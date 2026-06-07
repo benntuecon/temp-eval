@@ -1,0 +1,123 @@
+import dataclasses
+
+import pytest
+
+from skill_eval.contracts import (
+    Arm,
+    ArmReport,
+    ComparisonReport,
+    Criterion,
+    JudgeInput,
+    JudgeScore,
+    RunConfig,
+    RunMetrics,
+    StopReason,
+    TakerResult,
+    Workspace,
+)
+
+
+def test_enum_values():
+    assert Arm.BASELINE.value == "baseline"
+    assert Arm.CHALLENGER.value == "challenger"
+    assert StopReason.MAX_TURNS.value == "max_turns"
+    assert {c.value for c in Criterion} == {
+        "correctness",
+        "completeness",
+        "distance_to_gold",
+        "code_quality",
+        "question_quality",
+        "approach",
+    }
+
+
+def test_runconfig_defaults_and_frozen():
+    cfg = RunConfig(
+        before_hash="aaa",
+        after_hash="bbb",
+        repo_path="/repo",
+        task_brief="Implement feature X",
+        baseline_skill_path="/skills/base",
+        challenger_skill_path="/skills/chal",
+        models=["claude-opus-4-8"],
+    )
+    assert cfg.max_turns == 30
+    assert cfg.max_tokens is None
+    assert cfg.wall_clock_seconds is None
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        cfg.max_turns = 5  # type: ignore[misc]
+
+
+def test_workspace_frozen():
+    ws = Workspace(arm=Arm.BASELINE, taker_dir="/t", after_dir="/a", gold_diff="diff")
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        ws.taker_dir = "/x"  # type: ignore[misc]
+
+
+def test_full_report_composition():
+    metrics = RunMetrics(
+        total_tokens=10,
+        input_tokens=6,
+        output_tokens=4,
+        wall_seconds=1.5,
+        num_turns=2,
+        num_questions=1,
+    )
+    taker = TakerResult(
+        arm=Arm.CHALLENGER,
+        model="claude-opus-4-8",
+        diff="patch",
+        transcript=[{"role": "user", "content": "hi"}],
+        questions=["which db?"],
+        stop_reason=StopReason.COMPLETED,
+        metrics=metrics,
+    )
+    assert taker.metrics.num_questions == 1
+
+    score = JudgeScore(criterion=Criterion.CORRECTNESS, score=20, rationale="matches gold")
+    arm_report = ArmReport(
+        arm=Arm.CHALLENGER,
+        model="claude-opus-4-8",
+        metrics=metrics,
+        scores=[score],
+        total_score=20,
+    )
+    report = ComparisonReport(
+        config=RunConfig(
+            before_hash="a",
+            after_hash="b",
+            repo_path="/repo",
+            task_brief="x",
+            baseline_skill_path="/b",
+            challenger_skill_path="/c",
+            models=["claude-opus-4-8"],
+        ),
+        arms=[arm_report],
+        pairwise_verdict="challenger wins",
+    )
+    assert report.arms[0].scores[0].score == 20
+
+
+def test_judge_input_constructs():
+    metrics = RunMetrics(0, 0, 0, 0.0, 0, 0)
+    taker = TakerResult(
+        arm=Arm.BASELINE,
+        model="m",
+        diff="",
+        transcript=[],
+        questions=[],
+        stop_reason=StopReason.MAX_TURNS,
+        metrics=metrics,
+    )
+    ji = JudgeInput(
+        criterion=Criterion.COMPLETENESS,
+        task_brief="x",
+        gold_diff="gold",
+        after_dir="/a",
+        taker=taker,
+    )
+    assert ji.criterion is Criterion.COMPLETENESS
+
+
+def test_callable_aliases_importable():
+    from skill_eval.contracts import AskFn, MakeSimulator  # noqa: F401
