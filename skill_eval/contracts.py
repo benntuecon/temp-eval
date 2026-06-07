@@ -52,7 +52,7 @@ class RunConfig:
     task_brief: str  # PRD / Jira story / requirement text
     baseline_skill_path: str  # path to baseline skill dir
     challenger_skill_path: str  # path to challenger skill dir
-    models: list[str]  # one full eval per model
+    models: tuple[str, ...]  # one full eval per model
     max_turns: int = 30
     max_tokens: int | None = None  # optional hard token cap
     wall_clock_seconds: int | None = None  # real elapsed-time cap
@@ -74,7 +74,7 @@ class Workspace:
 # ---------- Metrics (Component 4) ----------
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunMetrics:
     """Objective, non-LLM measurements of a single taker run."""
 
@@ -93,15 +93,15 @@ class RunMetrics:
 AskFn = Callable[[str], str]
 
 
-@dataclass
+@dataclass(frozen=True)
 class TakerResult:
     """Everything one taker produced, ready for judging."""
 
     arm: Arm
     model: str
     diff: str  # patch: before_hash -> taker end state
-    transcript: list[dict]  # full message log
-    questions: list[str]  # clarifying questions the taker asked
+    transcript: tuple[dict, ...]  # full message log
+    questions: tuple[str, ...]  # clarifying questions the taker asked
     stop_reason: StopReason
     metrics: RunMetrics
 

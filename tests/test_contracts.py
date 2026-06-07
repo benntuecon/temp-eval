@@ -29,6 +29,13 @@ def test_enum_values():
         "question_quality",
         "approach",
     }
+    assert {s.value for s in StopReason} == {
+        "completed",
+        "max_turns",
+        "max_tokens",
+        "wall_clock",
+        "error",
+    }
 
 
 def test_runconfig_defaults_and_frozen():
@@ -39,7 +46,7 @@ def test_runconfig_defaults_and_frozen():
         task_brief="Implement feature X",
         baseline_skill_path="/skills/base",
         challenger_skill_path="/skills/chal",
-        models=["claude-opus-4-8"],
+        models=("claude-opus-4-8",),
     )
     assert cfg.max_turns == 30
     assert cfg.max_tokens is None
@@ -67,8 +74,8 @@ def test_full_report_composition():
         arm=Arm.CHALLENGER,
         model="claude-opus-4-8",
         diff="patch",
-        transcript=[{"role": "user", "content": "hi"}],
-        questions=["which db?"],
+        transcript=({"role": "user", "content": "hi"},),
+        questions=("which db?",),
         stop_reason=StopReason.COMPLETED,
         metrics=metrics,
     )
@@ -90,7 +97,7 @@ def test_full_report_composition():
             task_brief="x",
             baseline_skill_path="/b",
             challenger_skill_path="/c",
-            models=["claude-opus-4-8"],
+            models=("claude-opus-4-8",),
         ),
         arms=[arm_report],
         pairwise_verdict="challenger wins",
@@ -104,8 +111,8 @@ def test_judge_input_constructs():
         arm=Arm.BASELINE,
         model="m",
         diff="",
-        transcript=[],
-        questions=[],
+        transcript=(),
+        questions=(),
         stop_reason=StopReason.MAX_TURNS,
         metrics=metrics,
     )
