@@ -2,17 +2,28 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the foundation that unblocks all parallel component work — a installable Python package, the shared `contracts.py` integration contract, and two runnable spikes that pin down the Claude Agent SDK mechanisms the test-taker depends on.
+**Goal:** Build the foundation that unblocks all parallel component work — a `uv`-managed Python package, the shared `contracts.py` integration contract, and two runnable spikes that pin down the Claude Agent SDK mechanisms the test-taker depends on.
 
 **Architecture:** A single Python package `skill_eval` exposing typed data contracts that every later component imports. Two throwaway spike scripts validate (a) loading an isolated Claude Code Skill into an Agent SDK session and (b) routing a custom `ask_question` tool to a Python handler while capturing budgets/metrics. Findings are written to `docs/superpowers/spikes/`.
 
-**Tech Stack:** Python ≥3.11, `claude-agent-sdk`, `langgraph`, `arize-phoenix`, `streamlit`, `pytest`, `mypy`. Build backend: `hatchling`.
+**Tech Stack:** Python ≥3.11 managed by **`uv`** (env, deps, lock). Tooling all run via `uv run`: **ruff** (lint + format), **mypy** (types), **pytest** (tests). Runtime deps: `claude-agent-sdk`, `langgraph`, `arize-phoenix`, `streamlit`. Build backend: `hatchling`.
 
 **Scope:** This plan covers GitHub issues **#1** (scaffolding), **#2** (contracts), **#3** (skill-loading spike), **#4** (ask_question spike). Components C1/C2/C3/C5/C6/C7 (issues #5–#10) get their own plans, written by the parallel sessions against the contract this plan produces.
 
 **Prerequisites:**
-- Tasks 1–2: only `pip` (no network to Anthropic).
-- Tasks 3–4 (spikes): require `ANTHROPIC_API_KEY` in the environment **and** network egress to the Anthropic API. Confirm the sandbox allows this before starting them.
+- `uv` installed (`uv --version`). If absent: `curl -LsSf https://astral.sh/uv/install.sh | sh`.
+- Tasks 1–2: only `uv` + network to PyPI.
+- Tasks 3–4 (spikes): require `ANTHROPIC_API_KEY` in the environment **and** network egress to the Anthropic API.
+
+**Toolchain commands (used throughout):**
+- Sync env: `uv sync`
+- Test: `uv run pytest`
+- Lint: `uv run ruff check .`
+- Format: `uv run ruff format .` (verify with `uv run ruff format --check .`)
+- Types: `uv run mypy`
+- Run a script: `uv run python <path>`
+
+Every task ends green on **all four gates**: `ruff check`, `ruff format --check`, `mypy`, `pytest`.
 
 ---
 
@@ -20,10 +31,11 @@
 
 | File | Responsibility |
 |---|---|
-| `pyproject.toml` | Package metadata, deps, pytest config |
-| `.gitignore` | Ignore venv, `.env`, worktree temp dirs, Phoenix store |
+| `pyproject.toml` | Package metadata, runtime deps, `[dependency-groups].dev`, ruff/mypy/pytest config |
+| `uv.lock` | Resolved lockfile (committed) |
+| `.gitignore` | Ignore `.venv`, `.env`, worktree temp dirs, Phoenix store |
 | `.env.example` | Document required env vars |
-| `README.md` | How to install + run |
+| `README.md` | How to install + run with uv |
 | `skill_eval/__init__.py` | Package marker + `__version__` |
 | `skill_eval/contracts.py` | **All shared types + component signatures** (the integration contract) |
 | `tests/test_smoke.py` | Package imports |
@@ -36,14 +48,18 @@
 
 ---
 
-## Task 1: Project scaffolding (issue #1)
+## Task 1: Project scaffolding with uv (issue #1)
 
 **Files:**
-- Create: `pyproject.toml`, `.gitignore`, `.env.example`, `README.md`
-- Create: `skill_eval/__init__.py`
-- Test: `tests/test_smoke.py`
+- Create: `pyproject.toml`, `.gitignore`, `.env.example`, `README.md`, `skill_eval/__init__.py`, `tests/test_smoke.py`
+- Generated + committed: `uv.lock`
 
-- [ ] **Step 1: Write the failing smoke test**
+- [ ] **Step 1: Confirm uv is available**
+
+Run: `uv --version`
+Expected: prints a uv version.
+
+- [ ] **Step 2: Write the smoke test**
 
 Create `tests/test_smoke.py`:
 ```python
@@ -53,12 +69,12 @@ def test_package_imports():
     assert skill_eval.__version__ == "0.1.0"
 ```
 
-- [ ] **Step 2: Run it to verify it fails**
+- [ ] **Step 3: Watch it fail (red)**
 
-Run: `python -m pytest tests/test_smoke.py -v`
-Expected: FAIL — `ModuleNotFoundError: No module named 'skill_eval'`
+Run: `uv run --no-project --with pytest pytest tests/test_smoke.py -q`
+Expected: FAIL — `ModuleNotFoundError: No module named 'skill_eval'` (the package doesn't exist yet; `--no-project` skips installing it).
 
-- [ ] **Step 3: Create the package**
+- [ ] **Step 4: Create the package**
 
 Create `skill_eval/__init__.py`:
 ```python
@@ -67,13 +83,9 @@ Create `skill_eval/__init__.py`:
 __version__ = "0.1.0"
 ```
 
-- [ ] **Step 4: Create `pyproject.toml`**
+- [ ] **Step 5: Create `pyproject.toml`**
 
 ```toml
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "skill-eval"
 version = "0.1.0"
@@ -90,17 +102,36 @@ dependencies = [
     "streamlit",
 ]
 
-[project.optional-dependencies]
-dev = ["pytest", "mypy"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "mypy",
+    "ruff",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["skill_eval"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["skill_eval"]
 ```
 
-- [ ] **Step 5: Create `.gitignore`**
+- [ ] **Step 6: Create `.gitignore`**
 
 ```gitignore
 __pycache__/
@@ -110,6 +141,7 @@ venv/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 .env
 # git worktrees created at runtime for test-takers
 .worktrees/
@@ -117,7 +149,7 @@ venv/
 .phoenix/
 ```
 
-- [ ] **Step 6: Create `.env.example`**
+- [ ] **Step 7: Create `.env.example`**
 
 ```dotenv
 # Required for the test-takers, simulator, and judges (Tasks 3-4 and all components)
@@ -126,45 +158,53 @@ ANTHROPIC_API_KEY=sk-ant-...
 # PHOENIX_COLLECTOR_ENDPOINT=http://localhost:6006
 ```
 
-- [ ] **Step 7: Create `README.md`**
+- [ ] **Step 8: Create `README.md`**
 
-```markdown
+```
 # skill-eval
 
 Eval/comparison harness for two Claude Code Skills (baseline vs challenger).
-See `docs/superpowers/specs/2026-06-06-skill-eval-system-design.md`.
+See docs/superpowers/specs/2026-06-06-skill-eval-system-design.md
 
 ## Setup
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-cp .env.example .env   # then fill in ANTHROPIC_API_KEY
+    uv sync                 # creates .venv, installs deps + dev tools, writes uv.lock
+    cp .env.example .env     # then fill in ANTHROPIC_API_KEY
+
+## Develop
+
+    uv run pytest            # tests
+    uv run ruff check .      # lint
+    uv run ruff format .     # format
+    uv run mypy              # type-check
+    uv run python spikes/spike_skill_loading.py   # a spike (needs ANTHROPIC_API_KEY)
 ```
 
-## Run
+- [ ] **Step 9: Sync the environment (green)**
+
+Run: `uv sync`
+Expected: creates `.venv`, resolves all deps, writes `uv.lock`. Large deps (phoenix, streamlit, langgraph) may take a minute. If a single dependency fails to resolve, report it as a concern — do not hand-edit versions without flagging.
+
+- [ ] **Step 10: Run the smoke test (green)**
+
+Run: `uv run pytest -q`
+Expected: PASS (1 test).
+
+- [ ] **Step 11: Lint, format, type-check gates**
+
+Run:
+```bash
+uv run ruff format .
+uv run ruff check .
+uv run mypy
+```
+Expected: ruff format reports files left unchanged (or formats them), `ruff check` passes, `mypy` succeeds. Fix any issues, re-run until all green.
+
+- [ ] **Step 12: Commit**
 
 ```bash
-pytest                       # unit tests
-phoenix serve                # trace UI at http://localhost:6006 (once Phoenix is wired)
-```
-```
-
-- [ ] **Step 8: Install the package**
-
-Run: `pip install -e ".[dev]"`
-Expected: installs `skill-eval` and dev deps without error.
-
-- [ ] **Step 9: Run the smoke test to verify it passes**
-
-Run: `python -m pytest tests/test_smoke.py -v`
-Expected: PASS
-
-- [ ] **Step 10: Commit**
-
-```bash
-git add pyproject.toml .gitignore .env.example README.md skill_eval/__init__.py tests/test_smoke.py
-git commit -m "feat: project scaffolding and dependencies (#1)"
+git add pyproject.toml uv.lock .gitignore .env.example README.md skill_eval/__init__.py tests/test_smoke.py
+git commit -m "feat: project scaffolding with uv (#1)"
 ```
 
 ---
@@ -185,16 +225,16 @@ import pytest
 
 from skill_eval.contracts import (
     Arm,
-    StopReason,
-    Criterion,
-    RunConfig,
-    Workspace,
-    RunMetrics,
-    TakerResult,
-    JudgeInput,
-    JudgeScore,
     ArmReport,
     ComparisonReport,
+    Criterion,
+    JudgeInput,
+    JudgeScore,
+    RunConfig,
+    RunMetrics,
+    StopReason,
+    TakerResult,
+    Workspace,
 )
 
 
@@ -255,9 +295,7 @@ def test_full_report_composition():
     )
     assert taker.metrics.num_questions == 1
 
-    score = JudgeScore(
-        criterion=Criterion.CORRECTNESS, score=20, rationale="matches gold"
-    )
+    score = JudgeScore(criterion=Criterion.CORRECTNESS, score=20, rationale="matches gold")
     arm_report = ArmReport(
         arm=Arm.CHALLENGER,
         model="claude-opus-4-8",
@@ -308,7 +346,7 @@ def test_callable_aliases_importable():
 
 - [ ] **Step 2: Run it to verify it fails**
 
-Run: `python -m pytest tests/test_contracts.py -v`
+Run: `uv run pytest tests/test_contracts.py -q`
 Expected: FAIL — `ModuleNotFoundError: No module named 'skill_eval.contracts'`
 
 - [ ] **Step 3: Implement `skill_eval/contracts.py`**
@@ -320,9 +358,9 @@ This is the single integration point every component builds against. It contains
 only types and function signatures — no business logic. See the design spec §6.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, Optional
 
 
 # ---------- Enums ----------
@@ -348,12 +386,12 @@ class StopReason(str, Enum):
 class Criterion(str, Enum):
     """One judged dimension. Each becomes its own concurrent judge."""
 
-    CORRECTNESS = "correctness"            # satisfies the requirement (vs gold)
-    COMPLETENESS = "completeness"          # how much of the task got done
+    CORRECTNESS = "correctness"  # satisfies the requirement (vs gold)
+    COMPLETENESS = "completeness"  # how much of the task got done
     DISTANCE_TO_GOLD = "distance_to_gold"  # semantic closeness of diff to gold diff
-    CODE_QUALITY = "code_quality"          # maintainability / idiomaticity
+    CODE_QUALITY = "code_quality"  # maintainability / idiomaticity
     QUESTION_QUALITY = "question_quality"  # quality of clarifying questions asked
-    APPROACH = "approach"                  # strategy / efficiency / lack of thrashing
+    APPROACH = "approach"  # strategy / efficiency / lack of thrashing
 
 
 # ---------- Inputs ----------
@@ -366,13 +404,13 @@ class RunConfig:
     before_hash: str
     after_hash: str
     repo_path: str
-    task_brief: str                            # PRD / Jira story / requirement text
-    baseline_skill_path: str                   # path to baseline skill dir
-    challenger_skill_path: str                 # path to challenger skill dir
-    models: list[str]                          # one full eval per model
+    task_brief: str  # PRD / Jira story / requirement text
+    baseline_skill_path: str  # path to baseline skill dir
+    challenger_skill_path: str  # path to challenger skill dir
+    models: list[str]  # one full eval per model
     max_turns: int = 30
-    max_tokens: Optional[int] = None           # optional hard token cap
-    wall_clock_seconds: Optional[int] = None   # real elapsed-time cap
+    max_tokens: int | None = None  # optional hard token cap
+    wall_clock_seconds: int | None = None  # real elapsed-time cap
 
 
 # ---------- Sandbox (Component 1) ----------
@@ -383,9 +421,9 @@ class Workspace:
     """Isolated dirs for one arm plus the shared gold tree."""
 
     arm: Arm
-    taker_dir: str        # worktree @before_hash the taker edits
-    after_dir: str        # read-only worktree @after_hash (gold tree)
-    gold_diff: str        # `git diff before..after`
+    taker_dir: str  # worktree @before_hash the taker edits
+    after_dir: str  # read-only worktree @after_hash (gold tree)
+    gold_diff: str  # `git diff before..after`
 
 
 # ---------- Metrics (Component 4) ----------
@@ -416,9 +454,9 @@ class TakerResult:
 
     arm: Arm
     model: str
-    diff: str                  # patch: before_hash -> taker end state
-    transcript: list[dict]     # full message log
-    questions: list[str]       # clarifying questions the taker asked
+    diff: str  # patch: before_hash -> taker end state
+    transcript: list[dict]  # full message log
+    questions: list[str]  # clarifying questions the taker asked
     stop_reason: StopReason
     metrics: RunMetrics
 
@@ -450,7 +488,7 @@ class JudgeScore:
     """A single judge's 0-20 score plus rationale."""
 
     criterion: Criterion
-    score: int                 # 0-20, anchored
+    score: int  # 0-20, anchored
     rationale: str
 
 
@@ -465,7 +503,7 @@ class ArmReport:
     model: str
     metrics: RunMetrics
     scores: list[JudgeScore]
-    total_score: int           # sum of criterion scores (or weighted)
+    total_score: int  # sum of criterion scores (or weighted)
 
 
 @dataclass
@@ -473,8 +511,8 @@ class ComparisonReport:
     """The system's output: baseline vs challenger, per model."""
 
     config: RunConfig
-    arms: list[ArmReport]      # baseline + challenger, per model
-    pairwise_verdict: str      # which is better and why
+    arms: list[ArmReport]  # baseline + challenger, per model
+    pairwise_verdict: str  # which is better and why
 
 
 # ---------- Component function signatures ----------
@@ -514,13 +552,18 @@ def run_eval(cfg: RunConfig) -> ComparisonReport:
 
 - [ ] **Step 4: Run the test to verify it passes**
 
-Run: `python -m pytest tests/test_contracts.py -v`
+Run: `uv run pytest tests/test_contracts.py -q`
 Expected: PASS (all 6 tests)
 
-- [ ] **Step 5: Type-check the contract (issue #2 acceptance)**
+- [ ] **Step 5: Gates — lint, format, type-check**
 
-Run: `python -m mypy skill_eval/contracts.py`
-Expected: `Success: no issues found in 1 source file`
+Run:
+```bash
+uv run ruff format .
+uv run ruff check .
+uv run mypy
+```
+Expected: `ruff check` clean, `mypy` reports `Success` on `skill_eval` (issue #2 acceptance: type-check passes). Fix and re-run until green.
 
 - [ ] **Step 6: Commit**
 
@@ -533,7 +576,7 @@ git commit -m "feat: shared data contracts (#2)"
 
 ## Task 3: Spike — isolated skill loading (issue #3)
 
-This is an **investigation**, not red-green TDD: it runs a real Agent SDK session, observes behavior, and records findings. The script below is the best-known API from the SDK docs; **Step 2 verifies the actual installed API and you adapt + record any deltas in the findings doc.** Requires `ANTHROPIC_API_KEY` + network.
+This is an **investigation**, not red-green TDD: it runs a real Agent SDK session, observes behavior, and records findings. The script is the best-known API from the SDK docs; **Step 2 verifies the actual installed API and you adapt + record any deltas in the findings doc.** Requires `ANTHROPIC_API_KEY` + network. Run everything via `uv run`.
 
 **Files:**
 - Create: `tests/fixtures/skills/haiku-only/SKILL.md`
@@ -561,10 +604,10 @@ The `Skill` first-word marker makes activation trivially detectable in output.
 
 Run:
 ```bash
-python -c "import claude_agent_sdk, inspect; print(claude_agent_sdk.__version__); import claude_agent_sdk as s; print([n for n in dir(s) if not n.startswith('_')])"
-python -c "from claude_agent_sdk import ClaudeAgentOptions; import inspect; print(inspect.signature(ClaudeAgentOptions.__init__))"
+uv run python -c "import claude_agent_sdk as s; print(getattr(s,'__version__','?')); print([n for n in dir(s) if not n.startswith('_')])"
+uv run python -c "from claude_agent_sdk import ClaudeAgentOptions; import inspect; print(inspect.signature(ClaudeAgentOptions.__init__))"
 ```
-Expected: prints a version and the available names; the `ClaudeAgentOptions` signature shows which of `cwd`, `setting_sources`, `skills`, `system_prompt`, `allowed_tools` actually exist. **Record the real signature in the findings doc.** If `skills`/`setting_sources` are absent, only Approach B (system-prompt injection) is viable — note that and skip Approach A.
+Expected: prints a version and available names; the `ClaudeAgentOptions` signature shows which of `cwd`, `setting_sources`, `skills`, `system_prompt`, `allowed_tools` actually exist. **Record the real signature in the findings doc.** If `skills`/`setting_sources` are absent, only Approach B (system-prompt injection) is viable — note that and skip Approach A.
 
 - [ ] **Step 3: Write the spike script**
 
@@ -572,7 +615,7 @@ Create `spikes/spike_skill_loading.py`:
 ```python
 """Spike (#3): can we load ONE specific Claude Code Skill into an isolated session?
 
-Run: python spikes/spike_skill_loading.py
+Run: uv run python spikes/spike_skill_loading.py
 Requires: ANTHROPIC_API_KEY in env.
 Adapt option names to the real SDK signature found in Step 2; record deltas.
 """
@@ -582,7 +625,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from claude_agent_sdk import query, ClaudeAgentOptions
+from claude_agent_sdk import ClaudeAgentOptions, query
 
 FIXTURE = Path(__file__).parent.parent / "tests/fixtures/skills/haiku-only"
 PROMPT = "What is the capital of France?"
@@ -635,8 +678,10 @@ async def approach_b_system_prompt() -> str:
 
 
 async def main() -> None:
-    for name, coro in [("A setting_sources", approach_a_setting_sources),
-                       ("B system_prompt", approach_b_system_prompt)]:
+    for name, coro in [
+        ("A setting_sources", approach_a_setting_sources),
+        ("B system_prompt", approach_b_system_prompt),
+    ]:
         try:
             text = await coro()
             activated = text.strip().lower().startswith("skill")
@@ -653,18 +698,12 @@ if __name__ == "__main__":
 
 - [ ] **Step 4: Run the spike and observe**
 
-Run: `python spikes/spike_skill_loading.py`
-Expected: each approach prints the model's answer and `ACTIVATED=True/False`. A haiku starting with "Skill" means that approach loaded the skill. At least one approach should activate.
+Run: `uv run python spikes/spike_skill_loading.py`
+Expected: each approach prints the model's answer and `ACTIVATED=True/False`. A haiku starting with "Skill" means that approach loaded the skill. At least one approach should activate. (If Approach A raises because an option name is wrong, fix per Step 2's real signature and re-run.)
 
 - [ ] **Step 5: Record findings**
 
-Create `docs/superpowers/spikes/2026-06-06-skill-loading.md` documenting:
-- The real `ClaudeAgentOptions` signature (from Step 2).
-- Which approach(es) activated the skill (`ACTIVATED=True`).
-- **The recommended mechanism for C2** to load exactly one skill with no cross-contamination, and the exact options to use.
-- Any deltas from the script (renamed/missing options).
-
-Template:
+Create `docs/superpowers/spikes/2026-06-06-skill-loading.md`:
 ```markdown
 # Spike #3 — Isolated skill loading
 
@@ -679,9 +718,11 @@ ClaudeAgentOptions signature: <paste>
 <the exact option dict to load one skill in isolation, and why>
 ```
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Lint/format the spike, then commit**
 
 ```bash
+uv run ruff format spikes/spike_skill_loading.py
+uv run ruff check spikes/spike_skill_loading.py
 git add tests/fixtures/skills/haiku-only/SKILL.md spikes/spike_skill_loading.py docs/superpowers/spikes/2026-06-06-skill-loading.md
 git commit -m "spike: isolated Claude Code Skill loading in Agent SDK (#3)"
 ```
@@ -690,7 +731,7 @@ git commit -m "spike: isolated Claude Code Skill loading in Agent SDK (#3)"
 
 ## Task 4: Spike — ask_question routing, counting & metrics (issue #4)
 
-Investigation that pins down: custom-tool round-trip to a Python handler, counting tool calls, reading token/turn metrics, and wall-clock cancellation. Requires `ANTHROPIC_API_KEY` + network.
+Investigation that pins down: custom-tool round-trip to a Python handler, counting tool calls, reading token/turn metrics, and wall-clock cancellation. Requires `ANTHROPIC_API_KEY` + network. Run via `uv run`.
 
 **Files:**
 - Create: `spikes/spike_ask_question.py`
@@ -700,8 +741,8 @@ Investigation that pins down: custom-tool round-trip to a Python handler, counti
 
 Run:
 ```bash
-python -c "from claude_agent_sdk import tool, create_sdk_mcp_server; print('tools ok')"
-python -c "import claude_agent_sdk as s; print([n for n in dir(s) if 'Result' in n or 'Message' in n or 'Hook' in n])"
+uv run python -c "from claude_agent_sdk import tool, create_sdk_mcp_server; print('tools ok')"
+uv run python -c "import claude_agent_sdk as s; print([n for n in dir(s) if 'Result' in n or 'Message' in n or 'Hook' in n])"
 ```
 Expected: prints `tools ok` and the names of the result/message/hook classes. **Record them** — you'll confirm the metrics attribute names empirically in Step 3.
 
@@ -711,7 +752,7 @@ Create `spikes/spike_ask_question.py`:
 ```python
 """Spike (#4): custom ask_question tool -> Python handler; counting; metrics; timeout.
 
-Run: python spikes/spike_ask_question.py
+Run: uv run python spikes/spike_ask_question.py
 Requires: ANTHROPIC_API_KEY in env.
 """
 
@@ -720,11 +761,11 @@ import dataclasses
 from typing import Any
 
 from claude_agent_sdk import (
-    query,
     ClaudeAgentOptions,
-    tool,
-    create_sdk_mcp_server,
     HookMatcher,
+    create_sdk_mcp_server,
+    query,
+    tool,
 )
 
 # --- the Python callback the agent's question must reach ---
@@ -747,7 +788,7 @@ async def ask_question(args: dict[str, Any]) -> dict[str, Any]:
 HOOK_COUNTS: dict[str, int] = {}
 
 
-async def count_hook(input_data, tool_use_id, context):  # noqa: ANN001
+async def count_hook(input_data, tool_use_id, context):
     name = input_data.get("tool_name", "?")
     HOOK_COUNTS[name] = HOOK_COUNTS.get(name, 0) + 1
     return {}
@@ -797,11 +838,11 @@ if __name__ == "__main__":
 
 - [ ] **Step 3: Run the spike and observe**
 
-Run: `python spikes/spike_ask_question.py`
+Run: `uv run python spikes/spike_ask_question.py`
 Expected:
 - `HANDLER_CALLS` contains exactly one question string → the agent's tool call reached the Python handler.
 - `HOOK_COUNTS` shows `mcp__hitl__ask_question: 1` (confirms the counting mechanism for `num_questions`).
-- The `dump_metrics` output reveals the **actual** attribute names carrying input/output tokens and the end/stop reason.
+- The `dump_metrics` output reveals the **actual** attribute names carrying input/output tokens and the end/stop reason. (If hook signature differs from `(input_data, tool_use_id, context)`, fix per the real API found in Step 1 and re-run.)
 
 - [ ] **Step 4: Record findings**
 
@@ -814,7 +855,7 @@ Result/Message/Hook classes: <from Step 1>
 
 ## Confirmed
 - Custom tool -> Python handler round-trip: <works? exact wiring>
-- Question counting: HANDLER_CALLS vs HOOK_COUNTS agreed = <bool>; chosen method for `num_questions` = <which>
+- Question counting: HANDLER_CALLS vs HOOK_COUNTS agreed = <bool>; chosen method for num_questions = <which>
 - Metric attribute names (map to RunMetrics):
   - input_tokens  -> <real attr>
   - output_tokens -> <real attr>
@@ -827,9 +868,11 @@ Result/Message/Hook classes: <from Step 1>
 <exact options + how to populate RunMetrics + StopReason from a real run>
 ```
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Lint/format the spike, then commit**
 
 ```bash
+uv run ruff format spikes/spike_ask_question.py
+uv run ruff check spikes/spike_ask_question.py
 git add spikes/spike_ask_question.py docs/superpowers/spikes/2026-06-06-ask-question-and-metrics.md
 git commit -m "spike: ask_question routing, counting, and metrics (#4)"
 ```
@@ -838,7 +881,7 @@ git commit -m "spike: ask_question routing, counting, and metrics (#4)"
 
 ## Done criteria for this plan
 
-- `pip install -e ".[dev]"` succeeds; `pytest` is green; `mypy skill_eval/contracts.py` is clean.
-- `skill_eval/contracts.py` matches spec §6 exactly — every later component can import its types and signatures.
+- `uv sync` succeeds; `uv run pytest` green; `uv run ruff check .` clean; `uv run ruff format --check .` clean; `uv run mypy` clean.
+- `skill_eval/contracts.py` matches spec §6 — every later component can import its types and signatures.
 - Both spike findings docs answer the open questions in spec §12 with concrete, copy-pasteable options for C2.
 - After this plan, issues #5–#10 can be built in parallel against a locked contract.
