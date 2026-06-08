@@ -290,6 +290,14 @@ END
   `@after` tree (gold). Prompted to answer **as a knowledgeable human stakeholder would** —
   helpful but not spoon-feeding the implementation.
 - `make_simulator(after_dir, task_brief, model)` returns an `AskFn` closure bound to that context.
+- **Design decision (2026-06-08): reactive-only.** The simulator is a pure oracle — it answers
+  when the taker calls `ask_question`, and never proactively interjects, reviews plans, or
+  course-corrects. Rationale: the simulator holds the gold (`@after`), so proactive intervention
+  would leak the solution and confound the skill measurement (we'd be scoring "skill + how hard
+  the human rescued it"). Keeping it reactive puts the full burden of "ask the right thing at the
+  right time" on the skill, which is exactly what the `question_quality` and `approach` judges
+  measure. Proactive / plan-review modes were considered and deliberately deferred (could return
+  later as a config-gated `hitl_mode` knob with a requirement-level-only guardrail).
 
 ### 8.4 Metrics Collector (4)
 - **Purely objective, no LLM:** `total/input/output tokens`, `wall_seconds`, `num_turns`,
