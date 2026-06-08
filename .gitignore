@@ -14,3 +14,6 @@ build/
 .worktrees/
 # Phoenix local trace store
 .phoenix/
+# graphify local-only artifacts (the graph itself is committed)
+graphify-out/cache/
+graphify-out/cost.json

@@ -1,0 +1,132 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1780904497.8566678,
+    "ast_hash": "bfee062c3962c14264fd704e975a6b38",
+    "semantic_hash": ""
+  },
+  "app.py": {
+    "mtime": 1780899019.602555,
+    "ast_hash": "a63285cbb85ae3e09b357bb777f80cfd",
+    "semantic_hash": ""
+  },
+  "skill_eval/__init__.py": {
+    "mtime": 1780819328.817257,
+    "ast_hash": "cee175491dbf14d6c2752dee12dd9b61",
+    "semantic_hash": ""
+  },
+  "skill_eval/contracts.py": {
+    "mtime": 1780877720.287829,
+    "ast_hash": "1c3d9e05617351a7cf6a6df58c087ca9",
+    "semantic_hash": ""
+  },
+  "skill_eval/orchestrator.py": {
+    "mtime": 1780899007.166704,
+    "ast_hash": "b5f0484b506e05df27467dbe8866157f",
+    "semantic_hash": ""
+  },
+  "skill_eval/reporting.py": {
+    "mtime": 1780898205.346804,
+    "ast_hash": "39e08f78b5074e2a40b0d23a6109c1b0",
+    "semantic_hash": ""
+  },
+  "skill_eval/sample_repo.py": {
+    "mtime": 1780877755.9153101,
+    "ast_hash": "942f25209ce3446c05122289286de80f",
+    "semantic_hash": ""
+  },
+  "skill_eval/sandbox.py": {
+    "mtime": 1780899026.4801762,
+    "ast_hash": "e7ebd53f299900113ff3a2b4cacb5435",
+    "semantic_hash": ""
+  },
+  "skill_eval/simulated.py": {
+    "mtime": 1780877852.8338828,
+    "ast_hash": "90a79fb3e810ae1d3f459ed665b19cd0",
+    "semantic_hash": ""
+  },
+  "spikes/spike_ask_question.py": {
+    "mtime": 1780877365.429173,
+    "ast_hash": "da4a2695193c755180c55780f97ca02f",
+    "semantic_hash": ""
+  },
+  "spikes/spike_skill_loading.py": {
+    "mtime": 1780877361.2376964,
+    "ast_hash": "8adce32c335352bf30b00a39586a9231",
+    "semantic_hash": ""
+  },
+  "tests/test_contracts.py": {
+    "mtime": 1780877724.2612689,
+    "ast_hash": "1750621b46583211fc3952393144688e",
+    "semantic_hash": ""
+  },
+  "tests/test_orchestrator.py": {
+    "mtime": 1780897922.118077,
+    "ast_hash": "b57dcec72811087025fc53d6a15e4b1a",
+    "semantic_hash": ""
+  },
+  "tests/test_reporting.py": {
+    "mtime": 1780898081.0687282,
+    "ast_hash": "7978091882e0743357f79db6d84a6dd9",
+    "semantic_hash": ""
+  },
+  "tests/test_sample_repo.py": {
+    "mtime": 1780877741.5580242,
+    "ast_hash": "fb28d4a7059ffd7afee13c0d30e0f2a4",
+    "semantic_hash": ""
+  },
+  "tests/test_sandbox.py": {
+    "mtime": 1780877775.6339626,
+    "ast_hash": "86aa6662ef04bdecd183b84a6df75411",
+    "semantic_hash": ""
+  },
+  "tests/test_simulated.py": {
+    "mtime": 1780877814.0773437,
+    "ast_hash": "687625662953788c17be661c6bdb3495",
+    "semantic_hash": ""
+  },
+  "tests/test_smoke.py": {
+    "mtime": 1780816668.8958025,
+    "ast_hash": "6834a727c269545cdc5cc99b13d4b667",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1780904497.856236,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1780819346.554212,
+    "ast_hash": "b1723fe93575133988a4072dbb3d50f7",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-06-06-foundation.md": {
+    "mtime": 1780816980.7666433,
+    "ast_hash": "cabcbf6441a1aaee7895f407d8a2b3b6",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-06-07-walking-skeleton.md": {
+    "mtime": 1780877631.1547177,
+    "ast_hash": "64466c9e9f8f7586ff1a35db5441975f",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-06-06-skill-eval-system-design.md": {
+    "mtime": 1780810985.5281925,
+    "ast_hash": "a1a1582ed360d5b79da6ed0929c4f3a5",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/spikes/2026-06-06-ask-question-and-metrics.md": {
+    "mtime": 1780877353.117608,
+    "ast_hash": "f7eab481bd60c48f280973dad450db88",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/spikes/2026-06-06-skill-loading.md": {
+    "mtime": 1780877304.8574078,
+    "ast_hash": "5fb8f945bd7e6edcbc72b2804be3ee57",
+    "semantic_hash": ""
+  },
+  "tests/fixtures/skills/haiku-only/SKILL.md": {
+    "mtime": 1780821538.5986423,
+    "ast_hash": "18c6b7d57ad69a7e5ba7ce3914a29e56",
+    "semantic_hash": ""
+  }
+}
