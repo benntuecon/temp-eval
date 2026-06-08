@@ -16,6 +16,7 @@ from typing import Annotated, Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
+from opentelemetry import trace
 
 from skill_eval.contracts import (
     Arm,
@@ -33,6 +34,17 @@ from skill_eval.contracts import (
     Workspace,
 )
 from skill_eval.sandbox import cleanup_workspaces, prepare_workspaces
+
+
+def _get_tracer() -> trace.Tracer:
+    """Return a tracer bound to the *current* TracerProvider.
+
+    Called lazily (inside each function) so that a test can install an
+    in-memory provider via ``trace.set_tracer_provider(...)`` before the
+    first span is created, even after the module has been imported.
+    """
+    return trace.get_tracer("skill_eval")
+
 
 # ---------------------------------------------------------------------------
 # LangGraph state  (reducer channels so parallel nodes can append safely)
@@ -74,7 +86,10 @@ def _node_prepare(state: _EvalState) -> dict[str, Any]:
     """Emit sandbox stage events; workspaces are already created by run_eval."""
     on_event = state.get("on_event")
     spaces: dict[Arm, Workspace] = state["spaces"]
-    _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
+    with _get_tracer().start_as_current_span("sandbox") as span:
+        span.set_attribute("openinference.span.kind", "CHAIN")
+        span.set_attribute("num_arms", len(spaces))
+        _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
     return {}
 
 
@@ -123,20 +138,29 @@ async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
     skill_path = cfg.challenger_skill_path if arm is Arm.CHALLENGER else cfg.baseline_skill_path
     ask_fn = simulator_factory(ws.after_dir, cfg.task_brief, model)
 
-    _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
+    with _get_tracer().start_as_current_span("taker") as span:
+        span.set_attribute("openinference.span.kind", "AGENT")
+        span.set_attribute("arm", arm.value)
+        span.set_attribute("model", model)
 
-    result: TakerResult = await asyncio.to_thread(taker_fn, ws, model, skill_path, cfg, ask_fn)
+        _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
 
-    _emit(
-        on_event,
-        {
-            "stage": "taker",
-            "arm": arm.value,
-            "status": "done",
-            "stop_reason": result.stop_reason.value,
-            "num_questions": result.metrics.num_questions,
-        },
-    )
+        result: TakerResult = await asyncio.to_thread(taker_fn, ws, model, skill_path, cfg, ask_fn)
+
+        span.set_attribute("stop_reason", result.stop_reason.value)
+        span.set_attribute("num_questions", result.metrics.num_questions)
+        span.set_attribute("total_tokens", result.metrics.total_tokens)
+
+        _emit(
+            on_event,
+            {
+                "stage": "taker",
+                "arm": arm.value,
+                "status": "done",
+                "stop_reason": result.stop_reason.value,
+                "num_questions": result.metrics.num_questions,
+            },
+        )
 
     return {"taker_results": [(arm, result)]}
 
@@ -207,23 +231,30 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
         taker=taker,
     )
 
-    _emit(
-        on_event,
-        {"stage": "judge", "arm": arm.value, "criterion": criterion.value, "status": "running"},
-    )
+    with _get_tracer().start_as_current_span("judge") as span:
+        span.set_attribute("openinference.span.kind", "LLM")
+        span.set_attribute("arm", arm.value)
+        span.set_attribute("criterion", criterion.value)
 
-    score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
+        _emit(
+            on_event,
+            {"stage": "judge", "arm": arm.value, "criterion": criterion.value, "status": "running"},
+        )
 
-    _emit(
-        on_event,
-        {
-            "stage": "judge",
-            "arm": arm.value,
-            "criterion": criterion.value,
-            "status": "done",
-            "score": score.score,
-        },
-    )
+        score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
+
+        span.set_attribute("score", score.score)
+
+        _emit(
+            on_event,
+            {
+                "stage": "judge",
+                "arm": arm.value,
+                "criterion": criterion.value,
+                "status": "done",
+                "score": score.score,
+            },
+        )
 
     return {"scores": [(arm, score)]}
 
@@ -372,18 +403,22 @@ def run_eval(
     # even when a node after prepare raises.
     spaces: dict[Arm, Workspace] = prepare_workspaces(cfg)
     try:
-        initial_state: _EvalState = {
-            "cfg": cfg,
-            "taker_fn": taker_fn,
-            "simulator_factory": simulator_factory,
-            "judge_fn": judge_fn,
-            "on_event": on_event,
-            "spaces": spaces,
-            "taker_results": [],
-            "scores": [],
-        }
-        final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
-        report: ComparisonReport = final_state["report"]
+        with _get_tracer().start_as_current_span("skill_eval.run") as root:
+            root.set_attribute("openinference.span.kind", "CHAIN")
+            root.set_attribute("models", ",".join(cfg.models))
+            initial_state: _EvalState = {
+                "cfg": cfg,
+                "taker_fn": taker_fn,
+                "simulator_factory": simulator_factory,
+                "judge_fn": judge_fn,
+                "on_event": on_event,
+                "spaces": spaces,
+                "taker_results": [],
+                "scores": [],
+            }
+            final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
+            report: ComparisonReport = final_state["report"]
+            root.set_attribute("verdict", report.pairwise_verdict)
     finally:
         cleanup_workspaces(spaces)
 
