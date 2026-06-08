@@ -106,9 +106,7 @@ def sim_run_taker(
         target = py_files[0]
         arm_label = ws.arm.value
         brief_snippet = cfg.task_brief[:40].replace("\n", " ")
-        target.write_text(
-            target.read_text() + f"\n# [simulated {arm_label}] {brief_snippet}\n"
-        )
+        target.write_text(target.read_text() + f"\n# [simulated {arm_label}] {brief_snippet}\n")
     else:
         (taker_path / "SOLUTION_NOTES.md").write_text(
             f"# Solution Notes\n\nArm: {ws.arm.value}\nTask: {cfg.task_brief[:80]}\n"

@@ -83,8 +83,7 @@ def build_sample_cases(base_dir: str) -> list[RunConfig]:
             buggy_src="def add(a, b):\n    return a - b  # BUG\n",
             fixed_src="def add(a, b):\n    return a + b\n",
             test_src=(
-                "from calculator import add\n\n\n"
-                "def test_add():\n    assert add(2, 3) == 5\n"
+                "from calculator import add\n\n\ndef test_add():\n    assert add(2, 3) == 5\n"
             ),
             task_brief=(
                 "The `add(a, b)` function in calculator.py subtracts instead of adding. "
@@ -141,8 +140,7 @@ def build_sample_cases(base_dir: str) -> list[RunConfig]:
             "case_04",
             "recursion.py",
             buggy_src=(
-                "def factorial(n):\n"
-                "    return n * factorial(n - 1)  # BUG: missing base case\n"
+                "def factorial(n):\n    return n * factorial(n - 1)  # BUG: missing base case\n"
             ),
             fixed_src=(
                 "def factorial(n):\n"
@@ -254,8 +252,8 @@ def build_sample_cases(base_dir: str) -> list[RunConfig]:
             base_dir,
             "case_08",
             "temperature.py",
-            buggy_src=("def c_to_f(c):\n" "    return c * 9 / 5  # BUG: missing + 32\n"),
-            fixed_src=("def c_to_f(c):\n" "    return c * 9 / 5 + 32\n"),
+            buggy_src=("def c_to_f(c):\n    return c * 9 / 5  # BUG: missing + 32\n"),
+            fixed_src=("def c_to_f(c):\n    return c * 9 / 5 + 32\n"),
             test_src=(
                 "from temperature import c_to_f\n\n\n"
                 "def test_c_to_f():\n"
@@ -274,7 +272,9 @@ def build_sample_cases(base_dir: str) -> list[RunConfig]:
             base_dir,
             "case_09",
             "dedupe.py",
-            buggy_src=("def dedupe(xs):\n" "    return list(set(xs))  # BUG: doesn't preserve order\n"),
+            buggy_src=(
+                "def dedupe(xs):\n    return list(set(xs))  # BUG: doesn't preserve order\n"
+            ),
             fixed_src=(
                 "def dedupe(xs):\n"
                 "    seen: set = set()\n"
@@ -304,17 +304,12 @@ def build_sample_cases(base_dir: str) -> list[RunConfig]:
             base_dir,
             "case_10",
             "mathutils.py",
-            buggy_src=("def gcd(a, b):\n" "    return a  # BUG: stub, should be Euclidean algorithm\n"),
-            fixed_src=(
-                "def gcd(a, b):\n"
-                "    while b:\n"
-                "        a, b = b, a % b\n"
-                "    return a\n"
+            buggy_src=(
+                "def gcd(a, b):\n    return a  # BUG: stub, should be Euclidean algorithm\n"
             ),
+            fixed_src=("def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n"),
             test_src=(
-                "from mathutils import gcd\n\n\n"
-                "def test_gcd():\n"
-                "    assert gcd(12, 18) == 6\n"
+                "from mathutils import gcd\n\n\ndef test_gcd():\n    assert gcd(12, 18) == 6\n"
             ),
             task_brief=(
                 "The `gcd(a, b)` function in mathutils.py is a stub that returns `a`. "
