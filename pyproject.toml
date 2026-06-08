@@ -30,6 +30,8 @@ packages = ["skill_eval"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["live: hits the real Anthropic API (skipped by default)"]
+addopts = "-m 'not live'"
 
 [tool.ruff]
 line-length = 100
