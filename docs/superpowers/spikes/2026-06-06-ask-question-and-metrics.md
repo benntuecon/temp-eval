@@ -49,13 +49,13 @@ ResultMessage  (is a @dataclass)
 - **Tool + MCP server + ClaudeAgentOptions construct without error:** OK — verified by constructing all three objects without starting inference. `create_sdk_mcp_server` returns a `dict` (McpSdkServerConfig TypedDict). `ClaudeAgentOptions` is a `@dataclass`.
 
 - **Real attribute names that map to RunMetrics (from class introspection):**
-  - `input_tokens` → `result_msg.usage["input_tokens"]` (key in the `usage: dict` field; keys follow Anthropic API conventions; exact keys PENDING CREDITS runtime confirmation)
-  - `output_tokens` → `result_msg.usage["output_tokens"]` (same dict)
-  - `cache_tokens` → `result_msg.usage["cache_creation_input_tokens"]` / `"cache_read_input_tokens"` (same dict, PENDING)
-  - `total_cost` → `result_msg.total_cost_usd` (direct float field, always present after a successful run)
-  - `num_turns` → `result_msg.num_turns` (direct int field, confirmed in dataclass)
-  - `model_usage_breakdown` → `result_msg.model_usage` (dict from CLI `modelUsage` JSON key; structure PENDING runtime)
-  - `stop_reason` → `result_msg.stop_reason` (str | None; values like `"end_turn"`, `"max_turns"` — exact mapping PENDING CREDITS)
+  - `input_tokens` → `result_msg.usage["input_tokens"]`
+  - `output_tokens` → `result_msg.usage["output_tokens"]`
+  - `cache_tokens` → `result_msg.usage["cache_creation_input_tokens"]` / `"cache_read_input_tokens"`
+  - `total_cost` → `result_msg.total_cost_usd` (direct float field)
+  - `num_turns` → `result_msg.num_turns` (direct int field)
+  - `model_usage_breakdown` → `result_msg.model_usage` (dict from CLI `modelUsage` JSON key)
+  - `stop_reason` → `result_msg.stop_reason` (str | None)
 
 - **HookMatcher / hook callback signature:**
 
@@ -78,26 +78,81 @@ ResultMessage  (is a @dataclass)
 - **Syntax check:** `ast.parse(open('spikes/spike_ask_question.py').read())` → parses ok.
 - **ruff check:** All checks passed (0 errors).
 
-## PENDING CREDITS (needs a funded account to verify)
+## Real run results (credits restored, 2026-06-06)
 
-- **ask_question round-trip (HANDLER_CALLS == 1):** PENDING — the `query()` iterator never
-  yielded a message; `HANDLER_CALLS` was never printed before the exception was raised.
-- **HOOK_COUNTS shows the tool fired:** PENDING — same reason.
-- **Actual metric values + stop_reason from a real ResultMessage:** PENDING.
-- **Exact keys inside `usage` dict:** PENDING (expected: `input_tokens`, `output_tokens`,
-  `cache_creation_input_tokens`, `cache_read_input_tokens` per Anthropic API spec).
+### ask_question round-trip
 
-- **Exact billing error observed:**
+CONFIRMED. Exactly ONE call reached the Python handler:
 
-  ```
-  Exception: Claude Code returned an error result: success
-  ```
+```
+HANDLER_CALLS = ['Which database should we use for this project (e.g., PostgreSQL, MySQL, SQLite, MongoDB, or another)?']
+```
 
-  Raised inside `claude_agent_sdk/_internal/query.py:852` via
-  `raise Exception(message.get("error", "Unknown error"))`. The underlying CLI JSON has
-  `subtype="success"` but `is_error=True`; the SDK raises rather than yielding the
-  `ResultMessage`, so `last` remains `None` and `dump_metrics` is never called. This matches
-  the Spike #3 finding exactly.
+The agent then answered using the returned value:
+
+```
+result = "Based on your selection, we'll use PostgreSQL as the database for this project."
+```
+
+### Hook counting
+
+The PostToolUse hook fired, but `input_data.get("tool_name")` was used (incorrectly — it should be
+`input_data.tool_name`), so the dict key fell back to `"?"`:
+
+```
+HOOK_COUNTS = {'?': 2}
+```
+
+**Conclusion:** count questions via `len(HANDLER_CALLS)` (handler invocation count) — reliable.
+Do NOT rely on the PostToolUse hook key unless using `input_data.tool_name` (attribute access).
+
+### Real ResultMessage field values observed
+
+```
+subtype         = 'success'
+is_error        = False
+num_turns       = 3
+stop_reason     = 'end_turn'
+duration_ms     = 12931
+duration_api_ms = 11318
+total_cost_usd  = 0.2338   # NB: run used the expensive default model (Opus)
+usage = {
+    'input_tokens': 8461,
+    'output_tokens': 555,
+    'cache_creation_input_tokens': 25199,
+    'cache_read_input_tokens': 40287,
+    ...
+}
+model_usage = {'claude-opus-4-8[1m]': {...}}   # default model — always pin Haiku explicitly
+result = "Based on your selection, we'll use PostgreSQL as the database for this project."
+```
+
+**Critical:** the default model resolved to `claude-opus-4-8[1m]` (expensive). Always set
+`model="claude-haiku-4-5"` explicitly in `ClaudeAgentOptions`.
+
+## RunMetrics mapping
+
+| RunMetrics field | Source |
+|---|---|
+| `input_tokens` | `usage["input_tokens"]` |
+| `output_tokens` | `usage["output_tokens"]` |
+| `total_tokens` | `input_tokens + output_tokens` (computed) |
+| `wall_seconds` | `duration_ms / 1000` |
+| `num_turns` | `msg.num_turns` |
+| `num_questions` | `len(HANDLER_CALLS)` (handler invocation count) |
+
+## StopReason mapping
+
+| `stop_reason` value | StopReason enum | Notes |
+|---|---|---|
+| `"end_turn"` | `COMPLETED` | Normal completion |
+| `"max_turns"` (expected) | `MAX_TURNS` | Confirm exact value when C2 forces it |
+| n/a — `asyncio.timeout` cancel | `WALL_CLOCK` | Exception path, not a ResultMessage field |
+| exception or `is_error=True` | `ERROR` | SDK raises instead of yielding on some errors |
+
+**Important:** when the SDK raises (e.g., billing error, unhandled `is_error=True` cases), `last`
+remains `None` and metrics are unavailable. C2 must wrap `query()` in `try/except` and treat any
+exception as `StopReason.ERROR`.
 
 ## Recommendation for C2 (run_taker)
 
@@ -111,6 +166,7 @@ async def ask_question(args: dict[str, Any]) -> dict[str, Any]:
 
 server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[ask_question])
 options = ClaudeAgentOptions(
+    model="claude-haiku-4-5",               # cheapest model — hackathon cost control
     mcp_servers={"hitl": server},
     allowed_tools=["mcp__hitl__ask_question"],
     ...
@@ -124,23 +180,14 @@ async for message in query(prompt=..., options=options):
     last = message
 # last is a ResultMessage when the run succeeds
 
-# Confirmed-safe direct fields:
-num_turns     = last.num_turns           # int, always present
-total_cost    = last.total_cost_usd      # float | None
-stop_reason   = last.stop_reason         # str | None  (e.g. "end_turn")
-is_error      = last.is_error            # bool
-duration_ms   = last.duration_ms         # int
-
-# Usage dict (keys are PENDING runtime confirmation, but expected per Anthropic API):
+num_turns     = last.num_turns                              # int, always present
+total_cost    = last.total_cost_usd                         # float | None
+stop_reason   = last.stop_reason                            # str | None  (e.g. "end_turn")
+is_error      = last.is_error                               # bool
+duration_ms   = last.duration_ms                            # int
 input_tokens  = (last.usage or {}).get("input_tokens")
 output_tokens = (last.usage or {}).get("output_tokens")
+total_tokens  = (input_tokens or 0) + (output_tokens or 0)
+wall_seconds  = last.duration_ms / 1000
+num_questions = len(HANDLER_CALLS)                          # handler invocation count
 ```
-
-**What must be confirmed once credits exist:**
-1. Exact keys present in `result_msg.usage` (the raw Anthropic API dict).
-2. Exact keys present in `result_msg.model_usage` (the CLI `modelUsage` JSON).
-3. Whether the SDK raises or yields a `ResultMessage` on `is_error=True` non-billing runs
-   (e.g. `max_turns` exceeded) — currently it raises for the billing case.
-4. HANDLER_CALLS == 1 after one ask_question round-trip.
-5. HOOK_COUNTS["mcp__hitl__ask_question"] == 1 via the PostToolUse hook.
-6. stop_reason value mapping: e.g. `"end_turn"` vs `"max_turns"` vs `"tool_use"`.

@@ -46,6 +46,7 @@ async def approach_a_setting_sources() -> str:
     shutil.copytree(FIXTURE, skill_dst)
     try:
         options = ClaudeAgentOptions(
+            model="claude-haiku-4-5",  # cheapest model — hackathon cost control
             cwd=str(workdir),
             setting_sources=["project"],
             skills=["haiku-only"],
@@ -61,6 +62,7 @@ async def approach_b_system_prompt() -> str:
     """Fallback: inject the SKILL.md straight into the system prompt."""
     skill_md = (FIXTURE / "SKILL.md").read_text()
     options = ClaudeAgentOptions(
+        model="claude-haiku-4-5",  # cheapest model — hackathon cost control
         system_prompt=f"Follow this skill exactly:\n\n{skill_md}",
         allowed_tools=[],
     )

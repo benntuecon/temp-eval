@@ -81,6 +81,7 @@ def dump_metrics(message: Any) -> None:
 async def main() -> None:
     server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[ask_question])
     options = ClaudeAgentOptions(
+        model="claude-haiku-4-5",  # cheapest model — hackathon cost control
         mcp_servers={"hitl": server},
         allowed_tools=["mcp__hitl__ask_question"],
         max_turns=5,
