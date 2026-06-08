@@ -44,12 +44,8 @@ def test_run_batch_per_case_variance(tmp_path):
         judge_fn=sim_run_judge,
         max_cases=2,
     )
-    challenger_totals = [
-        a.total_score for r in reports for a in r.arms if a.arm is Arm.CHALLENGER
-    ]
-    assert len(set(challenger_totals)) > 1, (
-        f"All challenger totals identical: {challenger_totals}"
-    )
+    challenger_totals = [a.total_score for r in reports for a in r.arms if a.arm is Arm.CHALLENGER]
+    assert len(set(challenger_totals)) > 1, f"All challenger totals identical: {challenger_totals}"
 
 
 def test_run_batch_on_event(tmp_path):
@@ -79,7 +75,7 @@ def test_run_batch_preserves_order(tmp_path):
         judge_fn=sim_run_judge,
         max_cases=3,
     )
-    for i, (cfg, report) in enumerate(zip(cfgs, reports)):
+    for i, (cfg, report) in enumerate(zip(cfgs, reports, strict=True)):
         assert report.config.repo_path == cfg.repo_path, (
             f"Position {i}: expected {cfg.repo_path}, got {report.config.repo_path}"
         )
