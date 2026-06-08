@@ -42,6 +42,7 @@ def main() -> None:
 
     from skill_eval.orchestrator import run_eval
     from skill_eval.reporting import (
+        agent_graph_dot,
         batch_per_case_totals,
         batch_per_criterion_avg,
         batch_win_summary,
@@ -112,6 +113,7 @@ def main() -> None:
             sim_make_simulator=sim_make_simulator,
             sim_run_judge=sim_run_judge,
             sim_run_taker=sim_run_taker,
+            agent_graph_dot=agent_graph_dot,
         )
 
     # ------------------------------------------------------------------
@@ -150,6 +152,7 @@ def _run_single_case(
     sim_make_simulator,  # type: ignore[type-arg]
     sim_run_judge,  # type: ignore[type-arg]
     sim_run_taker,  # type: ignore[type-arg]
+    agent_graph_dot,  # type: ignore[type-arg]
 ) -> None:
     """Single-case control-room view (original logic, unchanged)."""
     # ------------------------------------------------------------------
@@ -174,6 +177,10 @@ def _run_single_case(
 
         st.markdown("**Judges grid**")
         judges_placeholder = st.empty()
+
+        st.markdown("**Agent graph**")
+        graph_placeholder = st.empty()
+
         event_log_placeholder = st.empty()
 
         # ------------------------------------------------------------------
@@ -244,6 +251,28 @@ def _run_single_case(
                 rows.append({"criterion": crit, "baseline": base_cell, "challenger": chal_cell})
             judges_df = pd.DataFrame(rows).set_index("criterion")
             judges_placeholder.dataframe(judges_df, use_container_width=True)
+
+            # --- Agent graph ---
+            # Build judge_status from judge_cells
+            js_map: dict[tuple[str, str], dict] = {}
+            for arm_key in ("baseline", "challenger"):
+                for crit in CRITERIA_ORDER:
+                    cell = judge_cells.get((arm_key, crit), "⬜")
+                    if cell == "⬜":
+                        js_map[(arm_key, crit)] = {"status": "pending", "score": None}
+                    elif cell == "⏳":
+                        js_map[(arm_key, crit)] = {"status": "running", "score": None}
+                    else:
+                        # cell is like "✅ 17"
+                        try:
+                            score = int(cell.split()[-1])
+                        except (ValueError, IndexError):
+                            score = None
+                        js_map[(arm_key, crit)] = {"status": "done", "score": score}
+            graph_placeholder.graphviz_chart(
+                agent_graph_dot(pipeline, taker_state, js_map),
+                use_container_width=True,
+            )
 
             # --- Event log ---
             recent = all_events[-15:]

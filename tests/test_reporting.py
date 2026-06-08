@@ -8,6 +8,7 @@ from skill_eval.contracts import (
     RunMetrics,
 )
 from skill_eval.reporting import (
+    agent_graph_dot,
     batch_per_case_totals,
     batch_per_criterion_avg,
     batch_win_summary,
@@ -100,3 +101,52 @@ def test_batch_per_criterion_avg_values_are_rounded():
             val = row[arm_key]
             assert isinstance(val, float)
             assert round(val, 1) == val
+
+
+# ---------------------------------------------------------------------------
+# agent_graph_dot
+# ---------------------------------------------------------------------------
+
+
+def test_agent_graph_dot():
+    """Build a sample state and verify the returned DOT string."""
+    pipeline = {
+        "sandbox": "done",
+        "takers": "running",
+        "judges": "pending",
+        "report": "pending",
+    }
+    taker_state = {
+        "baseline": {"status": "done"},
+        "challenger": {"status": "running"},
+    }
+    judge_status: dict[tuple[str, str], dict] = {
+        ("baseline", "correctness"): {"status": "done", "score": 17},
+        ("baseline", "completeness"): {"status": "pending", "score": None},
+        ("baseline", "distance_to_gold"): {"status": "pending", "score": None},
+        ("baseline", "code_quality"): {"status": "pending", "score": None},
+        ("baseline", "question_quality"): {"status": "pending", "score": None},
+        ("baseline", "approach"): {"status": "pending", "score": None},
+        ("challenger", "correctness"): {"status": "pending", "score": None},
+        ("challenger", "completeness"): {"status": "pending", "score": None},
+        ("challenger", "distance_to_gold"): {"status": "pending", "score": None},
+        ("challenger", "code_quality"): {"status": "pending", "score": None},
+        ("challenger", "question_quality"): {"status": "pending", "score": None},
+        ("challenger", "approach"): {"status": "pending", "score": None},
+    }
+
+    dot = agent_graph_dot(pipeline, taker_state, judge_status)
+
+    # Must be a digraph
+    assert "digraph" in dot
+    assert "{" in dot and "}" in dot
+
+    # Must contain taker node ids for both arms
+    assert "taker_baseline" in dot
+    assert "taker_challenger" in dot
+
+    # Must contain a judge node showing 17/20 for the done judge
+    assert "17/20" in dot
+
+    # Must contain the green fill color for at least one done node
+    assert "#a5d6a7" in dot

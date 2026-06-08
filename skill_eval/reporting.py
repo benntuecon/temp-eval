@@ -145,6 +145,126 @@ def batch_per_criterion_avg(reports: list[ComparisonReport]) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Agent-graph DOT builder (pure, no Streamlit/Phoenix dependency)
+# ---------------------------------------------------------------------------
+
+_STATUS_COLOR = {
+    "pending": "#e6e6e6",
+    "running": "#ffd54a",
+    "done": "#a5d6a7",
+}
+
+_CRITERIA_ORDER = [
+    "correctness",
+    "completeness",
+    "distance_to_gold",
+    "code_quality",
+    "question_quality",
+    "approach",
+]
+
+
+def agent_graph_dot(
+    pipeline: dict[str, str],
+    taker_state: dict[str, dict],
+    judge_status: dict[tuple[str, str], dict],
+) -> str:
+    """Return a Graphviz DOT digraph string representing the eval fan-out.
+
+    Parameters
+    ----------
+    pipeline:
+        stage -> ``"pending" | "running" | "done"`` for ``sandbox``, ``takers``,
+        ``judges``, ``report``.
+    taker_state:
+        arm (``"baseline"`` / ``"challenger"``) -> dict with at least a
+        ``"status"`` key (``"pending" | "running" | "done"``).
+    judge_status:
+        ``(arm, criterion)`` -> ``{"status": str, "score": int | None}``.
+
+    Returns
+    -------
+    str
+        A valid ``digraph { ... }`` DOT string suitable for
+        ``st.graphviz_chart()``.
+    """
+
+    def _color(status: str) -> str:
+        return _STATUS_COLOR.get(status, _STATUS_COLOR["pending"])
+
+    def _node(node_id: str, label: str, status: str) -> str:
+        color = _color(status)
+        safe_label = label.replace('"', '\\"')
+        return f'    {node_id} [label="{safe_label}" style=filled fillcolor="{color}"]'
+
+    lines: list[str] = ["digraph {", "    rankdir=TB", "    node [shape=box]", ""]
+
+    # --- sandbox node ---
+    sandbox_status = pipeline.get("sandbox", "pending")
+    lines.append(_node("sandbox", "sandbox", sandbox_status))
+    lines.append("")
+
+    # --- taker + judge nodes, one cluster per arm ---
+    arms = ["baseline", "challenger"]
+    for arm in arms:
+        arm_id = arm  # safe as-is
+        ts = taker_state.get(arm, {})
+        taker_status = ts.get("status", "pending")
+        taker_label = f"{arm}\\n({taker_status})"
+
+        lines.append(f"    subgraph cluster_{arm_id} {{")
+        lines.append(f'        label="{arm}"')
+        lines.append('        style="rounded,filled" fillcolor="white"')
+        lines.append("")
+
+        # taker node inside cluster
+        lines.append("    " + _node(f"taker_{arm_id}", taker_label, taker_status).lstrip())
+        lines.append("")
+
+        # judge nodes inside cluster
+        for criterion in _CRITERIA_ORDER:
+            js = judge_status.get((arm, criterion), {"status": "pending", "score": None})
+            j_status = js.get("status", "pending")
+            score = js.get("score")
+            if j_status == "done" and score is not None:
+                j_label = f"{criterion}\\n{score}/20"
+            else:
+                j_label = criterion
+            judge_id = f"judge_{arm_id}_{criterion}"
+            lines.append("    " + _node(judge_id, j_label, j_status).lstrip())
+
+        lines.append("    }")
+        lines.append("")
+
+    # --- assemble node ---
+    assemble_status = pipeline.get("report", "pending")
+    lines.append(_node("assemble", "assemble", assemble_status))
+    lines.append("")
+
+    # --- edges ---
+    # sandbox -> takers
+    for arm in arms:
+        lines.append(f"    sandbox -> taker_{arm}")
+
+    lines.append("")
+
+    # takers -> judges
+    for arm in arms:
+        for criterion in _CRITERIA_ORDER:
+            lines.append(f"    taker_{arm} -> judge_{arm}_{criterion}")
+
+    lines.append("")
+
+    # judges -> assemble
+    for arm in arms:
+        for criterion in _CRITERIA_ORDER:
+            lines.append(f"    judge_{arm}_{criterion} -> assemble")
+
+    lines.append("}")
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Phoenix initialisation (best-effort)
 # ---------------------------------------------------------------------------
 
