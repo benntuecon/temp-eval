@@ -144,6 +144,14 @@ def run_taker(
             "Glob",
             "mcp__hitl__ask_question",
         ],
+        # Isolation: load NO user/project/local settings so the taker cannot
+        # access the user's global ~/.claude skills, plugins, or CLAUDE.md.
+        # The skill-under-test is already injected via system_prompt (Approach B).
+        setting_sources=[],
+        # Belt-and-suspenders: explicitly suppress every discovered skill and
+        # block the Skill tool so a global plugin cannot sneak skills back in.
+        skills=[],
+        disallowed_tools=["Skill"],
         mcp_servers={"hitl": server},
         max_turns=cfg.max_turns,
         permission_mode="bypassPermissions",
