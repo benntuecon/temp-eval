@@ -58,9 +58,13 @@ def main() -> None:
 
     # Sidebar
     with st.sidebar:
-        st.markdown("### Phase A")
-        st.info("Phase A = simulated data (no API)")
-        st.markdown("All components are deterministic Python — zero LLM cost.")
+        st.markdown("### Phase A / B")
+        use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
+        if use_real:
+            st.warning("Real API calls — costs money!")
+        else:
+            st.info("Simulated data (no API)")
+            st.markdown("All components are deterministic Python — zero LLM cost.")
 
         # Phoenix link (cached in session so we don't relaunch on every rerun)
         if "phoenix_url" not in st.session_state:
@@ -106,6 +110,10 @@ def main() -> None:
         # ------------------------------------------------------------------
         q: queue.Queue = queue.Queue()
 
+        # Capture widget value before entering the background thread — Streamlit
+        # widgets cannot be accessed from a non-Streamlit thread.
+        _use_real = use_real
+
         def _background() -> None:
             tmp = tempfile.mkdtemp()
             try:
@@ -114,13 +122,26 @@ def main() -> None:
                 def on_event(ev: dict) -> None:
                     q.put(("event", ev))
 
-                report = run_eval(
-                    cfg,
-                    taker_fn=sim_run_taker,
-                    simulator_factory=sim_make_simulator,
-                    judge_fn=sim_run_judge,
-                    on_event=on_event,
-                )
+                if _use_real:
+                    from skill_eval.judge import run_judge
+                    from skill_eval.simulator import make_simulator
+                    from skill_eval.taker import run_taker
+
+                    report = run_eval(
+                        cfg,
+                        taker_fn=run_taker,
+                        simulator_factory=make_simulator,
+                        judge_fn=run_judge,
+                        on_event=on_event,
+                    )
+                else:
+                    report = run_eval(
+                        cfg,
+                        taker_fn=sim_run_taker,
+                        simulator_factory=sim_make_simulator,
+                        judge_fn=sim_run_judge,
+                        on_event=on_event,
+                    )
                 q.put(("done", report))
             except Exception as exc:
                 q.put(("error", exc))
