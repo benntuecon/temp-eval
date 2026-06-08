@@ -128,3 +128,7 @@ def test_judge_input_constructs():
 
 def test_callable_aliases_importable():
     from skill_eval.contracts import AskFn, MakeSimulator  # noqa: F401
+
+
+def test_phase_a_aliases_importable():
+    from skill_eval.contracts import EventFn, JudgeFn, TakerFn  # noqa: F401

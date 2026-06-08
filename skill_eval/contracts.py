@@ -160,6 +160,15 @@ class ComparisonReport:
     pairwise_verdict: str  # which is better and why
 
 
+# ---------- Orchestrator injection points (Phase A walking skeleton) ----------
+
+TakerFn = Callable[[Workspace, str, str, RunConfig, AskFn], TakerResult]
+JudgeFn = Callable[[JudgeInput, str], JudgeScore]
+# Live-progress event sink. Event is a free-form dict: {"stage", "arm"?, "msg", ...}.
+Event = dict
+EventFn = Callable[[Event], None]
+
+
 # ---------- Component function signatures ----------
 # Implementations live in their own modules; these signatures are the contract.
 
