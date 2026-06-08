@@ -1,0 +1,303 @@
+"""Tests for skill_eval/taker.py — zero network calls.
+
+Pure-helper unit tests use fake ResultMessage-like objects.
+The integration test patches ``skill_eval.taker.query`` with an async
+generator that yields a fake ResultMessage so ``run_taker`` can complete
+without any real API call.
+"""
+
+from __future__ import annotations
+
+import subprocess
+from typing import Any
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from skill_eval.contracts import Arm, RunConfig, RunMetrics, StopReason, TakerResult, Workspace
+from skill_eval.taker import _compute_diff, _metrics_from_result, _stop_reason
+
+# ---------------------------------------------------------------------------
+# Fake ResultMessage (no SDK import required)
+# ---------------------------------------------------------------------------
+
+
+class _FakeResult:
+    """Minimal stand-in for claude_agent_sdk.ResultMessage."""
+
+    _SENTINEL: dict[str, Any] = {}
+
+    def __init__(
+        self,
+        num_turns: int = 3,
+        stop_reason: str | None = "end_turn",
+        usage: dict[str, Any] | None | type = _SENTINEL,
+        is_error: bool = False,
+        duration_ms: int = 1000,
+    ) -> None:
+        self.num_turns = num_turns
+        self.stop_reason = stop_reason
+        self.usage = (
+            {"input_tokens": 100, "output_tokens": 50} if usage is _FakeResult._SENTINEL else usage
+        )
+        self.is_error = is_error
+        self.duration_ms = duration_ms
+
+
+# ---------------------------------------------------------------------------
+# _metrics_from_result
+# ---------------------------------------------------------------------------
+
+
+def test_metrics_basic() -> None:
+    msg = _FakeResult(num_turns=5, usage={"input_tokens": 200, "output_tokens": 80})
+    m = _metrics_from_result(msg, num_questions=2, wall_seconds=3.5)  # type: ignore[arg-type]
+    assert m.input_tokens == 200
+    assert m.output_tokens == 80
+    assert m.total_tokens == 280
+    assert m.num_turns == 5
+    assert m.num_questions == 2
+    assert m.wall_seconds == pytest.approx(3.5)
+
+
+def test_metrics_missing_usage() -> None:
+    msg = _FakeResult(usage=None)
+    m = _metrics_from_result(msg, num_questions=0, wall_seconds=1.0)  # type: ignore[arg-type]
+    assert m.input_tokens == 0
+    assert m.output_tokens == 0
+    assert m.total_tokens == 0
+
+
+def test_metrics_partial_usage() -> None:
+    msg = _FakeResult(usage={"input_tokens": 50})  # output_tokens missing
+    m = _metrics_from_result(msg, num_questions=0, wall_seconds=0.5)  # type: ignore[arg-type]
+    assert m.input_tokens == 50
+    assert m.output_tokens == 0
+    assert m.total_tokens == 50
+
+
+# ---------------------------------------------------------------------------
+# _stop_reason
+# ---------------------------------------------------------------------------
+
+
+def test_stop_reason_timeout() -> None:
+    assert _stop_reason(_FakeResult(2, "end_turn"), True, 30) is StopReason.WALL_CLOCK  # type: ignore[arg-type]
+
+
+def test_stop_reason_max_turns() -> None:
+    assert _stop_reason(_FakeResult(30, None), False, 30) is StopReason.MAX_TURNS  # type: ignore[arg-type]
+
+
+def test_stop_reason_completed() -> None:
+    assert _stop_reason(_FakeResult(3, "end_turn"), False, 30) is StopReason.COMPLETED  # type: ignore[arg-type]
+
+
+def test_stop_reason_timeout_overrides_end_turn() -> None:
+    """WALL_CLOCK takes priority even if stop_reason happens to be 'end_turn'."""
+    assert _stop_reason(_FakeResult(3, "end_turn"), True, 30) is StopReason.WALL_CLOCK  # type: ignore[arg-type]
+
+
+def test_stop_reason_max_turns_exact() -> None:
+    """Exactly at max_turns threshold → MAX_TURNS."""
+    assert _stop_reason(_FakeResult(10, "end_turn"), False, 10) is StopReason.MAX_TURNS  # type: ignore[arg-type]
+
+
+def test_stop_reason_completed_below_max() -> None:
+    """Below max_turns with end_turn → COMPLETED."""
+    assert _stop_reason(_FakeResult(9, "end_turn"), False, 10) is StopReason.COMPLETED  # type: ignore[arg-type]
+
+
+# ---------------------------------------------------------------------------
+# _compute_diff
+# ---------------------------------------------------------------------------
+
+
+def _init_git_repo(path: str) -> None:
+    """Create a minimal git repo with an initial commit."""
+    subprocess.run(["git", "init", "-b", "main"], cwd=path, capture_output=True, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "test@test.com"], cwd=path, capture_output=True, check=True
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Test"], cwd=path, capture_output=True, check=True
+    )
+    # Initial commit so HEAD exists
+    (pytest.importorskip("pathlib").Path(path) / "README.md").write_text("init\n")
+    subprocess.run(["git", "add", "-A"], cwd=path, capture_output=True, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=path, capture_output=True, check=True)
+
+
+def test_compute_diff_captures_new_file(tmp_path) -> None:
+    _init_git_repo(str(tmp_path))
+    (tmp_path / "solution.py").write_text("def solve():\n    pass\n")
+    diff = _compute_diff(str(tmp_path))
+    assert "solution.py" in diff
+    assert "+def solve" in diff
+
+
+def test_compute_diff_captures_modification(tmp_path) -> None:
+    _init_git_repo(str(tmp_path))
+    readme = tmp_path / "README.md"
+    readme.write_text("updated content\n")
+    diff = _compute_diff(str(tmp_path))
+    assert "README.md" in diff
+
+
+def test_compute_diff_empty_for_no_changes(tmp_path) -> None:
+    _init_git_repo(str(tmp_path))
+    # No changes after init → diff should be empty
+    diff = _compute_diff(str(tmp_path))
+    assert diff == ""
+
+
+def test_compute_diff_non_git_dir(tmp_path) -> None:
+    """Non-git directory should return empty string without raising."""
+    diff = _compute_diff(str(tmp_path))
+    assert diff == ""
+
+
+# ---------------------------------------------------------------------------
+# Integration test: run_taker with patched query
+# ---------------------------------------------------------------------------
+
+
+def _make_workspace(tmp_path) -> Workspace:
+    """Create a temp git repo and return a Workspace pointing at it."""
+    _init_git_repo(str(tmp_path))
+    return Workspace(
+        arm=Arm.CHALLENGER,
+        taker_dir=str(tmp_path),
+        after_dir=str(tmp_path),
+        gold_diff="+def add(a, b):\n+    return a + b\n",
+    )
+
+
+def _make_cfg() -> RunConfig:
+    return RunConfig(
+        before_hash="abc123",
+        after_hash="def456",
+        repo_path="/fake/repo",
+        task_brief="Fix the add function to return a + b.",
+        baseline_skill_path="/fake/baseline",
+        challenger_skill_path="/fake/challenger",
+        models=("claude-haiku-4-5",),
+        max_turns=30,
+        wall_clock_seconds=None,
+    )
+
+
+async def _fake_query_gen(*, prompt: str, options: Any):
+    """Async generator that yields one fake ResultMessage."""
+    from claude_agent_sdk import ResultMessage
+
+    # Yield a real ResultMessage so run_taker gets correct type-checking.
+    fake = MagicMock(spec=ResultMessage)
+    fake.num_turns = 3
+    fake.stop_reason = "end_turn"
+    fake.is_error = False
+    fake.usage = {"input_tokens": 120, "output_tokens": 60}
+    fake.duration_ms = 2000
+    # Make isinstance checks work
+    fake.__class__ = ResultMessage
+    yield fake
+
+
+def test_run_taker_mocked(tmp_path) -> None:
+    """run_taker returns a populated TakerResult with patched query."""
+    ws = _make_workspace(tmp_path)
+    cfg = _make_cfg()
+
+    # Write a tiny file so the diff is non-empty
+    (tmp_path / "solution.py").write_text("def add(a, b):\n    return a + b\n")
+
+    ask_calls: list[str] = []
+
+    def _ask(question: str) -> str:
+        ask_calls.append(question)
+        return "Use PostgreSQL."
+
+    with patch("skill_eval.taker.query", side_effect=_fake_query_gen):
+        from skill_eval.taker import run_taker
+
+        result = run_taker(ws, "claude-haiku-4-5", "/fake/skill", cfg, _ask)
+
+    assert isinstance(result, TakerResult)
+    assert result.arm is Arm.CHALLENGER
+    assert result.model == "claude-haiku-4-5"
+    # Diff should contain the new file
+    assert "solution.py" in result.diff
+    # stop_reason populated
+    assert result.stop_reason in StopReason.__members__.values()
+    # metrics populated from the fake ResultMessage
+    assert isinstance(result.metrics, RunMetrics)
+    assert result.metrics.input_tokens == 120
+    assert result.metrics.output_tokens == 60
+    assert result.metrics.total_tokens == 180
+    assert result.metrics.num_turns == 3
+    # transcript is a tuple (possibly empty if ResultMessage consumed exclusively)
+    assert isinstance(result.transcript, tuple)
+    assert isinstance(result.questions, tuple)
+
+
+def test_run_taker_with_skill_md(tmp_path) -> None:
+    """SKILL.md is injected into the system_prompt (Approach B)."""
+    ws = _make_workspace(tmp_path)
+    cfg = _make_cfg()
+
+    # Create a skill directory with a SKILL.md
+    skill_dir = tmp_path / "myskill"
+    skill_dir.mkdir()
+    (skill_dir / "SKILL.md").write_text("## My Skill\nAlways write clean code.\n")
+
+    captured_options: list[Any] = []
+
+    async def _recording_gen(*, prompt: str, options: Any):
+        captured_options.append(options)
+        from claude_agent_sdk import ResultMessage
+
+        fake = MagicMock(spec=ResultMessage)
+        fake.num_turns = 1
+        fake.stop_reason = "end_turn"
+        fake.is_error = False
+        fake.usage = {"input_tokens": 10, "output_tokens": 5}
+        fake.duration_ms = 500
+        fake.__class__ = ResultMessage
+        yield fake
+
+    with patch("skill_eval.taker.query", side_effect=_recording_gen):
+        from skill_eval.taker import run_taker
+
+        run_taker(ws, "claude-haiku-4-5", str(skill_dir), cfg, lambda q: "yes")
+
+    assert captured_options, "options should have been captured"
+    opts = captured_options[0]
+    assert "My Skill" in (opts.system_prompt or "")
+    assert "Always write clean code" in (opts.system_prompt or "")
+
+
+def test_run_taker_missing_skill_md(tmp_path) -> None:
+    """Missing SKILL.md should not raise — system_prompt uses empty skill."""
+    ws = _make_workspace(tmp_path)
+    cfg = _make_cfg()
+
+    async def _gen(*, prompt: str, options: Any):
+        from claude_agent_sdk import ResultMessage
+
+        fake = MagicMock(spec=ResultMessage)
+        fake.num_turns = 1
+        fake.stop_reason = "end_turn"
+        fake.is_error = False
+        fake.usage = {"input_tokens": 5, "output_tokens": 2}
+        fake.duration_ms = 200
+        fake.__class__ = ResultMessage
+        yield fake
+
+    with patch("skill_eval.taker.query", side_effect=_gen):
+        from skill_eval.taker import run_taker
+
+        result = run_taker(
+            ws, "claude-haiku-4-5", str(tmp_path / "nonexistent"), cfg, lambda q: "x"
+        )
+
+    assert isinstance(result, TakerResult)
