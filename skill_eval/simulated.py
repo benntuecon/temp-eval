@@ -2,9 +2,12 @@
 
 These make no API calls. They exercise the real workflow shape so the orchestrator,
 sandbox, and live UI all behave as they will in Phase B — just without LLM cost.
+
+Scoring is deterministic via sha256 of (task_brief, arm, criterion) so different
+tasks and criteria yield different scores, with a small challenger bias on average.
 """
 
-import time
+import hashlib
 from pathlib import Path
 
 from skill_eval import git_ops
@@ -21,15 +24,25 @@ from skill_eval.contracts import (
 )
 
 # ---------------------------------------------------------------------------
+# Deterministic hash helper
+# ---------------------------------------------------------------------------
+
+
+def _stable_hash_int(text: str) -> int:
+    """Return a stable integer hash of *text* using sha256 (not Python's hash())."""
+    return int(hashlib.sha256(text.encode()).hexdigest(), 16)
+
+
+# ---------------------------------------------------------------------------
 # Simulator (Component 3 stand-in)
 # ---------------------------------------------------------------------------
 
 _CANNED_ANSWERS = [
-    "Yes, the function should return the sum of the two arguments.",
-    "Correct — return `a + b` instead of `a - b`.",
-    "The fix is straightforward: change the subtraction to addition.",
-    "You are on the right track. The expected output for add(2, 3) is 5.",
-    "The test expects add(2, 3) == 5, so return a + b.",
+    "Yes, the function should return the correct result as described in the task.",
+    "Correct — the implementation has the bug described; fix it as specified.",
+    "The fix is straightforward: apply the change described in the task brief.",
+    "You are on the right track. The expected behaviour matches the task brief.",
+    "The test asserts the correct value; implement the function accordingly.",
 ]
 
 
@@ -52,9 +65,10 @@ def sim_make_simulator(after_dir: str, task_brief: str, model: str) -> AskFn:
 # ---------------------------------------------------------------------------
 
 _CLARIFYING_QUESTIONS = [
-    "Should the function return the sum of the two arguments?",
-    "Is the fix as simple as changing `a - b` to `a + b`?",
-    "Does the test suite already cover the add function?",
+    "Can you confirm the expected return value for the function under test?",
+    "Is there a specific edge case I should handle beyond the failing test?",
+    "Should I preserve the existing function signature exactly?",
+    "Are there any performance constraints I should be aware of?",
 ]
 
 
@@ -65,62 +79,71 @@ def sim_run_taker(
     cfg: RunConfig,
     ask_fn: AskFn,
 ) -> TakerResult:
-    """Simulate a taker: ask a clarifying question, write a fix, return result."""
-    # Determine if this is the challenger arm for slightly better output
+    """Simulate a taker: ask clarifying questions, write a marker, return result."""
     is_challenger = ws.arm is Arm.CHALLENGER
 
-    # Ask at least one clarifying question (the contract requires num_questions >= 1)
+    # Derive a task-specific seed from the brief so per-case metrics differ
+    task_seed = _stable_hash_int(cfg.task_brief)
+
+    # Number of questions: challenger asks 2-4, baseline asks 1-2 (task-dependent)
+    if is_challenger:
+        num_q = 2 + (task_seed % 3)  # 2, 3, or 4
+    else:
+        num_q = 1 + (task_seed % 2)  # 1 or 2
+
     questions_asked: list[str] = []
-    num_q = 2 if is_challenger else 1
     for i in range(num_q):
         q = _CLARIFYING_QUESTIONS[i % len(_CLARIFYING_QUESTIONS)]
         ask_fn(q)
         questions_asked.append(q)
 
-    # Simulate thinking time
-    time.sleep(0.05)
-
-    # Write a partial/full fix into the taker worktree
-    calc_path = Path(ws.taker_dir) / "calculator.py"
-    if is_challenger:
-        # Challenger produces the correct fix
-        calc_path.write_text("def add(a, b):\n    return a + b\n")
+    # Write a small marker change into the worktree so diff is non-empty.
+    # Find the first .py file (excluding test files) and append a comment,
+    # or fall back to writing a SOLUTION_NOTES.md.
+    taker_path = Path(ws.taker_dir)
+    py_files = sorted(f for f in taker_path.glob("*.py") if not f.name.startswith("test_"))
+    if py_files:
+        target = py_files[0]
+        arm_label = ws.arm.value
+        brief_snippet = cfg.task_brief[:40].replace("\n", " ")
+        target.write_text(
+            target.read_text() + f"\n# [simulated {arm_label}] {brief_snippet}\n"
+        )
     else:
-        # Baseline produces a partial fix (comment removed, still correct but minimal)
-        calc_path.write_text("def add(a, b):\n    return a + b  # fixed\n")
+        (taker_path / "SOLUTION_NOTES.md").write_text(
+            f"# Solution Notes\n\nArm: {ws.arm.value}\nTask: {cfg.task_brief[:80]}\n"
+        )
 
     # Compute actual git diff of what the taker changed
     try:
         diff = git_ops.diff_workdir(ws.taker_dir)
     except Exception:  # noqa: BLE001
-        diff = "+ return a + b"
+        diff = f"+ # [simulated {ws.arm.value}]"
 
-    # Build fabricated-but-sensible metrics
-    # Challenger uses slightly more tokens/turns (more thorough)
-    if is_challenger:
-        metrics = RunMetrics(
-            total_tokens=320,
-            input_tokens=180,
-            output_tokens=140,
-            wall_seconds=0.35,
-            num_turns=4,
-            num_questions=len(questions_asked),
-        )
-    else:
-        metrics = RunMetrics(
-            total_tokens=210,
-            input_tokens=130,
-            output_tokens=80,
-            wall_seconds=0.25,
-            num_turns=3,
-            num_questions=len(questions_asked),
-        )
+    # Seed metrics deterministically from task + arm so per-case values differ.
+    # Use the lower bits of the hash for token/turn ranges.
+    arm_offset = 100 if is_challenger else 0
+    base_tokens = 200 + (task_seed % 200) + arm_offset  # 200-499
+    input_frac = 55 + (task_seed % 20)  # 55-74% of total are input tokens
+    input_tokens = base_tokens * input_frac // 100
+    output_tokens = base_tokens - input_tokens
+    num_turns = 3 + (task_seed % 4) + (1 if is_challenger else 0)  # 3-7 turns
+    wall_secs = 0.1 + (task_seed % 50) / 100.0 + (0.05 if is_challenger else 0.0)
+
+    metrics = RunMetrics(
+        total_tokens=base_tokens,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+        wall_seconds=round(wall_secs, 3),
+        num_turns=num_turns,
+        num_questions=len(questions_asked),
+    )
 
     transcript: tuple[dict, ...] = (
         {"role": "user", "content": cfg.task_brief},
         {
             "role": "assistant",
-            "content": f"I'll fix the add function. Questions: {len(questions_asked)}",
+            "content": f"I'll implement the fix. Questions asked: {len(questions_asked)}",
         },
     )
 
@@ -139,41 +162,38 @@ def sim_run_taker(
 # Judge (Component 5 stand-in)
 # ---------------------------------------------------------------------------
 
-# Base scores per criterion for a "correct" diff (contains `a + b`)
-_BASE_SCORES: dict[str, int] = {
-    "correctness": 17,
-    "completeness": 15,
-    "distance_to_gold": 16,
-    "code_quality": 14,
-    "question_quality": 13,
-    "approach": 14,
-}
+# The score for each (task_brief, arm, criterion) is:
+#   base = 8 + hash(...) % 12          → band [8, 19]
+#   challenger_boost = 1 + hash2 % 3   → +1, +2, or +3 on average
+#   but we only apply boost ~70% of the time (hash3 % 10 >= 3)
+#   final = clamp(base + boost_if_applied, 0, 20)
+#
+# This gives challenger a ~+1.4 average advantage while ensuring baseline
+# wins a meaningful number of per-(case, criterion) comparisons.
 
-# Bonus for challenger arm
-_CHALLENGER_BONUS = 2
-
-# Penalty when the diff does NOT contain the fix
-_NO_FIX_PENALTY = 8
+_BOOST_APPLY_THRESHOLD = 3  # hash % 10 >= this → apply boost (7 out of 10 times)
 
 
 def sim_run_judge(ji: JudgeInput, model: str) -> JudgeScore:
-    """Return a deterministic 0-20 score for one criterion."""
+    """Return a deterministic 0-20 score for one criterion using sha256-based hash."""
     criterion_key = ji.criterion.value
-    has_fix = "a + b" in ji.taker.diff
-    is_challenger = ji.taker.arm is Arm.CHALLENGER
+    arm_value = ji.taker.arm.value
+    brief = ji.task_brief
 
-    base = _BASE_SCORES.get(criterion_key, 12)
-    score = base
-    if not has_fix:
-        score = max(0, score - _NO_FIX_PENALTY)
-    if is_challenger:
-        score = min(20, score + _CHALLENGER_BONUS)
+    # Primary hash: base score in [8, 19]
+    h1 = _stable_hash_int(f"{brief}|{arm_value}|{criterion_key}|base")
+    base = 8 + (h1 % 12)
 
-    rationale = (
-        f"[simulated] {criterion_key}: "
-        + ("fix present" if has_fix else "fix absent")
-        + f", arm={ji.taker.arm.value}"
-        + f", score={score}/20"
-    )
+    # Challenger boost
+    if ji.taker.arm is Arm.CHALLENGER:
+        h2 = _stable_hash_int(f"{brief}|{criterion_key}|boost_magnitude")
+        boost_magnitude = 1 + (h2 % 3)  # 1, 2, or 3
+        h3 = _stable_hash_int(f"{brief}|{criterion_key}|boost_apply")
+        apply_boost = (h3 % 10) >= _BOOST_APPLY_THRESHOLD
+        score = min(20, base + (boost_magnitude if apply_boost else 0))
+    else:
+        score = base
+
+    rationale = f"[simulated] {criterion_key}: arm={arm_value}, score={score}/20"
 
     return JudgeScore(criterion=ji.criterion, score=score, rationale=rationale)
