@@ -12,13 +12,13 @@ injected ``ask_fn`` closure and increments a shared question counter.
 from __future__ import annotations
 
 import asyncio
-import subprocess
 import time
 from pathlib import Path
 from typing import Any
 
 from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, create_sdk_mcp_server, query, tool
 
+from skill_eval import git_ops
 from skill_eval.contracts import AskFn, RunConfig, RunMetrics, StopReason, TakerResult, Workspace
 
 # ---------------------------------------------------------------------------
@@ -66,18 +66,8 @@ def _compute_diff(taker_dir: str) -> str:
     git repository.
     """
     try:
-        subprocess.run(
-            ["git", "-C", taker_dir, "add", "-A"],
-            capture_output=True,
-            check=False,
-        )
-        result = subprocess.run(
-            ["git", "-C", taker_dir, "diff", "--cached", "HEAD"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.stdout
+        git_ops.add_all(taker_dir)
+        return git_ops.diff_cached(taker_dir)
     except Exception:  # noqa: BLE001
         return ""
 

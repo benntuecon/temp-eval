@@ -4,10 +4,10 @@ These make no API calls. They exercise the real workflow shape so the orchestrat
 sandbox, and live UI all behave as they will in Phase B — just without LLM cost.
 """
 
-import subprocess
 import time
 from pathlib import Path
 
+from skill_eval import git_ops
 from skill_eval.contracts import (
     Arm,
     AskFn,
@@ -91,13 +91,8 @@ def sim_run_taker(
 
     # Compute actual git diff of what the taker changed
     try:
-        result = subprocess.run(
-            ["git", "-C", ws.taker_dir, "diff"],
-            capture_output=True,
-            text=True,
-        )
-        diff = result.stdout
-    except Exception:
+        diff = git_ops.diff_workdir(ws.taker_dir)
+    except Exception:  # noqa: BLE001
         diff = "+ return a + b"
 
     # Build fabricated-but-sensible metrics
