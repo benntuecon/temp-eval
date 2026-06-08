@@ -1,17 +1,21 @@
 """C6 LangGraph orchestrator for skill-eval.
 
 Wires sandbox → takers (concurrent) → judges (concurrent) → report
-as a LangGraph StateGraph. Concrete components are injected so Phase A
-uses the simulated stand-ins and Phase B swaps in real LLM-backed ones
-without changing this file.
+as a LangGraph StateGraph using the Send API for real per-agent fan-out.
+Each taker and each judge is an independently-visible LangGraph node.
+
+Concrete components are injected so Phase A uses the simulated stand-ins
+and Phase B swaps in real LLM-backed ones without changing this file.
 """
 
 from __future__ import annotations
 
 import asyncio
-from typing import Any, TypedDict
+import operator
+from typing import Annotated, Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
+from langgraph.types import Send
 
 from skill_eval.contracts import (
     Arm,
@@ -31,7 +35,7 @@ from skill_eval.contracts import (
 from skill_eval.sandbox import cleanup_workspaces, prepare_workspaces
 
 # ---------------------------------------------------------------------------
-# LangGraph state
+# LangGraph state  (reducer channels so parallel nodes can append safely)
 # ---------------------------------------------------------------------------
 
 
@@ -44,8 +48,9 @@ class _EvalState(TypedDict, total=False):
     on_event: EventFn | None
     # inter-node data
     spaces: dict[Arm, Workspace]
-    taker_results: dict[Arm, TakerResult]
-    scores: dict[Arm, list[JudgeScore]]
+    # reducer channels: parallel nodes append their results
+    taker_results: Annotated[list[tuple[Arm, TakerResult]], operator.add]
+    scores: Annotated[list[tuple[Arm, JudgeScore]], operator.add]
     # final output
     report: ComparisonReport
 
@@ -69,111 +74,179 @@ def _node_prepare(state: _EvalState) -> dict[str, Any]:
     """Emit sandbox stage events; workspaces are already created by run_eval."""
     on_event = state.get("on_event")
     spaces: dict[Arm, Workspace] = state["spaces"]
-    _emit(on_event, {"stage": "sandbox", "msg": "preparing workspaces"})
     _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
     return {}
 
 
 # ---------------------------------------------------------------------------
-# Node: run takers concurrently
+# Fan-out: one Send("taker", ...) per arm
 # ---------------------------------------------------------------------------
 
 
-def _node_takers(state: _EvalState) -> dict[str, Any]:
+def _fan_out_takers(state: _EvalState) -> list[Send]:
     cfg = state["cfg"]
     spaces: dict[Arm, Workspace] = state["spaces"]
-    taker_fn: TakerFn = state["taker_fn"]
-    simulator_factory: MakeSimulator = state["simulator_factory"]
-    on_event = state.get("on_event")
     model = cfg.models[0]
-
-    async def _run_all() -> dict[Arm, TakerResult]:
-        async def _run_one(arm: Arm, ws: Workspace) -> tuple[Arm, TakerResult]:
-            skill_path = (
-                cfg.challenger_skill_path if arm is Arm.CHALLENGER else cfg.baseline_skill_path
-            )
-            ask_fn = simulator_factory(ws.after_dir, cfg.task_brief, model)
-            _emit(on_event, {"stage": "taker", "arm": arm.value, "msg": "starting"})
-            result: TakerResult = await asyncio.to_thread(
-                taker_fn, ws, model, skill_path, cfg, ask_fn
-            )
-            _emit(
-                on_event,
+    sends: list[Send] = []
+    for arm, ws in spaces.items():
+        sends.append(
+            Send(
+                "taker",
                 {
-                    "stage": "taker",
-                    "arm": arm.value,
-                    "msg": "done",
-                    "stop_reason": result.stop_reason.value,
+                    "arm": arm,
+                    "ws": ws,
+                    "cfg": cfg,
+                    "model": model,
+                    "taker_fn": state["taker_fn"],
+                    "simulator_factory": state["simulator_factory"],
+                    "on_event": state.get("on_event"),
                 },
             )
-            return arm, result
-
-        pairs = await asyncio.gather(*[_run_one(arm, ws) for arm, ws in spaces.items()])
-        return dict(pairs)
-
-    taker_results = asyncio.run(_run_all())
-    return {"taker_results": taker_results}
+        )
+    return sends
 
 
 # ---------------------------------------------------------------------------
-# Node: run judges concurrently (arm × Criterion)
+# Node: taker  (async — runs concurrently via ainvoke)
 # ---------------------------------------------------------------------------
 
 
-def _node_judges(state: _EvalState) -> dict[str, Any]:
+async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
+    arm: Arm = payload["arm"]
+    ws: Workspace = payload["ws"]
+    cfg: RunConfig = payload["cfg"]
+    model: str = payload["model"]
+    taker_fn: TakerFn = payload["taker_fn"]
+    simulator_factory: MakeSimulator = payload["simulator_factory"]
+    on_event: EventFn | None = payload.get("on_event")
+
+    skill_path = cfg.challenger_skill_path if arm is Arm.CHALLENGER else cfg.baseline_skill_path
+    ask_fn = simulator_factory(ws.after_dir, cfg.task_brief, model)
+
+    _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
+
+    result: TakerResult = await asyncio.to_thread(taker_fn, ws, model, skill_path, cfg, ask_fn)
+
+    _emit(
+        on_event,
+        {
+            "stage": "taker",
+            "arm": arm.value,
+            "status": "done",
+            "stop_reason": result.stop_reason.value,
+            "num_questions": result.metrics.num_questions,
+        },
+    )
+
+    return {"taker_results": [(arm, result)]}
+
+
+# ---------------------------------------------------------------------------
+# Node: judges_dispatch  (join after all takers complete)
+# ---------------------------------------------------------------------------
+
+
+def _node_judges_dispatch(state: _EvalState) -> dict[str, Any]:
+    on_event = state.get("on_event")
+    _emit(on_event, {"stage": "takers_done", "count": len(state["taker_results"])})
+    return {}
+
+
+# ---------------------------------------------------------------------------
+# Fan-out: one Send("judge", ...) per arm × Criterion
+# ---------------------------------------------------------------------------
+
+
+def _fan_out_judges(state: _EvalState) -> list[Send]:
     cfg = state["cfg"]
     spaces: dict[Arm, Workspace] = state["spaces"]
-    taker_results: dict[Arm, TakerResult] = state["taker_results"]
-    judge_fn: JudgeFn = state["judge_fn"]
-    on_event = state.get("on_event")
+    taker_map: dict[Arm, TakerResult] = dict(state["taker_results"])
     model = cfg.models[0]
-
-    async def _run_all() -> dict[Arm, list[JudgeScore]]:
-        async def _run_one(arm: Arm, criterion: Criterion) -> tuple[Arm, JudgeScore]:
-            ws = spaces[arm]
-            taker = taker_results[arm]
-            ji = JudgeInput(
-                criterion=criterion,
-                task_brief=cfg.task_brief,
-                gold_diff=ws.gold_diff,
-                after_dir=ws.after_dir,
-                taker=taker,
+    sends: list[Send] = []
+    for arm, ws in spaces.items():
+        taker = taker_map[arm]
+        for criterion in Criterion:
+            sends.append(
+                Send(
+                    "judge",
+                    {
+                        "arm": arm,
+                        "criterion": criterion,
+                        "cfg": cfg,
+                        "model": model,
+                        "ws": ws,
+                        "taker": taker,
+                        "judge_fn": state["judge_fn"],
+                        "on_event": state.get("on_event"),
+                    },
+                )
             )
-            _emit(
-                on_event,
-                {"stage": "judge", "arm": arm.value, "criterion": criterion.value},
-            )
-            score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
-            return arm, score
-
-        # fan-out over all (arm × criterion) pairs
-        tasks = [_run_one(arm, criterion) for arm in spaces for criterion in Criterion]
-        results = await asyncio.gather(*tasks)
-
-        # group by arm
-        grouped: dict[Arm, list[JudgeScore]] = {arm: [] for arm in spaces}
-        for arm, score in results:
-            grouped[arm].append(score)
-        return grouped
-
-    scores = asyncio.run(_run_all())
-    return {"scores": scores}
+    return sends
 
 
 # ---------------------------------------------------------------------------
-# Node: assemble report
+# Node: judge  (async — runs concurrently via ainvoke)
+# ---------------------------------------------------------------------------
+
+
+async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
+    arm: Arm = payload["arm"]
+    criterion: Criterion = payload["criterion"]
+    cfg: RunConfig = payload["cfg"]
+    model: str = payload["model"]
+    ws: Workspace = payload["ws"]
+    taker: TakerResult = payload["taker"]
+    judge_fn: JudgeFn = payload["judge_fn"]
+    on_event: EventFn | None = payload.get("on_event")
+
+    ji = JudgeInput(
+        criterion=criterion,
+        task_brief=cfg.task_brief,
+        gold_diff=ws.gold_diff,
+        after_dir=ws.after_dir,
+        taker=taker,
+    )
+
+    _emit(
+        on_event,
+        {"stage": "judge", "arm": arm.value, "criterion": criterion.value, "status": "running"},
+    )
+
+    score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
+
+    _emit(
+        on_event,
+        {
+            "stage": "judge",
+            "arm": arm.value,
+            "criterion": criterion.value,
+            "status": "done",
+            "score": score.score,
+        },
+    )
+
+    return {"scores": [(arm, score)]}
+
+
+# ---------------------------------------------------------------------------
+# Node: assemble report  (join after all judges complete)
 # ---------------------------------------------------------------------------
 
 
 def _node_assemble(state: _EvalState) -> dict[str, Any]:
     cfg = state["cfg"]
-    taker_results: dict[Arm, TakerResult] = state["taker_results"]
-    scores: dict[Arm, list[JudgeScore]] = state["scores"]
     on_event = state.get("on_event")
 
+    taker_map: dict[Arm, TakerResult] = dict(state["taker_results"])
+
+    # Group scores by arm
+    scores_by_arm: dict[Arm, list[JudgeScore]] = {}
+    for arm, score in state["scores"]:
+        scores_by_arm.setdefault(arm, []).append(score)
+
     arm_reports: list[ArmReport] = []
-    for arm, arm_scores in scores.items():
-        taker = taker_results[arm]
+    for arm, arm_scores in scores_by_arm.items():
+        taker = taker_map[arm]
         total = sum(s.score for s in arm_scores)
         arm_reports.append(
             ArmReport(
@@ -216,14 +289,18 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
 def _build_graph() -> Any:
     g: StateGraph = StateGraph(_EvalState)
     g.add_node("prepare", _node_prepare)
-    g.add_node("takers", _node_takers)
-    g.add_node("judges", _node_judges)
+    g.add_node("taker", _node_taker)  # type: ignore[arg-type]
+    g.add_node("judges_dispatch", _node_judges_dispatch)
+    g.add_node("judge", _node_judge)  # type: ignore[arg-type]
     g.add_node("assemble", _node_assemble)
+
     g.add_edge(START, "prepare")
-    g.add_edge("prepare", "takers")
-    g.add_edge("takers", "judges")
-    g.add_edge("judges", "assemble")
+    g.add_conditional_edges("prepare", _fan_out_takers, ["taker"])
+    g.add_edge("taker", "judges_dispatch")
+    g.add_conditional_edges("judges_dispatch", _fan_out_judges, ["judge"])
+    g.add_edge("judge", "assemble")
     g.add_edge("assemble", END)
+
     return g.compile()
 
 
@@ -302,8 +379,10 @@ def run_eval(
             "judge_fn": judge_fn,
             "on_event": on_event,
             "spaces": spaces,
+            "taker_results": [],
+            "scores": [],
         }
-        final_state: _EvalState = _GRAPH.invoke(initial_state)
+        final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
         report: ComparisonReport = final_state["report"]
     finally:
         cleanup_workspaces(spaces)

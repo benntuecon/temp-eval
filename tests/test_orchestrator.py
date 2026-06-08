@@ -25,3 +25,41 @@ def test_run_eval_simulated_end_to_end(tmp_path):
     # events captured the workflow stages
     stages = {e.get("stage") for e in events}
     assert {"sandbox", "taker", "judge", "report"} <= stages
+
+
+def test_reducer_counts(tmp_path):
+    """Send-based fan-out must produce exactly 2 taker_results and 12 score entries."""
+    cfg = build_sample_repo(str(tmp_path / "repo"))
+    from skill_eval.orchestrator import _GRAPH
+    from skill_eval.sandbox import cleanup_workspaces, prepare_workspaces
+
+    spaces = prepare_workspaces(cfg)
+    try:
+        import asyncio
+
+        initial_state = {
+            "cfg": cfg,
+            "taker_fn": sim_run_taker,
+            "simulator_factory": sim_make_simulator,
+            "judge_fn": sim_run_judge,
+            "on_event": None,
+            "spaces": spaces,
+            "taker_results": [],
+            "scores": [],
+        }
+        final_state = asyncio.run(_GRAPH.ainvoke(initial_state))
+    finally:
+        cleanup_workspaces(spaces)
+
+    # 2 arms × 1 taker each
+    assert len(final_state["taker_results"]) == 2
+    taker_arms = {arm for arm, _ in final_state["taker_results"]}
+    assert taker_arms == {Arm.BASELINE, Arm.CHALLENGER}
+
+    # 2 arms × 6 criteria = 12 score entries
+    assert len(final_state["scores"]) == 12
+    score_arm_criterion_pairs = {
+        (arm.value, score.criterion.value) for arm, score in final_state["scores"]
+    }
+    expected_pairs = {(arm.value, c.value) for arm in Arm for c in Criterion}
+    assert score_arm_criterion_pairs == expected_pairs
