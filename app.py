@@ -415,7 +415,7 @@ def _run_single_case(
         # Grouped bar chart via scores_table -> DataFrame
         rows = scores_table(report)
         df = pd.DataFrame(rows).set_index("criterion")
-        st.bar_chart(df, use_container_width=True)
+        st.bar_chart(df, use_container_width=True, stack=False)
 
         # Objective metrics table
         st.subheader("Objective metrics")
@@ -576,13 +576,13 @@ def _run_batch_mode(
     st.subheader("Per-case total scores")
     per_case = batch_per_case_totals(reports)
     df_cases = pd.DataFrame(per_case).set_index("case")
-    st.bar_chart(df_cases[["baseline", "challenger"]], use_container_width=True)
+    st.bar_chart(df_cases[["baseline", "challenger"]], use_container_width=True, stack=False)
 
     # 3. Per-criterion averages bar chart
     st.subheader("Per-criterion averages")
     per_crit = batch_per_criterion_avg(reports)
     df_crit = pd.DataFrame(per_crit).set_index("criterion")
-    st.bar_chart(df_crit[["baseline", "challenger"]], use_container_width=True)
+    st.bar_chart(df_crit[["baseline", "challenger"]], use_container_width=True, stack=False)
 
     # 4. Detailed per-case table
     st.subheader("Per-case detail")
