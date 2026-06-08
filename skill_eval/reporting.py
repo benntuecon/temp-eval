@@ -64,29 +64,17 @@ def verdict_line(report: ComparisonReport) -> str:
 
 
 def init_phoenix() -> str | None:
-    """Launch / register Phoenix tracing and instrument LangChain.
+    """Launch / register Phoenix tracing and auto-instrument all supported SDKs.
 
     Returns the Phoenix UI URL string, or ``None`` if Phoenix is unavailable.
     This function is fully wrapped in try/except and will *never* raise.
     """
     try:
         import phoenix as px  # type: ignore[import-untyped]
+        from phoenix.otel import register  # type: ignore[import-untyped]
 
         session = px.launch_app()
-        # session.url may be None when Phoenix starts without a port; fall back
-        # to str() which returns a usable representation regardless.
-        raw_url = getattr(session, "url", None)
-        url: str = raw_url if isinstance(raw_url, str) else str(session)
+        register(project_name="skill-eval", auto_instrument=True)
+        return getattr(session, "url", None) or str(session)
     except Exception:
         return None
-
-    try:
-        from openinference.instrumentation.langchain import (  # type: ignore[import-untyped]
-            LangChainInstrumentor,
-        )
-
-        LangChainInstrumentor().instrument()
-    except Exception:
-        pass  # Phoenix is available but LangChain instrumentation failed — non-fatal
-
-    return url
