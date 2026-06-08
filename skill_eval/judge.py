@@ -10,8 +10,10 @@ import json
 import re
 
 import anthropic
+from opentelemetry import trace
 
 from skill_eval.contracts import JudgeInput, JudgeScore
+from skill_eval.tracing import set_input, set_kind, set_output, set_tokens
 
 # ---------------------------------------------------------------------------
 # Anchored rubric text (shared across criteria, specialised per criterion)
@@ -127,6 +129,11 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
     client = anthropic.Anthropic()
     prompt = _build_prompt(ji)
 
+    # Enrich the current judge span (set by orchestrator via start_as_current_span)
+    judge_span = trace.get_current_span()
+    set_kind(judge_span, "LLM")
+    set_input(judge_span, prompt)
+
     response = client.messages.create(
         model=model,
         max_tokens=300,
@@ -135,4 +142,13 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
 
     raw_text = "".join(block.text for block in response.content if hasattr(block, "text"))
     score, rationale = _parse_response(raw_text)
+
+    # Enrich with output and token counts
+    set_output(judge_span, f"score={score} | {rationale}")
+    usage = getattr(response, "usage", None)
+    if usage is not None:
+        prompt_tokens = getattr(usage, "input_tokens", 0) or 0
+        completion_tokens = getattr(usage, "output_tokens", 0) or 0
+        set_tokens(judge_span, int(prompt_tokens), int(completion_tokens))
+
     return JudgeScore(criterion=ji.criterion, score=score, rationale=rationale)

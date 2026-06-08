@@ -86,9 +86,16 @@ def _node_prepare(state: _EvalState) -> dict[str, Any]:
     """Emit sandbox stage events; workspaces are already created by run_eval."""
     on_event = state.get("on_event")
     spaces: dict[Arm, Workspace] = state["spaces"]
+    cfg: RunConfig = state["cfg"]
     with _get_tracer().start_as_current_span("sandbox") as span:
         span.set_attribute("openinference.span.kind", "CHAIN")
         span.set_attribute("num_arms", len(spaces))
+        # Enrich with hashes and gold diff sizes
+        span.set_attribute("before_hash", cfg.before_hash)
+        span.set_attribute("after_hash", cfg.after_hash)
+        # Accumulate gold_diff_chars across arms
+        total_gold_chars = sum(len(ws.gold_diff) for ws in spaces.values())
+        span.set_attribute("gold_diff_chars", total_gold_chars)
         _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
     return {}
 
@@ -406,6 +413,15 @@ def run_eval(
         with _get_tracer().start_as_current_span("skill_eval.run") as root:
             root.set_attribute("openinference.span.kind", "CHAIN")
             root.set_attribute("models", ",".join(cfg.models))
+            # Enrich input with task brief and skill names
+            import os as _os
+
+            baseline_name = _os.path.basename(cfg.baseline_skill_path)
+            challenger_name = _os.path.basename(cfg.challenger_skill_path)
+            root.set_attribute("input.value", cfg.task_brief)
+            root.set_attribute("input.mime_type", "text/plain")
+            root.set_attribute("baseline_skill", baseline_name)
+            root.set_attribute("challenger_skill", challenger_name)
             initial_state: _EvalState = {
                 "cfg": cfg,
                 "taker_fn": taker_fn,
@@ -419,6 +435,12 @@ def run_eval(
             final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
             report: ComparisonReport = final_state["report"]
             root.set_attribute("verdict", report.pairwise_verdict)
+            # Build per-arm totals summary for output.value
+            arm_summary = "; ".join(f"{ar.arm.value}={ar.total_score}" for ar in report.arms)
+            root.set_attribute(
+                "output.value",
+                f"{report.pairwise_verdict} | arms: {arm_summary}",
+            )
     finally:
         cleanup_workspaces(spaces)
 

@@ -12,14 +12,17 @@ injected ``ask_fn`` closure and increments a shared question counter.
 from __future__ import annotations
 
 import asyncio
+import json
 import time
 from pathlib import Path
 from typing import Any
 
 from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, create_sdk_mcp_server, query, tool
+from opentelemetry import trace
 
 from skill_eval import git_ops
 from skill_eval.contracts import AskFn, RunConfig, RunMetrics, StopReason, TakerResult, Workspace
+from skill_eval.tracing import get_tracer, set_input, set_kind, set_output, set_tokens, tool_span
 
 # ---------------------------------------------------------------------------
 # Pure helpers (unit-testable without network)
@@ -113,8 +116,13 @@ def run_taker(
     @tool("ask_question", "Ask the human stakeholder a clarifying question.", {"question": str})
     async def _ask_question(args: dict[str, Any]) -> dict[str, Any]:
         question_counter[0] += 1
-        asked_questions.append(args["question"])
-        answer = ask_fn(args["question"])
+        question = args["question"]
+        asked_questions.append(question)
+        tracer = get_tracer()
+        with tool_span(tracer, "ask_question", {"question": question}) as span:
+            set_input(span, question)
+            answer = ask_fn(question)
+            set_output(span, answer)
         return {"content": [{"type": "text", "text": answer}]}
 
     server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[_ask_question])
@@ -164,10 +172,73 @@ def run_taker(
             error_msg[0] = str(exc)
 
     async def _run_query() -> None:
+        # Maps tool_use_id -> (Span, tracer context token) for open tool spans.
+        # We use the tracer's manual start_span / span.end so durations are real.
+        open_tool_spans: dict[str, trace.Span] = {}
+        tracer = get_tracer()
+
         async for message in query(prompt=cfg.task_brief, options=options):
             if isinstance(message, ResultMessage):
                 last_result[0] = message
             else:
+                # ---- Instrument tool-use / tool-result blocks ----
+                # AssistantMessage carries content blocks (ToolUseBlock items).
+                # UserMessage carries ToolResultBlock items.
+                # We detect these defensively by block type name, not exact class,
+                # since SDK versions may rename or reorganise classes.
+                content = getattr(message, "content", None)
+                if isinstance(content, list):
+                    for block in content:
+                        btype = type(block).__name__
+                        # Open a span for each tool-use block
+                        if btype == "ToolUseBlock":
+                            tool_id = getattr(block, "id", None)
+                            tool_name = getattr(block, "name", None) or "unknown"
+                            tool_input = getattr(block, "input", None) or {}
+                            if tool_id and tool_id not in open_tool_spans:
+                                child = tracer.start_span(f"tool.{tool_name}")
+                                try:
+                                    child.set_attribute("openinference.span.kind", "TOOL")
+                                    child.set_attribute("tool.name", tool_name)
+                                    try:
+                                        child.set_attribute(
+                                            "tool.parameters",
+                                            json.dumps(tool_input, default=str),
+                                        )
+                                    except Exception:  # noqa: BLE001
+                                        pass
+                                    set_input(child, json.dumps(tool_input, default=str))
+                                except Exception:  # noqa: BLE001
+                                    pass
+                                open_tool_spans[tool_id] = child
+
+                        # Close the matching span when the tool result arrives
+                        elif btype == "ToolResultBlock":
+                            tool_use_id = getattr(block, "tool_use_id", None)
+                            span = open_tool_spans.pop(tool_use_id, None) if tool_use_id else None
+                            if span is not None:
+                                try:
+                                    raw_content = getattr(block, "content", None)
+                                    if isinstance(raw_content, str):
+                                        result_text = raw_content
+                                    elif isinstance(raw_content, list):
+                                        parts = []
+                                        for item in raw_content:
+                                            if isinstance(item, dict):
+                                                parts.append(item.get("text", str(item)))
+                                            else:
+                                                parts.append(str(item))
+                                        result_text = "\n".join(parts)
+                                    else:
+                                        result_text = str(raw_content) if raw_content else ""
+                                    set_output(span, result_text[:2000])
+                                except Exception:  # noqa: BLE001
+                                    pass
+                                span.end()
+
+                # Close any spans that never received a result (edge cases)
+                # — we do this lazily at session end (see below)
+
                 # Collect all non-ResultMessage messages as transcript entries.
                 # SDK messages are dataclass instances; convert to dict for storage.
                 try:
@@ -181,6 +252,14 @@ def run_taker(
                         )
                 except Exception:  # noqa: BLE001
                     transcript.append({"type": str(type(message).__name__), "raw": str(message)})
+
+        # Close any spans that never received a result (tool call with no result)
+        for orphan in list(open_tool_spans.values()):
+            try:
+                orphan.end()
+            except Exception:  # noqa: BLE001
+                pass
+        open_tool_spans.clear()
 
     asyncio.run(_session())
 
@@ -229,6 +308,21 @@ def run_taker(
                 stop = StopReason.WALL_CLOCK
             else:
                 stop = _stop_reason(result_msg, timed_out[0], cfg.max_turns)
+
+    # -- Enrich the current taker span (set by orchestrator) ---------------
+    taker_span = trace.get_current_span()
+    try:
+        skill_name = Path(skill_path).name
+        input_text = f"task: {cfg.task_brief}\nskill: {skill_name}"
+        set_input(taker_span, input_text)
+        # set_kind is already done by the orchestrator, but re-set to be safe
+        set_kind(taker_span, "AGENT")
+        # output: first ~1500 chars of the resulting diff
+        set_output(taker_span, diff[:1500] if diff else "(empty diff)")
+        # token counts from metrics
+        set_tokens(taker_span, metrics.input_tokens, metrics.output_tokens)
+    except Exception:  # noqa: BLE001
+        pass
 
     return TakerResult(
         arm=ws.arm,
