@@ -66,12 +66,12 @@ def _emit(on_event: EventFn | None, event: dict[str, Any]) -> None:
 
 
 def _node_prepare(state: _EvalState) -> dict[str, Any]:
-    cfg = state["cfg"]
+    """Emit sandbox stage events; workspaces are already created by run_eval."""
     on_event = state.get("on_event")
+    spaces: dict[Arm, Workspace] = state["spaces"]
     _emit(on_event, {"stage": "sandbox", "msg": "preparing workspaces"})
-    spaces = prepare_workspaces(cfg)
     _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
-    return {"spaces": spaces}
+    return {}
 
 
 # ---------------------------------------------------------------------------
@@ -291,22 +291,21 @@ def run_eval(
                 "real judge is Phase B; pass judge_fn=sim_run_judge for now"
             ) from exc
 
-    # Run the graph; always clean up workspaces.
-    initial_state: _EvalState = {
-        "cfg": cfg,
-        "taker_fn": taker_fn,
-        "simulator_factory": simulator_factory,
-        "judge_fn": judge_fn,
-        "on_event": on_event,
-    }
-
-    spaces: dict[Arm, Workspace] | None = None
+    # Create workspaces BEFORE invoking the graph so cleanup is guaranteed
+    # even when a node after prepare raises.
+    spaces: dict[Arm, Workspace] = prepare_workspaces(cfg)
     try:
+        initial_state: _EvalState = {
+            "cfg": cfg,
+            "taker_fn": taker_fn,
+            "simulator_factory": simulator_factory,
+            "judge_fn": judge_fn,
+            "on_event": on_event,
+            "spaces": spaces,
+        }
         final_state: _EvalState = _GRAPH.invoke(initial_state)
-        spaces = final_state.get("spaces")
         report: ComparisonReport = final_state["report"]
     finally:
-        if spaces is not None:
-            cleanup_workspaces(spaces)
+        cleanup_workspaces(spaces)
 
     return report

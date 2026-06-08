@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -41,4 +42,13 @@ def cleanup_workspaces(spaces: dict[Arm, Workspace]) -> None:
         break
     for d in dirs:
         if repo:
-            subprocess.run(["git", "-C", repo, "worktree", "remove", "--force", d])
+            res = subprocess.run(
+                ["git", "-C", repo, "worktree", "remove", "--force", d],
+                capture_output=True,
+                text=True,
+            )
+            if res.returncode != 0:
+                print(
+                    f"warn: worktree remove failed for {d}: {res.stderr.strip()}",
+                    file=sys.stderr,
+                )

@@ -33,6 +33,7 @@ def _is_streamlit() -> bool:
 
 def main() -> None:
     import queue
+    import shutil
     import tempfile
     import threading
 
@@ -107,19 +108,24 @@ def main() -> None:
 
         def _background() -> None:
             tmp = tempfile.mkdtemp()
-            cfg = build_sample_repo(tmp)
+            try:
+                cfg = build_sample_repo(tmp)
 
-            def on_event(ev: dict) -> None:
-                q.put(("event", ev))
+                def on_event(ev: dict) -> None:
+                    q.put(("event", ev))
 
-            report = run_eval(
-                cfg,
-                taker_fn=sim_run_taker,
-                simulator_factory=sim_make_simulator,
-                judge_fn=sim_run_judge,
-                on_event=on_event,
-            )
-            q.put(("done", report))
+                report = run_eval(
+                    cfg,
+                    taker_fn=sim_run_taker,
+                    simulator_factory=sim_make_simulator,
+                    judge_fn=sim_run_judge,
+                    on_event=on_event,
+                )
+                q.put(("done", report))
+            except Exception as exc:
+                q.put(("error", exc))
+            finally:
+                shutil.rmtree(tmp, ignore_errors=True)
 
         t = threading.Thread(target=_background, daemon=True)
         t.start()
@@ -140,6 +146,10 @@ def main() -> None:
 
             if kind == "done":
                 report = payload
+                break
+
+            if kind == "error":
+                st.error(f"Eval failed: {payload}")
                 break
 
             # kind == "event"
