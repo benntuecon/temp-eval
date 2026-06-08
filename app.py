@@ -41,7 +41,14 @@ def main() -> None:
     import streamlit as st
 
     from skill_eval.orchestrator import run_eval
-    from skill_eval.reporting import init_phoenix, scores_table, verdict_line
+    from skill_eval.reporting import (
+        batch_per_case_totals,
+        batch_per_criterion_avg,
+        batch_win_summary,
+        init_phoenix,
+        scores_table,
+        verdict_line,
+    )
     from skill_eval.sample_repo import build_sample_repo
     from skill_eval.simulated import sim_make_simulator, sim_run_judge, sim_run_taker
 
@@ -56,10 +63,21 @@ def main() -> None:
 
     st.title("Skill Eval — Phase A Live Race")
 
+    # ------------------------------------------------------------------
+    # Mode selector
+    # ------------------------------------------------------------------
+    mode = st.radio("Mode", ["Single case", "Batch (10 cases)"], horizontal=True)
+
     # Sidebar
     with st.sidebar:
         st.markdown("### Phase A / B")
-        use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
+        if mode == "Batch (10 cases)":
+            use_real = st.checkbox(
+                "Use real Haiku agents (Phase B — Batch of 10 ≈ $1.5–2 with real agents)",
+                value=False,
+            )
+        else:
+            use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
         if use_real:
             st.warning("Real API calls — costs money!")
         else:
@@ -75,6 +93,65 @@ def main() -> None:
         else:
             st.caption("Phoenix not available — tracing skipped.")
 
+    # ------------------------------------------------------------------
+    # Single case mode
+    # ------------------------------------------------------------------
+    if mode == "Single case":
+        _run_single_case(
+            st=st,
+            pd=pd,
+            queue=queue,
+            shutil=shutil,
+            tempfile=tempfile,
+            threading=threading,
+            use_real=use_real,
+            run_eval=run_eval,
+            scores_table=scores_table,
+            verdict_line=verdict_line,
+            build_sample_repo=build_sample_repo,
+            sim_make_simulator=sim_make_simulator,
+            sim_run_judge=sim_run_judge,
+            sim_run_taker=sim_run_taker,
+        )
+
+    # ------------------------------------------------------------------
+    # Batch (10 cases) mode
+    # ------------------------------------------------------------------
+    else:
+        _run_batch_mode(
+            st=st,
+            pd=pd,
+            queue=queue,
+            tempfile=tempfile,
+            threading=threading,
+            use_real=use_real,
+            batch_win_summary=batch_win_summary,
+            batch_per_case_totals=batch_per_case_totals,
+            batch_per_criterion_avg=batch_per_criterion_avg,
+            sim_make_simulator=sim_make_simulator,
+            sim_run_judge=sim_run_judge,
+            sim_run_taker=sim_run_taker,
+        )
+
+
+def _run_single_case(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    queue,  # type: ignore[type-arg]
+    shutil,  # type: ignore[type-arg]
+    tempfile,  # type: ignore[type-arg]
+    threading,  # type: ignore[type-arg]
+    use_real: bool,
+    run_eval,  # type: ignore[type-arg]
+    scores_table,  # type: ignore[type-arg]
+    verdict_line,  # type: ignore[type-arg]
+    build_sample_repo,  # type: ignore[type-arg]
+    sim_make_simulator,  # type: ignore[type-arg]
+    sim_run_judge,  # type: ignore[type-arg]
+    sim_run_taker,  # type: ignore[type-arg]
+) -> None:
+    """Single-case control-room view (original logic, unchanged)."""
     # ------------------------------------------------------------------
     # Run eval button
     # ------------------------------------------------------------------
@@ -358,6 +435,176 @@ def main() -> None:
 
         # Verdict
         st.success(f"Verdict: {verdict_line(report)}")
+
+
+def _run_batch_mode(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    queue,  # type: ignore[type-arg]
+    tempfile,  # type: ignore[type-arg]
+    threading,  # type: ignore[type-arg]
+    use_real: bool,
+    batch_win_summary,  # type: ignore[type-arg]
+    batch_per_case_totals,  # type: ignore[type-arg]
+    batch_per_criterion_avg,  # type: ignore[type-arg]
+    sim_make_simulator,  # type: ignore[type-arg]
+    sim_run_judge,  # type: ignore[type-arg]
+    sim_run_taker,  # type: ignore[type-arg]
+) -> None:
+    """Batch (10 cases) view: run all sample cases and show aggregate viz."""
+    from skill_eval.batch import run_batch
+    from skill_eval.sample_cases import build_sample_cases
+
+    if not st.button("Run batch", type="primary"):
+        st.info("Click **Run batch** to evaluate all 10 sample cases.")
+        return
+
+    st.divider()
+    st.subheader("Batch progress")
+
+    # ------------------------------------------------------------------
+    # Placeholders for live progress
+    # ------------------------------------------------------------------
+    progress_bar = st.progress(0.0)
+    status_placeholder = st.empty()
+    status_placeholder.info("Starting batch…")
+    case_log_placeholder = st.empty()
+
+    # ------------------------------------------------------------------
+    # Background thread: run_batch pushes events into a queue
+    # ------------------------------------------------------------------
+    q: queue.Queue = queue.Queue()
+    _use_real = use_real
+
+    def _background() -> None:
+        tmp = tempfile.mkdtemp()
+        try:
+            cfgs = build_sample_cases(tmp)
+            total = len(cfgs)
+
+            def on_event(ev: dict) -> None:
+                q.put(("event", ev, total))
+
+            if _use_real:
+                from skill_eval.judge import run_judge
+                from skill_eval.simulator import make_simulator
+                from skill_eval.taker import run_taker
+
+                reports = run_batch(
+                    cfgs,
+                    taker_fn=run_taker,
+                    simulator_factory=make_simulator,
+                    judge_fn=run_judge,
+                    max_cases=4,
+                    on_event=on_event,
+                )
+            else:
+                reports = run_batch(
+                    cfgs,
+                    taker_fn=sim_run_taker,
+                    simulator_factory=sim_make_simulator,
+                    judge_fn=sim_run_judge,
+                    max_cases=4,
+                    on_event=on_event,
+                )
+            q.put(("done", reports, total))
+        except Exception as exc:
+            q.put(("error", exc, 0))
+
+    t = threading.Thread(target=_background, daemon=True)
+    t.start()
+
+    # ------------------------------------------------------------------
+    # Drain queue: track per-case completion via "report" stage events
+    # ------------------------------------------------------------------
+    reports = None
+    cases_done: set[int] = set()
+    case_lines: list[str] = []
+    total_cases = 10  # we know it's 10
+
+    while t.is_alive() or not q.empty():
+        try:
+            item = q.get(timeout=0.05)
+        except queue.Empty:
+            continue
+
+        kind = item[0]
+        if kind == "done":
+            reports = item[1]
+            break
+        if kind == "error":
+            st.error(f"Batch failed: {item[1]}")
+            return
+
+        # kind == "event"
+        ev: dict = item[1]
+        case_idx: int = ev.get("case", -1)
+        stage = ev.get("stage", "")
+
+        if stage == "report" and case_idx not in cases_done:
+            cases_done.add(case_idx)
+            case_lines.append(f"case {case_idx + 1} done")
+            frac = len(cases_done) / total_cases
+            progress_bar.progress(frac)
+            status_placeholder.info(f"{len(cases_done)} / {total_cases} cases done…")
+            case_log_placeholder.markdown("\n\n".join(case_lines[-total_cases:]))
+
+    t.join(timeout=10)
+
+    if reports is None:
+        st.error("Batch did not return reports — check logs.")
+        return
+
+    progress_bar.progress(1.0)
+    status_placeholder.success(f"All {total_cases} cases complete!")
+
+    # ------------------------------------------------------------------
+    # Aggregate visualisations
+    # ------------------------------------------------------------------
+    st.divider()
+    st.subheader("Aggregate: Baseline vs Challenger")
+
+    # 1. Win summary metrics
+    win_summary = batch_win_summary(reports)
+    col_c, col_b, col_t = st.columns(3)
+    col_c.metric("Challenger wins", win_summary["challenger"])
+    col_b.metric("Baseline wins", win_summary["baseline"])
+    col_t.metric("Ties", win_summary["tie"])
+
+    # 2. Per-case totals bar chart
+    st.subheader("Per-case total scores")
+    per_case = batch_per_case_totals(reports)
+    df_cases = pd.DataFrame(per_case).set_index("case")
+    st.bar_chart(df_cases[["baseline", "challenger"]], use_container_width=True)
+
+    # 3. Per-criterion averages bar chart
+    st.subheader("Per-criterion averages")
+    per_crit = batch_per_criterion_avg(reports)
+    df_crit = pd.DataFrame(per_crit).set_index("criterion")
+    st.bar_chart(df_crit[["baseline", "challenger"]], use_container_width=True)
+
+    # 4. Detailed per-case table
+    st.subheader("Per-case detail")
+    table_rows = []
+    for row in per_case:
+        b_total = row["baseline"]
+        c_total = row["challenger"]
+        if c_total > b_total:
+            winner = "challenger"
+        elif b_total > c_total:
+            winner = "baseline"
+        else:
+            winner = "tie"
+        table_rows.append(
+            {
+                "case": row["case"],
+                "baseline total": b_total,
+                "challenger total": c_total,
+                "winner": winner,
+            }
+        )
+    st.dataframe(pd.DataFrame(table_rows).set_index("case"), use_container_width=True)
 
 
 # ---------------------------------------------------------------------------

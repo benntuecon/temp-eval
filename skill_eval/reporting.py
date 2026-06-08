@@ -59,6 +59,92 @@ def verdict_line(report: ComparisonReport) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Batch aggregation helpers
+# ---------------------------------------------------------------------------
+
+
+def batch_win_summary(reports: list[ComparisonReport]) -> dict[str, int]:
+    """Count wins for challenger, baseline, and ties across a batch of reports.
+
+    Compares each report's per-arm ``total_score``.  Returns a dict with keys
+    ``"challenger"``, ``"baseline"``, and ``"tie"``.
+    """
+    from skill_eval.contracts import Arm
+
+    counts: dict[str, int] = {"challenger": 0, "baseline": 0, "tie": 0}
+    for report in reports:
+        totals = {ar.arm: ar.total_score for ar in report.arms}
+        c = totals.get(Arm.CHALLENGER, 0)
+        b = totals.get(Arm.BASELINE, 0)
+        if c > b:
+            counts["challenger"] += 1
+        elif b > c:
+            counts["baseline"] += 1
+        else:
+            counts["tie"] += 1
+    return counts
+
+
+def batch_per_case_totals(reports: list[ComparisonReport]) -> list[dict]:
+    """Return one row per report with ``case``, ``baseline``, and ``challenger`` totals.
+
+    The ``case`` label is derived from the first ~4 words of the config's
+    ``task_brief``; falls back to ``"case {i+1}"`` if the brief is empty.
+    """
+    from skill_eval.contracts import Arm
+
+    rows = []
+    for i, report in enumerate(reports):
+        brief = report.config.task_brief.strip()
+        if brief:
+            words = brief.split()
+            case_label = " ".join(words[:4])
+        else:
+            case_label = f"case {i + 1}"
+
+        totals = {ar.arm: ar.total_score for ar in report.arms}
+        rows.append(
+            {
+                "case": case_label,
+                "baseline": totals.get(Arm.BASELINE, 0),
+                "challenger": totals.get(Arm.CHALLENGER, 0),
+            }
+        )
+    return rows
+
+
+def batch_per_criterion_avg(reports: list[ComparisonReport]) -> list[dict]:
+    """Return one row per Criterion with average baseline and challenger scores.
+
+    Averages each criterion's score across all reports per arm.  Scores are
+    rounded to 1 decimal place.  Row order matches ``Criterion`` enum order.
+    """
+    from skill_eval.contracts import Arm, Criterion
+
+    # Accumulate sums per (arm, criterion)
+    sums: dict[tuple[str, str], float] = {}
+    for arm in Arm:
+        for criterion in Criterion:
+            sums[(arm.value, criterion.value)] = 0.0
+
+    n = len(reports)
+    for report in reports:
+        for arm_report in report.arms:
+            for js in arm_report.scores:
+                key = (arm_report.arm.value, js.criterion.value)
+                sums[key] = sums.get(key, 0.0) + js.score
+
+    rows = []
+    for criterion in Criterion:
+        row: dict = {"criterion": criterion.value}
+        for arm in Arm:
+            total = sums.get((arm.value, criterion.value), 0.0)
+            row[arm.value] = round(total / n, 1) if n > 0 else 0.0
+        rows.append(row)
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Phoenix initialisation (best-effort)
 # ---------------------------------------------------------------------------
 
