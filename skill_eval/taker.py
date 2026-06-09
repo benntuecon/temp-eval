@@ -364,12 +364,26 @@ def run_taker(
         set_kind(taker_span, "AGENT")
         # output: full diff (capped at 10000 chars to keep spans manageable)
         set_output(taker_span, diff[:10000] if diff else "(empty diff)")
-        # token counts from metrics
-        set_tokens(taker_span, metrics.input_tokens, metrics.output_tokens)
         # thinking trajectory stats
         thinking_texts = _thinking_texts_ref[0]
         taker_span.set_attribute("thinking.num_blocks", len(thinking_texts))
         taker_span.set_attribute("thinking.total_chars", sum(len(t) for t in thinking_texts))
+        # Phoenix rolls token usage up from descendant *LLM* spans; token counts
+        # set on this AGENT span are not shown in the token column. So expose the
+        # agent's aggregate model usage as an LLM-kind child span carrying the
+        # real prompt/completion/total counts (the SDK's internal model calls
+        # aren't otherwise traced).
+        final_text = (getattr(last_result[0], "result", "") or "") if last_result[0] else ""
+        model_span = get_tracer().start_span("model")
+        try:
+            set_kind(model_span, "LLM")
+            model_span.set_attribute("llm.model_name", model)
+            set_input(model_span, input_text)
+            if final_text:
+                set_output(model_span, final_text[:10000])
+            set_tokens(model_span, metrics.input_tokens, metrics.output_tokens)
+        finally:
+            model_span.end()
     except Exception:  # noqa: BLE001
         pass
 
