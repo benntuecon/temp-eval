@@ -1,17 +1,72 @@
 # skill-eval
 
-Eval/comparison harness for two Claude Code Skills (baseline vs challenger).
-See docs/superpowers/specs/2026-06-06-skill-eval-system-design.md
+**An eval harness that measures how much a Claude Code *skill* improves an agent — by running two skills head-to-head on the same task and scoring the results.**
 
-## Setup
+Give it a task (a repo at a `before` commit, a `after`/gold commit, and a brief) plus two skills — a **baseline** and a **challenger** — and it spins up two real Claude-Agent-SDK coding agents, lets each attempt the task under its skill, simulates a human answering their clarifying questions, then has a panel of LLM judges score both on 6 criteria (0–20 each). You get a holistic, evidence-backed comparison.
 
-    uv sync                 # creates .venv, installs deps + dev tools, writes uv.lock
-    cp .env.example .env     # then fill in ANTHROPIC_API_KEY
+## The headline result
 
-## Develop
+On a deliberately **under-specified** `prorate_refund` task (4 critical details the brief omits), a **disciplined** skill (read → ask about every ambiguity → test-first → implement) vs a **ship-it-fast** skill (don't ask, just guess and ship):
 
-    uv run pytest            # tests
-    uv run ruff check .      # lint
-    uv run ruff format .     # format
-    uv run mypy              # type-check
-    uv run python spikes/spike_skill_loading.py   # a spike (needs ANTHROPIC_API_KEY)
+```
+VERDICT: challenger (disciplined) wins by 88 — 118 vs 30 / 120
+
+ship-it-fast   30/120   questions asked: 0   → guessed the edge cases wrong
+disciplined   118/120   questions asked: 5   → asked, nailed every edge case
+               (question_quality 20 vs 0)
+```
+
+The system correctly detects that the skill which makes the agent **ask the right questions** produces dramatically better work — and shows *why* in the traces.
+
+## How it works
+
+```
+INPUT: before_hash, after_hash, task_brief, baseline_skill, challenger_skill
+   │
+   ▼  (LangGraph orchestration, Send fan-out, async)
+ sandbox ──► 2 test-takers (concurrent)        ──► 12 judges (concurrent) ──► report
+   git        Claude Agent SDK, isolated            one per (arm × criterion)
+   worktrees  skill injected, ask_question →        0–20 anchored rubric
+              HITL simulator (has the gold)
+```
+
+- **Test-takers** — real Claude Agent SDK agents, each loaded with one skill *in isolation* (`setting_sources=[]`, so no global skills leak in). A custom `ask_question` tool routes their clarifying questions to the simulator.
+- **HITL simulator** — an LLM that answers questions using the gold tree as ground truth (reactive only — it never volunteers the solution).
+- **Judges** — one LLM per criterion (`correctness`, `completeness`, `distance_to_gold`, `code_quality`, `question_quality`, `approach`), each with an anchored 0/5/10/15/20 rubric. `question_quality` is derived by comparing the under-specified brief to the gold's decisions.
+- **Orchestrator** — a LangGraph graph; each taker and judge is a real node (`Send` fan-out) so they run concurrently and show up individually in traces.
+
+Everything is **injectable**: simulated stand-ins (free, instant) for the plumbing, real Haiku agents for the truth.
+
+## Quickstart
+
+```bash
+uv sync                       # install
+cp .env.example .env          # add ANTHROPIC_API_KEY
+just app                      # dashboard at localhost:8501 (auto-starts Phoenix at :6006)
+```
+
+In the dashboard pick a **Mode**:
+- **Single case** — watch one eval run live (simulated = free, or toggle real Haiku).
+- **Batch (10 cases)** — 10 tasks at once: win summary, per-case + per-criterion bars, score-distribution boxplots.
+- **Flagship** — the disciplined-vs-ship-it-fast comparison above, with real agents.
+
+## Visualizations
+- **Live agent graph** — the eval fan-out as a Graphviz DAG, nodes lighting grey→gold→green.
+- **Control room** — per-arm panels, a 12-tile judges grid, grouped 0–20 comparison bars.
+- **Phoenix** (`localhost:6006`) — per-agent traces: the taker's tool timeline (Read/Edit/Bash/ask_question), each judge's prompt + rationale + tokens, and judge scores as span annotations.
+
+## Dev
+
+```bash
+just check        # ruff format + lint + mypy + pytest  (81 tests, no network)
+just test-live    # the one real end-to-end smoke test (needs API + credits)
+just phoenix      # standalone Phoenix (just app auto-starts it otherwise)
+just graph        # refresh the graphify code knowledge graph
+```
+
+## Layout
+- `skill_eval/` — `contracts.py` (the typed contract), `orchestrator.py` (LangGraph), `sandbox.py`/`git_ops.py` (worktrees), `taker.py`/`simulator.py`/`judge.py` (real components), `simulated.py` (free stand-ins), `reporting.py`, `tracing.py`.
+- `flagship/skills/` — the two demo skills (`disciplined`, `ship-it-fast`).
+- `app.py` — the Streamlit dashboard. `docs/superpowers/` — specs, plans, decisions, spikes.
+
+See `DEMO.md` for the 2-minute presentation script.
