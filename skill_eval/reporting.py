@@ -265,6 +265,78 @@ def agent_graph_dot(
 
 
 # ---------------------------------------------------------------------------
+# Phoenix span-evaluation logging (best-effort)
+# ---------------------------------------------------------------------------
+
+
+def log_judge_evaluations(records: list[tuple]) -> bool:
+    """Log per-judge scores to Phoenix as span evaluations.
+
+    Parameters
+    ----------
+    records:
+        List of ``(span_id, arm, criterion, score, rationale)`` tuples.
+
+    Returns
+    -------
+    bool
+        ``True`` if all evaluations were logged successfully, ``False`` on any
+        failure.  This function *never* raises.
+    """
+    try:
+        from phoenix.client import Client
+        from phoenix.client.__generated__.v1 import AnnotationResult, SpanAnnotationData
+
+        if not records:
+            return False
+
+        client = Client()
+        annotations: list[SpanAnnotationData] = [
+            SpanAnnotationData(
+                name=criterion,
+                annotator_kind="CODE",
+                span_id=span_id,
+                result=AnnotationResult(
+                    label=arm,
+                    score=float(score),
+                    explanation=rationale,
+                ),
+            )
+            for span_id, arm, criterion, score, rationale in records
+        ]
+        client.spans.log_span_annotations(span_annotations=annotations, sync=True)
+        return True
+    except Exception:
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Batch score distribution (pure, testable)
+# ---------------------------------------------------------------------------
+
+
+def batch_score_distribution(reports: list) -> list[dict]:
+    """Return long-form rows for per-criterion, per-arm score distributions.
+
+    Each row has ``{"criterion": str, "arm": str, "score": int}``.
+    There is one row per judge score across ALL reports, so the total row
+    count is ``len(reports) * 12`` (2 arms × 6 criteria per report).
+    """
+    rows: list[dict] = []
+    for report in reports:
+        for arm_report in report.arms:
+            for js in arm_report.scores:
+                rows.append(
+                    {
+                        "criterion": js.criterion.value,
+                        "arm": arm_report.arm.value,
+                        "score": js.score,
+                    }
+                )
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Phoenix initialisation (best-effort)
 # ---------------------------------------------------------------------------
 

@@ -62,7 +62,7 @@ class _EvalState(TypedDict, total=False):
     spaces: dict[Arm, Workspace]
     # reducer channels: parallel nodes append their results
     taker_results: Annotated[list[tuple[Arm, TakerResult]], operator.add]
-    scores: Annotated[list[tuple[Arm, JudgeScore]], operator.add]
+    scores: Annotated[list[tuple[Arm, JudgeScore, str]], operator.add]
     # final output
     report: ComparisonReport
 
@@ -251,6 +251,7 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
         score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
 
         span.set_attribute("score", score.score)
+        sid = format(trace.get_current_span().get_span_context().span_id, "016x")
 
         _emit(
             on_event,
@@ -263,7 +264,7 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
             },
         )
 
-    return {"scores": [(arm, score)]}
+    return {"scores": [(arm, score, sid)]}
 
 
 # ---------------------------------------------------------------------------
@@ -279,7 +280,7 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
 
     # Group scores by arm
     scores_by_arm: dict[Arm, list[JudgeScore]] = {}
-    for arm, score in state["scores"]:
+    for arm, score, _sid in state["scores"]:
         scores_by_arm.setdefault(arm, []).append(score)
 
     arm_reports: list[ArmReport] = []
@@ -435,6 +436,17 @@ def run_eval(
             final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
             report: ComparisonReport = final_state["report"]
             root.set_attribute("verdict", report.pairwise_verdict)
+            # Log per-judge scores to Phoenix as span evaluations (best-effort)
+            records = [
+                (sid, arm.value, score.criterion.value, score.score, score.rationale)
+                for arm, score, sid in final_state["scores"]
+            ]
+            try:
+                from skill_eval.reporting import log_judge_evaluations
+
+                log_judge_evaluations(records)
+            except Exception:
+                pass  # never let analytics break the eval
             # Build per-arm totals summary for output.value
             arm_summary = "; ".join(f"{ar.arm.value}={ar.total_score}" for ar in report.arms)
             root.set_attribute(

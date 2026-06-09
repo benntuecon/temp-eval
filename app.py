@@ -45,6 +45,7 @@ def main() -> None:
         agent_graph_dot,
         batch_per_case_totals,
         batch_per_criterion_avg,
+        batch_score_distribution,
         batch_win_summary,
         init_phoenix,
         scores_table,
@@ -130,6 +131,7 @@ def main() -> None:
             batch_win_summary=batch_win_summary,
             batch_per_case_totals=batch_per_case_totals,
             batch_per_criterion_avg=batch_per_criterion_avg,
+            batch_score_distribution=batch_score_distribution,
             sim_make_simulator=sim_make_simulator,
             sim_run_judge=sim_run_judge,
             sim_run_taker=sim_run_taker,
@@ -477,6 +479,7 @@ def _run_batch_mode(
     batch_win_summary,  # type: ignore[type-arg]
     batch_per_case_totals,  # type: ignore[type-arg]
     batch_per_criterion_avg,  # type: ignore[type-arg]
+    batch_score_distribution,  # type: ignore[type-arg]
     sim_make_simulator,  # type: ignore[type-arg]
     sim_run_judge,  # type: ignore[type-arg]
     sim_run_taker,  # type: ignore[type-arg]
@@ -613,7 +616,27 @@ def _run_batch_mode(
     df_crit = pd.DataFrame(per_crit).set_index("criterion")
     st.bar_chart(df_crit[["baseline", "challenger"]], use_container_width=True, stack=False)
 
-    # 4. Detailed per-case table
+    # 4. Score distributions (grouped boxplot per criterion, baseline vs challenger)
+    st.subheader("Score distributions")
+    dist_rows = batch_score_distribution(reports)
+    if dist_rows:
+        import altair as alt
+
+        df_dist = pd.DataFrame(dist_rows)
+        chart = (
+            alt.Chart(df_dist)
+            .mark_boxplot()
+            .encode(
+                x=alt.X("criterion:N", title="Criterion"),
+                y=alt.Y("score:Q", title="Score", scale=alt.Scale(domain=[0, 20])),
+                color=alt.Color("arm:N", title="Arm"),
+                xOffset=alt.XOffset("arm:N"),
+            )
+            .properties(height=350)
+        )
+        st.altair_chart(chart, use_container_width=True)
+
+    # 5. Detailed per-case table (was 4)
     st.subheader("Per-case detail")
     table_rows = []
     for row in per_case:

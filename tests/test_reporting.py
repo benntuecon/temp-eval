@@ -11,7 +11,9 @@ from skill_eval.reporting import (
     agent_graph_dot,
     batch_per_case_totals,
     batch_per_criterion_avg,
+    batch_score_distribution,
     batch_win_summary,
+    log_judge_evaluations,
     scores_table,
     verdict_line,
 )
@@ -150,3 +152,52 @@ def test_agent_graph_dot():
 
     # Must contain the green fill color for at least one done node
     assert "#a5d6a7" in dot
+
+
+# ---------------------------------------------------------------------------
+# batch_score_distribution
+# ---------------------------------------------------------------------------
+
+
+def test_batch_score_distribution_row_count():
+    """len(reports) * 12 rows (2 arms × 6 criteria per report)."""
+    n_reports = 3
+    rows = batch_score_distribution(_BATCH_REPORTS[:n_reports])
+    assert len(rows) == n_reports * 12
+
+
+def test_batch_score_distribution_schema():
+    """Every row has criterion, arm, and score keys."""
+    rows = batch_score_distribution(_BATCH_REPORTS)
+    for row in rows:
+        assert "criterion" in row
+        assert "arm" in row
+        assert "score" in row
+        assert isinstance(row["score"], int)
+        assert row["arm"] in ("baseline", "challenger")
+
+
+def test_batch_score_distribution_empty():
+    assert batch_score_distribution([]) == []
+
+
+# ---------------------------------------------------------------------------
+# log_judge_evaluations (best-effort, no Phoenix running)
+# ---------------------------------------------------------------------------
+
+
+def test_log_judge_evaluations_best_effort_no_phoenix():
+    """Should return False (or at minimum not raise) when no Phoenix is running."""
+    records = [
+        ("0000000000000001", "baseline", "correctness", 15, "good"),
+        ("0000000000000002", "challenger", "completeness", 12, "ok"),
+    ]
+    result = log_judge_evaluations(records)
+    # Must not raise; returns bool
+    assert isinstance(result, bool)
+
+
+def test_log_judge_evaluations_empty():
+    """Empty records: no crash, returns False."""
+    result = log_judge_evaluations([])
+    assert result is False

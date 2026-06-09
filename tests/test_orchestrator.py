@@ -56,10 +56,13 @@ def test_reducer_counts(tmp_path):
     taker_arms = {arm for arm, _ in final_state["taker_results"]}
     assert taker_arms == {Arm.BASELINE, Arm.CHALLENGER}
 
-    # 2 arms × 6 criteria = 12 score entries
+    # 2 arms × 6 criteria = 12 score entries (now 3-tuples: arm, score, span_id)
     assert len(final_state["scores"]) == 12
     score_arm_criterion_pairs = {
-        (arm.value, score.criterion.value) for arm, score in final_state["scores"]
+        (arm.value, score.criterion.value) for arm, score, _sid in final_state["scores"]
     }
     expected_pairs = {(arm.value, c.value) for arm in Arm for c in Criterion}
     assert score_arm_criterion_pairs == expected_pairs
+    # span_ids are 16-char hex strings
+    for _arm, _score, sid in final_state["scores"]:
+        assert isinstance(sid, str) and len(sid) == 16
