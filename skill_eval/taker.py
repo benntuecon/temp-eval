@@ -62,15 +62,17 @@ def _stop_reason(
     return StopReason.COMPLETED
 
 
-def _compute_diff(taker_dir: str) -> str:
-    """Stage all changes and return the cached diff (new + modified files).
+def _compute_diff(taker_dir: str, before_ref: str) -> str:
+    """Stage all changes and return the diff against the starting commit.
 
-    Returns an empty string if git is unavailable or the directory is not a
-    git repository.
+    Diffs against ``before_ref`` (not ``HEAD``) so the taker's work is captured
+    whether or not the agent committed it (a skill that runs ``git commit`` would
+    otherwise show an empty diff vs ``HEAD``). Returns an empty string if git is
+    unavailable or the directory is not a git repository.
     """
     try:
         git_ops.add_all(taker_dir)
-        return git_ops.diff_cached(taker_dir)
+        return git_ops.diff_cached(taker_dir, before_ref)
     except Exception:  # noqa: BLE001
         return ""
 
@@ -272,7 +274,7 @@ def run_taker(
     asyncio.run(_session())
 
     wall_seconds = time.monotonic() - wall_start
-    diff = _compute_diff(ws.taker_dir)
+    diff = _compute_diff(ws.taker_dir, cfg.before_hash)
     num_q = question_counter[0]
 
     # -- Determine stop_reason and metrics ---------------------------------

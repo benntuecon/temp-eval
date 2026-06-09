@@ -131,7 +131,7 @@ def _init_git_repo(path: str) -> None:
 def test_compute_diff_captures_new_file(tmp_path) -> None:
     _init_git_repo(str(tmp_path))
     (tmp_path / "solution.py").write_text("def solve():\n    pass\n")
-    diff = _compute_diff(str(tmp_path))
+    diff = _compute_diff(str(tmp_path), "HEAD")
     assert "solution.py" in diff
     assert "+def solve" in diff
 
@@ -140,21 +140,43 @@ def test_compute_diff_captures_modification(tmp_path) -> None:
     _init_git_repo(str(tmp_path))
     readme = tmp_path / "README.md"
     readme.write_text("updated content\n")
-    diff = _compute_diff(str(tmp_path))
+    diff = _compute_diff(str(tmp_path), "HEAD")
     assert "README.md" in diff
 
 
 def test_compute_diff_empty_for_no_changes(tmp_path) -> None:
     _init_git_repo(str(tmp_path))
     # No changes after init → diff should be empty
-    diff = _compute_diff(str(tmp_path))
+    diff = _compute_diff(str(tmp_path), "HEAD")
     assert diff == ""
 
 
 def test_compute_diff_non_git_dir(tmp_path) -> None:
     """Non-git directory should return empty string without raising."""
-    diff = _compute_diff(str(tmp_path))
+    diff = _compute_diff(str(tmp_path), "HEAD")
     assert diff == ""
+
+
+def test_compute_diff_captures_committed_changes(tmp_path) -> None:
+    """A skill that runs `git commit` must still have its work captured.
+
+    Diffing vs HEAD would be empty after a commit; diffing vs the original
+    `before_ref` captures it.
+    """
+    _init_git_repo(str(tmp_path))
+    before = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=str(tmp_path), capture_output=True, text=True, check=True
+    ).stdout.strip()
+    (tmp_path / "solution.py").write_text("def solve():\n    return 42\n")
+    subprocess.run(["git", "add", "-A"], cwd=str(tmp_path), capture_output=True, check=True)
+    subprocess.run(
+        ["git", "commit", "-m", "ship it"], cwd=str(tmp_path), capture_output=True, check=True
+    )
+    # HEAD moved to the new commit; diff vs HEAD is empty, but vs `before` captures it.
+    assert _compute_diff(str(tmp_path), "HEAD") == ""
+    diff = _compute_diff(str(tmp_path), before)
+    assert "solution.py" in diff
+    assert "+def solve" in diff
 
 
 # ---------------------------------------------------------------------------
@@ -175,7 +197,9 @@ def _make_workspace(tmp_path) -> Workspace:
 
 def _make_cfg() -> RunConfig:
     return RunConfig(
-        before_hash="abc123",
+        # "HEAD" is a valid ref in the temp repo created by _make_workspace; the
+        # taker leaves its work uncommitted, so diffing vs HEAD captures it.
+        before_hash="HEAD",
         after_hash="def456",
         repo_path="/fake/repo",
         task_brief="Fix the add function to return a + b.",
