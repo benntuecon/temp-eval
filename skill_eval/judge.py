@@ -16,80 +16,163 @@ from skill_eval.contracts import JudgeInput, JudgeScore
 from skill_eval.tracing import set_input, set_kind, set_output, set_tokens
 
 # ---------------------------------------------------------------------------
-# Anchored rubric text (shared across criteria, specialised per criterion)
+# Per-criterion anchored rubric (0 / 5 / 10 / 15 / 20)
+# Taken verbatim from docs/superpowers/specs/2026-06-08-flagship-comparison.md
 # ---------------------------------------------------------------------------
 
-_RUBRIC_COMMON = """\
-Score on a 0-20 integer scale:
-  0  = nothing useful was produced / criterion entirely missing
-  5  = very poor / major gaps
- 10  = partial — some elements correct but significant issues remain
- 15  = good — mostly correct with minor gaps or style issues
- 20  = excellent — matches or exceeds the gold reference
+_RUBRIC: dict[str, dict[int, str]] = {
+    "correctness": {
+        0: "not implemented / completely wrong",
+        5: "happy path only; wrong on the gold's key decisions",
+        10: "partially correct, misses several decisions",
+        15: "matches most gold behavior, one minor miss",
+        20: "matches ALL gold behavior incl. edge cases",
+    },
+    "completeness": {
+        0: "nothing",
+        5: "stub/trivial",
+        10: "core done, edges missing",
+        15: "nearly all done",
+        20: "fully complete per gold",
+    },
+    "distance_to_gold": {
+        0: "unrelated diff",
+        5: "superficially related",
+        10: "same shape, different logic",
+        15: "close, small deviations",
+        20: "semantically equivalent to gold diff",
+    },
+    "code_quality": {
+        0: "broken/unreadable",
+        5: "works but messy, no tests",
+        10: "acceptable",
+        15: "clean, readable",
+        20: "idiomatic, tested, clear",
+    },
+    "question_quality": {
+        0: "asked nothing or irrelevant",
+        5: "1 vague question",
+        10: "asked some, missed critical ambiguities",
+        15: "asked most critical missing-info questions",
+        20: "surfaced ALL critical ambiguities, clear & specific",
+    },
+    "approach": {
+        0: "chaotic / wrong path / thrashing",
+        5: "disorganized",
+        10: "reasonable",
+        15: "solid: read context + clarified",
+        20: "exemplary: read -> clarified every ambiguity -> test-first -> minimal",
+    },
+}
 
-Anchor examples:
-  0  → empty diff or completely wrong approach
- 10  → half the changes present, key logic still incorrect
- 20  → diff is functionally identical or better than gold
-"""
-
-_CRITERION_GUIDANCE: dict[str, str] = {
+_CRITERION_DEFINITION: dict[str, str] = {
     "correctness": (
-        "Focus on whether the taker's diff satisfies the stated requirement"
-        " and matches the gold diff's intent."
+        "Whether the taker's implementation satisfies the stated requirement "
+        "and matches the gold diff's intent, including edge cases and key decisions."
     ),
     "completeness": (
-        "Focus on how much of the required change was implemented; penalise missing parts."
+        "How much of the required change was implemented. "
+        "Penalise missing parts, stub-only implementations, or unhandled cases."
     ),
-    "distance_to_gold": "Focus on semantic similarity between the taker diff and the gold diff.",
+    "distance_to_gold": (
+        "Semantic similarity between the taker's diff and the gold diff. "
+        "Focus on whether the logic is equivalent, not just surface textual similarity."
+    ),
     "code_quality": (
-        "Focus on readability, idiomaticity, and maintainability of the taker's changes."
+        "Readability, idiomaticity, and maintainability of the taker's changes. "
+        "Consider naming, structure, test coverage, and use of language features."
     ),
     "question_quality": (
-        "Focus on whether the clarifying questions the taker asked were relevant and well-targeted."
+        "Quality of the clarifying questions the taker asked before implementing. "
+        "Derive the CRITICAL AMBIGUITIES by comparing what is under-specified in the "
+        "task_brief against the concrete decisions encoded in the gold diff. "
+        "Then score whether the taker's questions surfaced those critical missing-info "
+        "gaps. Questions that are vague, irrelevant, or that guess instead of asking "
+        "score lower. A taker that asked nothing scores 0 on this criterion."
     ),
     "approach": (
-        "Focus on the overall strategy and efficiency:"
-        " did the taker take a sensible path with minimal thrashing?"
+        "Overall strategy and efficiency: did the taker follow a sensible path — "
+        "reading existing code, clarifying ambiguities, writing tests before code, "
+        "implementing minimally — with minimal thrashing?"
     ),
 }
 
 
 def _build_prompt(ji: JudgeInput) -> str:
-    guidance = _CRITERION_GUIDANCE.get(ji.criterion.value, "")
-    questions_note = (
-        f"The taker asked {len(ji.taker.questions)} clarifying question(s)."
-        if ji.taker.questions
-        else "The taker asked no clarifying questions."
-    )
-    return f"""\
-You are an expert code-review judge.  Score the taker's work on the criterion \
-**{ji.criterion.value}** for the following task.
+    """Build the judge prompt for a single criterion evaluation.
 
-{_RUBRIC_COMMON}
-Criterion guidance: {guidance}
+    This is a pure function (no I/O) so it can be unit-tested without any
+    API call.
+    """
+    criterion = ji.criterion.value
+    rubric = _RUBRIC.get(criterion, {})
+    definition = _CRITERION_DEFINITION.get(criterion, "")
+
+    # Build the anchored scale text
+    scale_lines = "\n".join(
+        f"  {score:2d}  = {descriptor}" for score, descriptor in sorted(rubric.items())
+    )
+
+    # Format the taker's clarifying questions
+    if ji.taker.questions:
+        questions_block = "\n".join(f"  Q{i + 1}: {q}" for i, q in enumerate(ji.taker.questions))
+        questions_text = (
+            f"The taker asked {len(ji.taker.questions)} clarifying question(s):\n{questions_block}"
+        )
+    else:
+        questions_text = "The taker asked NO clarifying questions."
+
+    # For question_quality: add explicit instruction about deriving ambiguities
+    if criterion == "question_quality":
+        criterion_extra = (
+            "\n\nIMPORTANT for question_quality scoring:\n"
+            "1. First, compare the task_brief (under-specified) to the gold_diff "
+            "(which encodes concrete decisions such as rounding rules, boundary handling, "
+            "month-length definition, etc.) to identify all CRITICAL AMBIGUITIES — "
+            "decisions the brief leaves open that the gold resolves.\n"
+            "2. Then examine the taker's questions above and assess how many of those "
+            "critical ambiguities were explicitly surfaced with clear, specific questions.\n"
+            "3. Score based on the rubric anchors: 0 if nothing/irrelevant, up to 20 "
+            "if ALL critical ambiguities were surfaced with clarity."
+        )
+    else:
+        criterion_extra = ""
+
+    return f"""\
+You are an expert code-review judge. Score the taker's work on the criterion \
+**{criterion}** for the following task.
+
+## Criterion definition
+{definition}{criterion_extra}
+
+## Anchored 0 / 5 / 10 / 15 / 20 scale
+{scale_lines}
+
+Note: the taker may not have finished due to budget limits (token cap, turn cap, \
+or wall-clock). Judge only what is present in their diff and questions.
 
 ---
-## Task brief
+## Task brief (may be deliberately under-specified)
 {ji.task_brief}
 
-## Gold diff (reference solution)
+## Gold diff (reference solution — encodes the authoritative decisions)
 ```diff
 {ji.gold_diff}
 ```
 
-## Taker diff (what was submitted)
+## Taker diff (what the taker submitted)
 ```diff
 {ji.taker.diff}
 ```
 
-## Additional context
-{questions_note}
+## Taker's clarifying questions
+{questions_text}
+
 Stop reason: {ji.taker.stop_reason.value}
 
 ---
-Reply with **only** valid JSON — no markdown fences, no extra text:
-{{"score": <integer 0-20>, "rationale": "<one concise sentence>"}}
+Reply with ONLY a valid JSON object — no markdown fences, no extra text:
+{{"score": <integer 0-20 matching one of the anchors>, "rationale": "<one concise sentence>"}}
 """
 
 
@@ -136,7 +219,7 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
 
     response = client.messages.create(
         model=model,
-        max_tokens=300,
+        max_tokens=500,
         messages=[{"role": "user", "content": prompt}],
     )
 
