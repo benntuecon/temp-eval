@@ -342,21 +342,51 @@ def batch_score_distribution(reports: list) -> list[dict]:
 
 
 def init_phoenix() -> str | None:
-    """Register tracing against an *already-running* Phoenix server.
+    """Register tracing against a Phoenix server, auto-starting one if needed.
 
-    Phoenix must be started separately (``just phoenix`` / ``uv run phoenix serve``):
-    ``px.launch_app()`` does not work from Streamlit's worker thread, so we only
-    *connect* here. Returns the Phoenix UI URL if a server is reachable on
-    ``localhost:6006``, else ``None``. Never raises.
+    If nothing is listening on ``localhost:6006``, spawn ``phoenix serve`` as a
+    detached background process and wait briefly for it to come up; then register
+    the tracer and return the Phoenix UI URL (or ``None`` if it couldn't be
+    reached/started). Never raises. (``px.launch_app()`` is intentionally avoided —
+    it doesn't work from Streamlit's worker thread.)
     """
     import socket
+    import time
 
     host, ui_port = "localhost", 6006
-    try:
-        with socket.create_connection((host, ui_port), timeout=0.5):
-            pass
-    except OSError:
-        return None  # no Phoenix server running — start it with `just phoenix`
+
+    def _reachable() -> bool:
+        try:
+            with socket.create_connection((host, ui_port), timeout=0.5):
+                return True
+        except OSError:
+            return False
+
+    if not _reachable():
+        # Auto-start a detached Phoenix server (survives Streamlit reruns/exit).
+        try:
+            import subprocess
+            import sys
+            from pathlib import Path
+
+            phoenix_bin = Path(sys.executable).with_name("phoenix")
+            cmd = [str(phoenix_bin), "serve"] if phoenix_bin.exists() else ["phoenix", "serve"]
+            subprocess.Popen(
+                cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+        except Exception:
+            return None
+        # Phoenix needs a few seconds (DB migrations, server bind).
+        deadline = time.monotonic() + 20.0
+        while time.monotonic() < deadline:
+            if _reachable():
+                break
+            time.sleep(0.5)
+        else:
+            return None  # didn't come up in time
 
     try:
         from phoenix.otel import register  # type: ignore[import-untyped]
