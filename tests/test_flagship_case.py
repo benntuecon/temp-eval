@@ -67,3 +67,6 @@ def test_build_flagship_case(tmp_path):
     # baseline is ship-it-fast (bad), challenger is disciplined (good)
     assert "ship-it-fast" in str(baseline)
     assert "disciplined" in str(challenger)
+
+    # --- thinking budget ---
+    assert cfg.thinking_budget == 2048

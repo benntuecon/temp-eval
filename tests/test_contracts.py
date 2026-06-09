@@ -51,8 +51,35 @@ def test_runconfig_defaults_and_frozen():
     assert cfg.max_turns == 30
     assert cfg.max_tokens is None
     assert cfg.wall_clock_seconds is None
+    assert cfg.thinking_budget is None
     with pytest.raises(dataclasses.FrozenInstanceError):
         cfg.max_turns = 5  # type: ignore[misc]
+
+
+def test_runconfig_thinking_budget():
+    """thinking_budget can be set to a positive integer; defaults to None."""
+    cfg_no_thinking = RunConfig(
+        before_hash="a",
+        after_hash="b",
+        repo_path="/r",
+        task_brief="t",
+        baseline_skill_path="/b",
+        challenger_skill_path="/c",
+        models=("claude-haiku-4-5",),
+    )
+    assert cfg_no_thinking.thinking_budget is None
+
+    cfg_with_thinking = RunConfig(
+        before_hash="a",
+        after_hash="b",
+        repo_path="/r",
+        task_brief="t",
+        baseline_skill_path="/b",
+        challenger_skill_path="/c",
+        models=("claude-haiku-4-5",),
+        thinking_budget=2048,
+    )
+    assert cfg_with_thinking.thinking_budget == 2048
 
 
 def test_workspace_frozen():
@@ -89,6 +116,19 @@ def test_full_report_composition():
         scores=[score],
         total_score=20,
     )
+    # default questions is empty tuple
+    assert arm_report.questions == ()
+
+    arm_report_with_questions = ArmReport(
+        arm=Arm.CHALLENGER,
+        model="claude-opus-4-8",
+        metrics=metrics,
+        scores=[score],
+        total_score=20,
+        questions=("Which DB?", "Any performance constraints?"),
+    )
+    assert arm_report_with_questions.questions == ("Which DB?", "Any performance constraints?")
+
     report = ComparisonReport(
         config=RunConfig(
             before_hash="a",

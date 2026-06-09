@@ -83,4 +83,5 @@ def build_flagship_case(base_dir: str) -> RunConfig:
         baseline_skill_path=str(_SHIP_IT_FAST_SKILL),
         challenger_skill_path=str(_DISCIPLINED_SKILL),
         models=("claude-haiku-4-5",),
+        thinking_budget=2048,
     )

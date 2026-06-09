@@ -129,7 +129,8 @@ def run_taker(
 
     server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[_ask_question])
 
-    options = ClaudeAgentOptions(
+    # Build options dict; only include thinking when budget is set and > 0.
+    options_kwargs: dict[str, Any] = dict(
         model="claude-haiku-4-5",
         cwd=ws.taker_dir,
         system_prompt=(
@@ -158,12 +159,17 @@ def run_taker(
         max_turns=cfg.max_turns,
         permission_mode="bypassPermissions",
     )
+    if cfg.thinking_budget is not None and cfg.thinking_budget > 0:
+        options_kwargs["thinking"] = {"type": "enabled", "budget_tokens": cfg.thinking_budget}
+    options = ClaudeAgentOptions(**options_kwargs)
 
     # -- Async inner session (collected via asyncio.run) -------------------
     transcript: list[dict[str, Any]] = []
     last_result: list[ResultMessage | None] = [None]
     timed_out: list[bool] = [False]
     error_msg: list[str | None] = [None]
+    # Thinking trajectory collected inside _run_query; surfaced here after asyncio.run.
+    _thinking_texts_ref: list[list[str]] = [[]]
     wall_start = time.monotonic()
 
     async def _session() -> None:
@@ -186,13 +192,14 @@ def run_taker(
         # We use the tracer's manual start_span / span.end so durations are real.
         open_tool_spans: dict[str, trace.Span] = {}
         tracer = get_tracer()
+        thinking_texts: list[str] = []  # accumulate thinking content for span attributes
 
         async for message in query(prompt=cfg.task_brief, options=options):
             if isinstance(message, ResultMessage):
                 last_result[0] = message
             else:
-                # ---- Instrument tool-use / tool-result blocks ----
-                # AssistantMessage carries content blocks (ToolUseBlock items).
+                # ---- Instrument tool-use / tool-result / thinking blocks ----
+                # AssistantMessage carries content blocks (ToolUseBlock, ThinkingBlock items).
                 # UserMessage carries ToolResultBlock items.
                 # We detect these defensively by block type name, not exact class,
                 # since SDK versions may rename or reorganise classes.
@@ -200,8 +207,30 @@ def run_taker(
                 if isinstance(content, list):
                     for block in content:
                         btype = type(block).__name__
+
+                        # --- ThinkingBlock: capture reasoning trajectory ---
+                        if btype == "ThinkingBlock":
+                            thinking_text = getattr(block, "thinking", "") or ""
+                            thinking_texts.append(thinking_text)
+                            transcript.append({"role": "thinking", "content": thinking_text})
+                            # Create a nested child span for the thinking block
+                            thinking_span = tracer.start_span("thinking")
+                            try:
+                                thinking_span.set_attribute("openinference.span.kind", "LLM")
+                                thinking_span.set_attribute("input.mime_type", "text/plain")
+                                thinking_span.set_attribute("output.value", thinking_text)
+                            except Exception:  # noqa: BLE001
+                                pass
+                            finally:
+                                thinking_span.end()
+
+                        # --- TextBlock: capture assistant prose ---
+                        elif btype == "TextBlock":
+                            text = getattr(block, "text", "") or ""
+                            transcript.append({"role": "assistant", "content": text})
+
                         # Open a span for each tool-use block
-                        if btype == "ToolUseBlock":
+                        elif btype == "ToolUseBlock":
                             tool_id = getattr(block, "id", None)
                             tool_name = getattr(block, "name", None) or "unknown"
                             tool_input = getattr(block, "input", None) or {}
@@ -241,7 +270,8 @@ def run_taker(
                                         result_text = "\n".join(parts)
                                     else:
                                         result_text = str(raw_content) if raw_content else ""
-                                    set_output(span, result_text[:2000])
+                                    # Store FULL tool result (no truncation)
+                                    set_output(span, result_text)
                                 except Exception:  # noqa: BLE001
                                     pass
                                 span.end()
@@ -251,6 +281,8 @@ def run_taker(
 
                 # Collect all non-ResultMessage messages as transcript entries.
                 # SDK messages are dataclass instances; convert to dict for storage.
+                # (ThinkingBlock and TextBlock already appended above; still store
+                # the whole message for completeness.)
                 try:
                     import dataclasses
 
@@ -270,6 +302,9 @@ def run_taker(
             except Exception:  # noqa: BLE001
                 pass
         open_tool_spans.clear()
+
+        # Store thinking summary on the taker span for later enrichment
+        _thinking_texts_ref[0] = thinking_texts
 
     asyncio.run(_session())
 
@@ -327,10 +362,14 @@ def run_taker(
         set_input(taker_span, input_text)
         # set_kind is already done by the orchestrator, but re-set to be safe
         set_kind(taker_span, "AGENT")
-        # output: first ~1500 chars of the resulting diff
-        set_output(taker_span, diff[:1500] if diff else "(empty diff)")
+        # output: full diff (capped at 10000 chars to keep spans manageable)
+        set_output(taker_span, diff[:10000] if diff else "(empty diff)")
         # token counts from metrics
         set_tokens(taker_span, metrics.input_tokens, metrics.output_tokens)
+        # thinking trajectory stats
+        thinking_texts = _thinking_texts_ref[0]
+        taker_span.set_attribute("thinking.num_blocks", len(thinking_texts))
+        taker_span.set_attribute("thinking.total_chars", sum(len(t) for t in thinking_texts))
     except Exception:  # noqa: BLE001
         pass
 

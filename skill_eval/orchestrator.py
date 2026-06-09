@@ -294,6 +294,7 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
                 metrics=taker.metrics,
                 scores=arm_scores,
                 total_score=total,
+                questions=tuple(taker.questions),
             )
         )
 

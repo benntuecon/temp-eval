@@ -211,9 +211,25 @@ def _make_cfg() -> RunConfig:
     )
 
 
+def _make_thinking_block(text: str) -> MagicMock:
+    """Return a MagicMock that looks like a ThinkingBlock to type(block).__name__."""
+    block = MagicMock()
+    block.__class__.__name__ = "ThinkingBlock"
+    block.thinking = text
+    return block
+
+
 async def _fake_query_gen(*, prompt: str, options: Any):
-    """Async generator that yields one fake ResultMessage."""
+    """Async generator that yields a fake AssistantMessage with a ThinkingBlock,
+    then a fake ResultMessage."""
     from claude_agent_sdk import ResultMessage
+
+    # Yield a fake message whose content includes a ThinkingBlock
+    fake_thinking_block = _make_thinking_block("I am thinking about this problem...")
+    fake_assistant_msg = MagicMock()
+    fake_assistant_msg.__class__.__name__ = "AssistantMessage"
+    fake_assistant_msg.content = [fake_thinking_block]
+    yield fake_assistant_msg
 
     # Yield a real ResultMessage so run_taker gets correct type-checking.
     fake = MagicMock(spec=ResultMessage)
@@ -262,6 +278,10 @@ def test_run_taker_mocked(tmp_path) -> None:
     # transcript is a tuple (possibly empty if ResultMessage consumed exclusively)
     assert isinstance(result.transcript, tuple)
     assert isinstance(result.questions, tuple)
+    # ThinkingBlock yielded by the fake stream should appear in transcript
+    thinking_entries = [e for e in result.transcript if e.get("role") == "thinking"]
+    assert len(thinking_entries) >= 1
+    assert "thinking about this problem" in thinking_entries[0]["content"]
 
 
 def test_run_taker_with_skill_md(tmp_path) -> None:
@@ -325,3 +345,78 @@ def test_run_taker_missing_skill_md(tmp_path) -> None:
         )
 
     assert isinstance(result, TakerResult)
+
+
+def test_run_taker_thinking_budget_sets_option(tmp_path) -> None:
+    """When thinking_budget is set in cfg, the options include a thinking dict."""
+    ws = _make_workspace(tmp_path)
+    cfg = RunConfig(
+        before_hash="HEAD",
+        after_hash="def456",
+        repo_path="/fake/repo",
+        task_brief="Fix the add function.",
+        baseline_skill_path="/fake/baseline",
+        challenger_skill_path="/fake/challenger",
+        models=("claude-haiku-4-5",),
+        max_turns=30,
+        thinking_budget=2048,
+    )
+
+    captured_options: list[Any] = []
+
+    async def _recording_gen(*, prompt: str, options: Any):
+        captured_options.append(options)
+        from claude_agent_sdk import ResultMessage
+
+        fake = MagicMock(spec=ResultMessage)
+        fake.num_turns = 1
+        fake.stop_reason = "end_turn"
+        fake.is_error = False
+        fake.usage = {"input_tokens": 10, "output_tokens": 5}
+        fake.duration_ms = 500
+        fake.__class__ = ResultMessage
+        yield fake
+
+    with patch("skill_eval.taker.query", side_effect=_recording_gen):
+        from skill_eval.taker import run_taker
+
+        run_taker(ws, "claude-haiku-4-5", "/fake/skill", cfg, lambda q: "yes")
+
+    assert captured_options, "options should have been captured"
+    opts = captured_options[0]
+    assert hasattr(opts, "thinking"), "thinking attribute should be present"
+    assert opts.thinking == {"type": "enabled", "budget_tokens": 2048}
+
+
+def test_run_taker_no_thinking_without_budget(tmp_path) -> None:
+    """When thinking_budget is None, options should NOT include thinking."""
+    ws = _make_workspace(tmp_path)
+    cfg = _make_cfg()  # thinking_budget defaults to None
+
+    captured_options: list[Any] = []
+
+    async def _recording_gen(*, prompt: str, options: Any):
+        captured_options.append(options)
+        from claude_agent_sdk import ResultMessage
+
+        fake = MagicMock(spec=ResultMessage)
+        fake.num_turns = 1
+        fake.stop_reason = "end_turn"
+        fake.is_error = False
+        fake.usage = {"input_tokens": 10, "output_tokens": 5}
+        fake.duration_ms = 500
+        fake.__class__ = ResultMessage
+        yield fake
+
+    with patch("skill_eval.taker.query", side_effect=_recording_gen):
+        from skill_eval.taker import run_taker
+
+        run_taker(ws, "claude-haiku-4-5", "/fake/skill", cfg, lambda q: "yes")
+
+    assert captured_options, "options should have been captured"
+    opts = captured_options[0]
+    # thinking should not be set (None or absent) when budget is not configured
+    thinking_val = getattr(opts, "thinking", None)
+    assert thinking_val is None or thinking_val == {}, (
+        f"expected no thinking when budget is None, got: {thinking_val}"
+    )

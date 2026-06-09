@@ -56,6 +56,7 @@ class RunConfig:
     max_turns: int = 30
     max_tokens: int | None = None  # optional hard token cap
     wall_clock_seconds: int | None = None  # real elapsed-time cap
+    thinking_budget: int | None = None  # token budget for extended thinking (None = disabled)
 
 
 # ---------- Sandbox (Component 1) ----------
@@ -149,6 +150,7 @@ class ArmReport:
     metrics: RunMetrics
     scores: list[JudgeScore]
     total_score: int  # sum of criterion scores (or weighted)
+    questions: tuple[str, ...] = ()  # clarifying questions the arm's taker asked
 
 
 @dataclass

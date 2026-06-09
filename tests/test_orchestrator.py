@@ -21,6 +21,10 @@ def test_run_eval_simulated_end_to_end(tmp_path):
         # one score per criterion
         assert {s.criterion for s in arm_report.scores} == set(Criterion)
         assert arm_report.total_score == sum(s.score for s in arm_report.scores)
+        # questions is always a tuple
+        assert isinstance(arm_report.questions, tuple)
+    # simulated taker always asks >= 1 question per arm, so at least one arm non-empty
+    assert any(len(ar.questions) > 0 for ar in report.arms)
     assert report.pairwise_verdict
     # events captured the workflow stages
     stages = {e.get("stage") for e in events}
