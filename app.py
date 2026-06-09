@@ -509,6 +509,37 @@ def _run_single_case(
         # Verdict
         st.success(f"Verdict: {verdict_line(report)}")
 
+        # ------------------------------------------------------------------
+        # Clarifying questions side-by-side
+        # ------------------------------------------------------------------
+        st.subheader("Clarifying questions asked")
+        st.caption(
+            "What each skill made the agent ask — the concrete signal of capability."
+            " Full reasoning trajectory in Phoenix."
+        )
+
+        # Pull the two ArmReports by arm value (order not assumed)
+        baseline_ar = next((ar for ar in report.arms if ar.arm.value == "baseline"), None)
+        challenger_ar = next((ar for ar in report.arms if ar.arm.value == "challenger"), None)
+
+        col_q_base, col_q_chal = st.columns(2)
+
+        with col_q_base:
+            st.markdown("**Baseline**")
+            if baseline_ar is None or not baseline_ar.questions:
+                st.markdown("*(no clarifying questions asked)*")
+            else:
+                q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(baseline_ar.questions))
+                st.markdown(q_lines)
+
+        with col_q_chal:
+            st.markdown("**Challenger**")
+            if challenger_ar is None or not challenger_ar.questions:
+                st.markdown("*(no clarifying questions asked)*")
+            else:
+                q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(challenger_ar.questions))
+                st.markdown(q_lines)
+
 
 def _run_flagship_mode(
     *,
