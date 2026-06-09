@@ -68,23 +68,27 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Mode selector
     # ------------------------------------------------------------------
-    mode = st.radio("Mode", ["Single case", "Batch (10 cases)"], horizontal=True)
+    mode = st.radio("Mode", ["Single case", "Batch (10 cases)", "Flagship"], horizontal=True)
 
     # Sidebar
     with st.sidebar:
         st.markdown("### Phase A / B")
-        if mode == "Batch (10 cases)":
+        if mode == "Flagship":
+            st.info("Flagship always uses real Haiku agents.")
+            use_real = False  # sidebar toggle unused in Flagship mode
+        elif mode == "Batch (10 cases)":
             use_real = st.checkbox(
                 "Use real Haiku agents (Phase B — Batch of 10 ≈ $1.5–2 with real agents)",
                 value=False,
             )
         else:
             use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
-        if use_real:
-            st.warning("Real API calls — costs money!")
-        else:
-            st.info("Simulated data (no API)")
-            st.markdown("All components are deterministic Python — zero LLM cost.")
+        if mode != "Flagship":
+            if use_real:
+                st.warning("Real API calls — costs money!")
+            else:
+                st.info("Simulated data (no API)")
+                st.markdown("All components are deterministic Python — zero LLM cost.")
 
         # Phoenix link (cached in session so we don't relaunch on every rerun)
         if "phoenix_url" not in st.session_state:
@@ -110,11 +114,32 @@ def main() -> None:
             run_eval=run_eval,
             scores_table=scores_table,
             verdict_line=verdict_line,
-            build_sample_repo=build_sample_repo,
+            build_cfg=build_sample_repo,
+            force_real=False,
             sim_make_simulator=sim_make_simulator,
             sim_run_judge=sim_run_judge,
             sim_run_taker=sim_run_taker,
             agent_graph_dot=agent_graph_dot,
+        )
+
+    # ------------------------------------------------------------------
+    # Flagship mode
+    # ------------------------------------------------------------------
+    elif mode == "Flagship":
+        _run_flagship_mode(
+            st=st,
+            pd=pd,
+            queue=queue,
+            shutil=shutil,
+            tempfile=tempfile,
+            threading=threading,
+            run_eval=run_eval,
+            scores_table=scores_table,
+            verdict_line=verdict_line,
+            agent_graph_dot=agent_graph_dot,
+            sim_make_simulator=sim_make_simulator,
+            sim_run_judge=sim_run_judge,
+            sim_run_taker=sim_run_taker,
         )
 
     # ------------------------------------------------------------------
@@ -150,17 +175,28 @@ def _run_single_case(
     run_eval,  # type: ignore[type-arg]
     scores_table,  # type: ignore[type-arg]
     verdict_line,  # type: ignore[type-arg]
-    build_sample_repo,  # type: ignore[type-arg]
+    build_cfg=None,  # type: ignore[type-arg]  callable(base_dir) -> RunConfig
+    force_real: bool = False,
     sim_make_simulator,  # type: ignore[type-arg]
     sim_run_judge,  # type: ignore[type-arg]
     sim_run_taker,  # type: ignore[type-arg]
     agent_graph_dot,  # type: ignore[type-arg]
+    button_label: str = "Run eval",
 ) -> None:
-    """Single-case control-room view (original logic, unchanged)."""
-    # ------------------------------------------------------------------
-    # Run eval button
-    # ------------------------------------------------------------------
-    if st.button("Run eval", type="primary"):
+    """Single-case control-room view.
+
+    Parameters
+    ----------
+    build_cfg:
+        Callable ``(base_dir: str) -> RunConfig`` used to set up the repo.
+        Defaults to ``build_sample_repo`` when *None*.
+    force_real:
+        When *True*, always use the real taker/simulator/judge regardless of
+        the ``use_real`` sidebar toggle (used by Flagship mode).
+    button_label:
+        Label for the primary action button.
+    """
+    if st.button(button_label, type="primary"):
         st.divider()
         st.subheader("Live progress")
 
@@ -289,14 +325,20 @@ def _run_single_case(
         # ------------------------------------------------------------------
         q: queue.Queue = queue.Queue()
 
-        # Capture widget value before entering the background thread — Streamlit
+        # Capture values before entering the background thread — Streamlit
         # widgets cannot be accessed from a non-Streamlit thread.
-        _use_real = use_real
+        _use_real = force_real or use_real
+        # Resolve build_cfg: default to build_sample_repo when not supplied.
+        _build_cfg = build_cfg
+        if _build_cfg is None:
+            from skill_eval.sample_repo import build_sample_repo as _bsr
+
+            _build_cfg = _bsr
 
         def _background() -> None:
             tmp = tempfile.mkdtemp()
             try:
-                cfg = build_sample_repo(tmp)
+                cfg = _build_cfg(tmp)
 
                 def on_event(ev: dict) -> None:
                     q.put(("event", ev))
@@ -466,6 +508,51 @@ def _run_single_case(
 
         # Verdict
         st.success(f"Verdict: {verdict_line(report)}")
+
+
+def _run_flagship_mode(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    queue,  # type: ignore[type-arg]
+    shutil,  # type: ignore[type-arg]
+    tempfile,  # type: ignore[type-arg]
+    threading,  # type: ignore[type-arg]
+    run_eval,  # type: ignore[type-arg]
+    scores_table,  # type: ignore[type-arg]
+    verdict_line,  # type: ignore[type-arg]
+    agent_graph_dot,  # type: ignore[type-arg]
+    sim_make_simulator,  # type: ignore[type-arg]
+    sim_run_judge,  # type: ignore[type-arg]
+    sim_run_taker,  # type: ignore[type-arg]
+) -> None:
+    """Flagship mode: disciplined vs ship-it-fast on prorate_refund with real Haiku agents."""
+    st.caption(
+        "Disciplined skill vs ship-it-fast skill on an under-specified `prorate_refund` task"
+        " — runs **real Haiku agents** (~$0.40)."
+    )
+
+    from skill_eval.flagship_case import build_flagship_case
+
+    _run_single_case(
+        st=st,
+        pd=pd,
+        queue=queue,
+        shutil=shutil,
+        tempfile=tempfile,
+        threading=threading,
+        use_real=False,  # overridden by force_real
+        run_eval=run_eval,
+        scores_table=scores_table,
+        verdict_line=verdict_line,
+        build_cfg=build_flagship_case,
+        force_real=True,
+        sim_make_simulator=sim_make_simulator,
+        sim_run_judge=sim_run_judge,
+        sim_run_taker=sim_run_taker,
+        agent_graph_dot=agent_graph_dot,
+        button_label="Run flagship",
+    )
 
 
 def _run_batch_mode(
