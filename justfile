@@ -24,6 +24,9 @@ check: fmt lint types test
 app:
     uv run streamlit run app.py
 
+phoenix:
+    uv run phoenix serve
+
 graph:
     graphify update .
 

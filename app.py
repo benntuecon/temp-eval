@@ -93,7 +93,7 @@ def main() -> None:
         if phoenix_url:
             st.markdown(f"[Open Phoenix traces]({phoenix_url})")
         else:
-            st.caption("Phoenix not available — tracing skipped.")
+            st.caption("Phoenix not running — start it with `just phoenix`, then rerun.")
 
     # ------------------------------------------------------------------
     # Single case mode

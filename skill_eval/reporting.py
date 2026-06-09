@@ -342,17 +342,26 @@ def batch_score_distribution(reports: list) -> list[dict]:
 
 
 def init_phoenix() -> str | None:
-    """Launch / register Phoenix tracing and auto-instrument all supported SDKs.
+    """Register tracing against an *already-running* Phoenix server.
 
-    Returns the Phoenix UI URL string, or ``None`` if Phoenix is unavailable.
-    This function is fully wrapped in try/except and will *never* raise.
+    Phoenix must be started separately (``just phoenix`` / ``uv run phoenix serve``):
+    ``px.launch_app()`` does not work from Streamlit's worker thread, so we only
+    *connect* here. Returns the Phoenix UI URL if a server is reachable on
+    ``localhost:6006``, else ``None``. Never raises.
     """
+    import socket
+
+    host, ui_port = "localhost", 6006
     try:
-        import phoenix as px  # type: ignore[import-untyped]
+        with socket.create_connection((host, ui_port), timeout=0.5):
+            pass
+    except OSError:
+        return None  # no Phoenix server running — start it with `just phoenix`
+
+    try:
         from phoenix.otel import register  # type: ignore[import-untyped]
 
-        session = px.launch_app()
         register(project_name="skill-eval", auto_instrument=True)
-        return getattr(session, "url", None) or str(session)
+        return f"http://{host}:{ui_port}"
     except Exception:
         return None
