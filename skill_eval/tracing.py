@@ -45,6 +45,19 @@ except Exception:  # noqa: BLE001
     _TOOL_NAME = "tool.name"
     _TOOL_PARAMETERS = "tool.parameters"
 
+# Additional OpenInference attribute keys (string forms — these conventions are
+# stable, so we hard-code them rather than importing to keep the block readable).
+_LLM_MODEL_NAME = "llm.model_name"
+_LLM_INVOCATION_PARAMETERS = "llm.invocation_parameters"
+_LLM_INPUT_MESSAGES = "llm.input_messages"
+_LLM_OUTPUT_MESSAGES = "llm.output_messages"
+_MESSAGE_ROLE = "message.role"
+_MESSAGE_CONTENT = "message.content"
+_CACHE_READ = "llm.token_count.prompt_details.cache_read"
+_CACHE_WRITE = "llm.token_count.prompt_details.cache_write"
+_METADATA = "metadata"
+_SESSION_ID = "session.id"
+
 
 # ---------------------------------------------------------------------------
 # Tracer accessor
@@ -92,6 +105,77 @@ def set_tokens(span: Span, prompt: int, completion: int) -> None:
         span.set_attribute(_TOKEN_PROMPT, prompt)
         span.set_attribute(_TOKEN_COMPLETION, completion)
         span.set_attribute(_TOKEN_TOTAL, prompt + completion)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_cache_tokens(span: Span, cache_read: int, cache_write: int) -> None:
+    """Set Anthropic prompt-cache token details (read / creation)."""
+    try:
+        if cache_read:
+            span.set_attribute(_CACHE_READ, int(cache_read))
+        if cache_write:
+            span.set_attribute(_CACHE_WRITE, int(cache_write))
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_model_name(span: Span, model_name: str) -> None:
+    """Set ``llm.model_name`` so Phoenix labels the LLM span with the model."""
+    try:
+        span.set_attribute(_LLM_MODEL_NAME, model_name)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_invocation_parameters(span: Span, params: dict[str, Any]) -> None:
+    """Set ``llm.invocation_parameters`` (JSON of temperature, max_tokens, …)."""
+    try:
+        span.set_attribute(_LLM_INVOCATION_PARAMETERS, json.dumps(params, default=str))
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_messages(
+    span: Span,
+    *,
+    input_messages: list[dict[str, str]] | None = None,
+    output_messages: list[dict[str, str]] | None = None,
+) -> None:
+    """Set OpenInference structured ``llm.input_messages`` / ``llm.output_messages``.
+
+    Each message is ``{"role": ..., "content": ...}``.  Phoenix renders these as
+    a proper chat panel (role + content) instead of a flat ``input.value`` blob.
+    """
+    try:
+        for i, m in enumerate(input_messages or []):
+            span.set_attribute(f"{_LLM_INPUT_MESSAGES}.{i}.{_MESSAGE_ROLE}", str(m.get("role", "")))
+            span.set_attribute(
+                f"{_LLM_INPUT_MESSAGES}.{i}.{_MESSAGE_CONTENT}", str(m.get("content", ""))
+            )
+        for i, m in enumerate(output_messages or []):
+            span.set_attribute(
+                f"{_LLM_OUTPUT_MESSAGES}.{i}.{_MESSAGE_ROLE}", str(m.get("role", ""))
+            )
+            span.set_attribute(
+                f"{_LLM_OUTPUT_MESSAGES}.{i}.{_MESSAGE_CONTENT}", str(m.get("content", ""))
+            )
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_metadata(span: Span, metadata: dict[str, Any]) -> None:
+    """Set ``metadata`` (JSON) — arbitrary structured context Phoenix surfaces."""
+    try:
+        span.set_attribute(_METADATA, json.dumps(metadata, default=str))
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def set_session(span: Span, session_id: str) -> None:
+    """Set ``session.id`` so Phoenix groups every span of one eval run together."""
+    try:
+        span.set_attribute(_SESSION_ID, str(session_id))
     except Exception:  # noqa: BLE001
         pass
 

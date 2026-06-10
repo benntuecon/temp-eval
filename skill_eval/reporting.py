@@ -14,6 +14,25 @@ if TYPE_CHECKING:
     from skill_eval.contracts import ComparisonReport
 
 # ---------------------------------------------------------------------------
+# Shared visual palette — ONE colour per arm, used by EVERY chart so the eye
+# can compare across views without re-learning the legend each time.
+# ---------------------------------------------------------------------------
+
+ARM_COLORS: dict[str, str] = {
+    "baseline": "#E45756",  # warm red  → the weaker/control arm
+    "challenger": "#4C78A8",  # cool blue → the arm under test
+}
+
+# Column order for grouped bars / dumbbells (baseline first, challenger second).
+ARM_ORDER: list[str] = ["baseline", "challenger"]
+
+
+def arm_color_list(columns: list[str]) -> list[str]:
+    """Return a colour per column in ``columns`` order (for ``st.bar_chart``)."""
+    return [ARM_COLORS.get(c, "#999999") for c in columns]
+
+
+# ---------------------------------------------------------------------------
 # Pure helpers
 # ---------------------------------------------------------------------------
 
@@ -56,6 +75,78 @@ def verdict_line(report: ComparisonReport) -> str:
         return f"Baseline wins by {margin} points ({baseline} vs {challenger})"
     else:
         return f"Tie — both arms scored {baseline}"
+
+
+# ---------------------------------------------------------------------------
+# Comparison-dataviz helpers (single report) — gap, winners, quality-vs-cost
+# ---------------------------------------------------------------------------
+
+
+def criterion_gap_rows(report: ComparisonReport) -> list[dict]:
+    """Return one row per Criterion with baseline, challenger, and the gap.
+
+    ``gap = challenger - baseline`` (positive ⇒ challenger ahead).  This feeds a
+    dumbbell / diverging chart — the canonical way to compare two series across
+    several dimensions, because it makes the *difference* the primary visual.
+    Rows are sorted by descending gap so the biggest wins float to the top.
+    """
+    from skill_eval.contracts import Arm, Criterion
+
+    score_map: dict[tuple[str, str], int] = {}
+    for arm_report in report.arms:
+        for js in arm_report.scores:
+            score_map[(arm_report.arm.value, js.criterion.value)] = js.score
+
+    rows = []
+    for criterion in Criterion:
+        b = score_map.get((Arm.BASELINE.value, criterion.value), 0)
+        c = score_map.get((Arm.CHALLENGER.value, criterion.value), 0)
+        rows.append({"criterion": criterion.value, "baseline": b, "challenger": c, "gap": c - b})
+    rows.sort(key=lambda r: r["gap"], reverse=True)
+    return rows
+
+
+def criterion_winners(report: ComparisonReport) -> list[dict]:
+    """Return one row per Criterion with the per-criterion winner and margin.
+
+    Each row is ``{"criterion": str, "winner": "baseline"|"challenger"|"tie",
+    "margin": int}``.  Order matches :func:`criterion_gap_rows` (largest gap
+    first).
+    """
+    rows = []
+    for r in criterion_gap_rows(report):
+        gap = r["gap"]
+        if gap > 0:
+            winner = "challenger"
+        elif gap < 0:
+            winner = "baseline"
+        else:
+            winner = "tie"
+        rows.append({"criterion": r["criterion"], "winner": winner, "margin": abs(gap)})
+    return rows
+
+
+def quality_cost_rows(report: ComparisonReport) -> list[dict]:
+    """Return one row per arm pairing quality (total score) against cost.
+
+    Each row is ``{"arm", "total_score", "total_tokens", "wall_seconds",
+    "num_turns", "num_questions"}`` — the data behind a quality-vs-cost scatter
+    that answers "is the better skill worth what it costs?".
+    """
+    rows = []
+    for arm_report in report.arms:
+        m = arm_report.metrics
+        rows.append(
+            {
+                "arm": arm_report.arm.value,
+                "total_score": arm_report.total_score,
+                "total_tokens": m.total_tokens,
+                "wall_seconds": round(m.wall_seconds, 2),
+                "num_turns": m.num_turns,
+                "num_questions": m.num_questions,
+            }
+        )
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -141,6 +232,25 @@ def batch_per_criterion_avg(reports: list[ComparisonReport]) -> list[dict]:
             total = sums.get((arm.value, criterion.value), 0.0)
             row[arm.value] = round(total / n, 1) if n > 0 else 0.0
         rows.append(row)
+    return rows
+
+
+def batch_criterion_gap_rows(reports: list[ComparisonReport]) -> list[dict]:
+    """Return per-Criterion average baseline, challenger, and gap across a batch.
+
+    Built on :func:`batch_per_criterion_avg`; adds ``gap = challenger - baseline``
+    and sorts by descending gap.  Feeds the batch dumbbell chart.
+    """
+    from skill_eval.contracts import Arm
+
+    rows = []
+    for r in batch_per_criterion_avg(reports):
+        b = r.get(Arm.BASELINE.value, 0.0)
+        c = r.get(Arm.CHALLENGER.value, 0.0)
+        rows.append(
+            {"criterion": r["criterion"], "baseline": b, "challenger": c, "gap": round(c - b, 1)}
+        )
+    rows.sort(key=lambda r: r["gap"], reverse=True)
     return rows
 
 

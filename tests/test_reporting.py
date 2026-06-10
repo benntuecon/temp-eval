@@ -8,12 +8,18 @@ from skill_eval.contracts import (
     RunMetrics,
 )
 from skill_eval.reporting import (
+    ARM_COLORS,
     agent_graph_dot,
+    arm_color_list,
+    batch_criterion_gap_rows,
     batch_per_case_totals,
     batch_per_criterion_avg,
     batch_score_distribution,
     batch_win_summary,
+    criterion_gap_rows,
+    criterion_winners,
     log_judge_evaluations,
+    quality_cost_rows,
     scores_table,
     verdict_line,
 )
@@ -48,6 +54,67 @@ def test_scores_table_shape():
 
 def test_verdict_line():
     assert "challenger" in verdict_line(_report()).lower()
+
+
+# ---------------------------------------------------------------------------
+# Comparison-dataviz helpers (gap / winners / quality-cost / palette)
+# ---------------------------------------------------------------------------
+
+
+def test_criterion_gap_rows_shape_and_gap():
+    rows = criterion_gap_rows(_report())  # baseline base 8, challenger base 12
+    assert len(rows) == len(Criterion)
+    for row in rows:
+        assert set(row) == {"criterion", "baseline", "challenger", "gap"}
+        # challenger = base+i, baseline = base+i ⇒ constant gap of 4 here
+        assert row["gap"] == row["challenger"] - row["baseline"] == 4
+
+
+def test_criterion_gap_rows_sorted_by_gap_desc():
+    # Build a report where gaps differ per criterion so ordering is observable.
+    m = RunMetrics(100, 60, 40, 1.2, 3, 1)
+    base_scores = [JudgeScore(c, 5, "x") for c in Criterion]
+    chal_scores = [JudgeScore(c, 5 + i, "x") for i, c in enumerate(Criterion)]  # gap grows
+    cfg = RunConfig("a", "b", "/r", "brief", "/b", "/c", ("claude-haiku-4-5",))
+    report = ComparisonReport(
+        cfg,
+        [
+            ArmReport(Arm.BASELINE, "m", m, base_scores, sum(s.score for s in base_scores)),
+            ArmReport(Arm.CHALLENGER, "m", m, chal_scores, sum(s.score for s in chal_scores)),
+        ],
+        "v",
+    )
+    rows = criterion_gap_rows(report)
+    gaps = [r["gap"] for r in rows]
+    assert gaps == sorted(gaps, reverse=True)
+
+
+def test_criterion_winners():
+    rows = criterion_winners(_report())  # challenger ahead everywhere
+    assert len(rows) == len(Criterion)
+    for row in rows:
+        assert row["winner"] == "challenger"
+        assert row["margin"] == 4
+
+
+def test_quality_cost_rows():
+    rows = quality_cost_rows(_report())
+    assert len(rows) == 2
+    arms = {r["arm"] for r in rows}
+    assert arms == {"baseline", "challenger"}
+    for row in rows:
+        assert set(row) >= {"arm", "total_score", "total_tokens", "wall_seconds", "num_questions"}
+        assert row["total_tokens"] == 100  # from RunMetrics(100, ...)
+
+
+def test_arm_color_palette():
+    assert set(ARM_COLORS) == {"baseline", "challenger"}
+    assert arm_color_list(["baseline", "challenger"]) == [
+        ARM_COLORS["baseline"],
+        ARM_COLORS["challenger"],
+    ]
+    # Unknown column falls back to a neutral grey, never raises.
+    assert arm_color_list(["mystery"]) == ["#999999"]
 
 
 # ---------------------------------------------------------------------------
@@ -103,6 +170,16 @@ def test_batch_per_criterion_avg_values_are_rounded():
             val = row[arm_key]
             assert isinstance(val, float)
             assert round(val, 1) == val
+
+
+def test_batch_criterion_gap_rows():
+    rows = batch_criterion_gap_rows(_BATCH_REPORTS)
+    assert len(rows) == len(Criterion)
+    gaps = [r["gap"] for r in rows]
+    assert gaps == sorted(gaps, reverse=True)  # sorted by descending gap
+    for row in rows:
+        assert set(row) == {"criterion", "baseline", "challenger", "gap"}
+        assert round(row["gap"], 1) == round(row["challenger"] - row["baseline"], 1)
 
 
 # ---------------------------------------------------------------------------

@@ -34,6 +34,7 @@ from skill_eval.contracts import (
     Workspace,
 )
 from skill_eval.sandbox import cleanup_workspaces, prepare_workspaces
+from skill_eval.tracing import set_session
 
 
 def _get_tracer() -> trace.Tracer:
@@ -58,6 +59,7 @@ class _EvalState(TypedDict, total=False):
     simulator_factory: MakeSimulator
     judge_fn: JudgeFn
     on_event: EventFn | None
+    session_id: str
     # inter-node data
     spaces: dict[Arm, Workspace]
     # reducer channels: parallel nodes append their results
@@ -89,6 +91,7 @@ def _node_prepare(state: _EvalState) -> dict[str, Any]:
     cfg: RunConfig = state["cfg"]
     with _get_tracer().start_as_current_span("sandbox") as span:
         span.set_attribute("openinference.span.kind", "CHAIN")
+        set_session(span, state.get("session_id", ""))
         span.set_attribute("num_arms", len(spaces))
         # Enrich with hashes and gold diff sizes
         span.set_attribute("before_hash", cfg.before_hash)
@@ -122,6 +125,7 @@ def _fan_out_takers(state: _EvalState) -> list[Send]:
                     "taker_fn": state["taker_fn"],
                     "simulator_factory": state["simulator_factory"],
                     "on_event": state.get("on_event"),
+                    "session_id": state.get("session_id", ""),
                 },
             )
         )
@@ -147,6 +151,7 @@ async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
 
     with _get_tracer().start_as_current_span("taker") as span:
         span.set_attribute("openinference.span.kind", "AGENT")
+        set_session(span, payload.get("session_id", ""))
         span.set_attribute("arm", arm.value)
         span.set_attribute("model", model)
 
@@ -209,6 +214,7 @@ def _fan_out_judges(state: _EvalState) -> list[Send]:
                         "taker": taker,
                         "judge_fn": state["judge_fn"],
                         "on_event": state.get("on_event"),
+                        "session_id": state.get("session_id", ""),
                     },
                 )
             )
@@ -240,6 +246,7 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
 
     with _get_tracer().start_as_current_span("judge") as span:
         span.set_attribute("openinference.span.kind", "LLM")
+        set_session(span, payload.get("session_id", ""))
         span.set_attribute("arm", arm.value)
         span.set_attribute("criterion", criterion.value)
 
@@ -408,12 +415,35 @@ def run_eval(
                 "real judge is Phase B; pass judge_fn=sim_run_judge for now"
             ) from exc
 
+    # One session id per eval run so Phoenix groups every span (root, takers,
+    # judges, simulator, tools) under a single Session.
+    from uuid import uuid4
+
+    session_id = uuid4().hex
+
+    # ``using_session`` puts the id in OTel context so it propagates to EVERY
+    # span — including framework spans created by auto-instrumentation
+    # (LangGraph nodes, Anthropic ``messages.create``) that we don't create
+    # ourselves. Fall back to a no-op when the package is absent so the module
+    # stays importable in minimal environments.
+    try:
+        from openinference.instrumentation import using_session
+    except Exception:  # noqa: BLE001
+        from contextlib import nullcontext
+
+        def using_session(_sid: str):  # type: ignore[no-redef]
+            return nullcontext()
+
     # Create workspaces BEFORE invoking the graph so cleanup is guaranteed
     # even when a node after prepare raises.
     spaces: dict[Arm, Workspace] = prepare_workspaces(cfg)
     try:
-        with _get_tracer().start_as_current_span("skill_eval.run") as root:
+        with (
+            using_session(session_id),
+            _get_tracer().start_as_current_span("skill_eval.run") as root,
+        ):
             root.set_attribute("openinference.span.kind", "CHAIN")
+            set_session(root, session_id)
             root.set_attribute("models", ",".join(cfg.models))
             # Enrich input with task brief and skill names
             import os as _os
@@ -431,6 +461,7 @@ def run_eval(
                 "judge_fn": judge_fn,
                 "on_event": on_event,
                 "spaces": spaces,
+                "session_id": session_id,
                 "taker_results": [],
                 "scores": [],
             }

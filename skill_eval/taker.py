@@ -22,7 +22,19 @@ from opentelemetry import trace
 
 from skill_eval import git_ops
 from skill_eval.contracts import AskFn, RunConfig, RunMetrics, StopReason, TakerResult, Workspace
-from skill_eval.tracing import get_tracer, set_input, set_kind, set_output, set_tokens, tool_span
+from skill_eval.tracing import (
+    get_tracer,
+    set_cache_tokens,
+    set_input,
+    set_invocation_parameters,
+    set_kind,
+    set_messages,
+    set_metadata,
+    set_model_name,
+    set_output,
+    set_tokens,
+    tool_span,
+)
 
 # ---------------------------------------------------------------------------
 # Pure helpers (unit-testable without network)
@@ -123,7 +135,10 @@ def run_taker(
         tracer = get_tracer()
         with tool_span(tracer, "ask_question", {"question": question}) as span:
             set_input(span, question)
-            answer = ask_fn(question)
+            # Make the tool span current while ask_fn runs so the simulator's
+            # own LLM span nests *under* this ask_question TOOL span (tool→LLM).
+            with trace.use_span(span, end_on_exit=False):
+                answer = ask_fn(question)
             set_output(span, answer)
         return {"content": [{"type": "text", "text": answer}]}
 
@@ -368,20 +383,50 @@ def run_taker(
         thinking_texts = _thinking_texts_ref[0]
         taker_span.set_attribute("thinking.num_blocks", len(thinking_texts))
         taker_span.set_attribute("thinking.total_chars", sum(len(t) for t in thinking_texts))
+        # Structured metadata Phoenix surfaces as a tidy panel on the AGENT span.
+        set_metadata(
+            taker_span,
+            {
+                "skill": skill_name,
+                "stop_reason": stop.value,
+                "num_questions": num_q,
+                "num_turns": metrics.num_turns,
+                "thinking_budget": cfg.thinking_budget,
+                "diff_chars": len(diff),
+            },
+        )
         # Phoenix rolls token usage up from descendant *LLM* spans; token counts
         # set on this AGENT span are not shown in the token column. So expose the
         # agent's aggregate model usage as an LLM-kind child span carrying the
         # real prompt/completion/total counts (the SDK's internal model calls
         # aren't otherwise traced).
         final_text = (getattr(last_result[0], "result", "") or "") if last_result[0] else ""
+        usage = (getattr(last_result[0], "usage", None) or {}) if last_result[0] else {}
+        invocation = {"model": "claude-haiku-4-5", "max_turns": cfg.max_turns}
+        if cfg.thinking_budget:
+            invocation["thinking_budget_tokens"] = cfg.thinking_budget
         model_span = get_tracer().start_span("model")
         try:
             set_kind(model_span, "LLM")
-            model_span.set_attribute("llm.model_name", model)
+            set_model_name(model_span, model)
+            set_invocation_parameters(model_span, invocation)
             set_input(model_span, input_text)
             if final_text:
                 set_output(model_span, final_text[:10000])
+            set_messages(
+                model_span,
+                input_messages=[{"role": "user", "content": cfg.task_brief}],
+                output_messages=(
+                    [{"role": "assistant", "content": final_text[:10000]}] if final_text else None
+                ),
+            )
             set_tokens(model_span, metrics.input_tokens, metrics.output_tokens)
+            if isinstance(usage, dict):
+                set_cache_tokens(
+                    model_span,
+                    int(usage.get("cache_read_input_tokens", 0) or 0),
+                    int(usage.get("cache_creation_input_tokens", 0) or 0),
+                )
         finally:
             model_span.end()
     except Exception:  # noqa: BLE001

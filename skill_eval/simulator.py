@@ -11,6 +11,18 @@ from pathlib import Path
 import anthropic
 
 from skill_eval.contracts import AskFn
+from skill_eval.tracing import (
+    get_tracer,
+    set_cache_tokens,
+    set_input,
+    set_invocation_parameters,
+    set_kind,
+    set_messages,
+    set_metadata,
+    set_model_name,
+    set_output,
+    set_tokens,
+)
 
 # Maximum total characters of file content included in the gold context.
 _MAX_GOLD_CHARS = 6000
@@ -70,12 +82,45 @@ def make_simulator(after_dir: str, task_brief: str, model: str) -> AskFn:
     client = anthropic.Anthropic()
 
     def ask(question: str) -> str:
-        response = client.messages.create(
-            model=model,
-            max_tokens=400,
-            system=system,
-            messages=[{"role": "user", "content": question}],
-        )
-        return "".join(block.text for block in response.content if hasattr(block, "text"))
+        # Trace the simulator's own LLM call as a nested LLM span. Without this,
+        # the HITL stakeholder agent is invisible in Phoenix — only the taker's
+        # ask_question TOOL latency is captured, not the model call behind it.
+        with get_tracer().start_as_current_span("llm.simulator") as span:
+            set_kind(span, "LLM")
+            set_model_name(span, model)
+            set_input(span, question)
+            set_invocation_parameters(span, {"model": model, "max_tokens": 400})
+            set_metadata(span, {"role": "hitl_simulator", "gold_context_chars": len(system)})
+
+            response = client.messages.create(
+                model=model,
+                max_tokens=400,
+                system=system,
+                messages=[{"role": "user", "content": question}],
+            )
+            answer = "".join(block.text for block in response.content if hasattr(block, "text"))
+
+            set_output(span, answer)
+            set_messages(
+                span,
+                input_messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": question},
+                ],
+                output_messages=[{"role": "assistant", "content": answer}],
+            )
+            usage = getattr(response, "usage", None)
+            if usage is not None:
+                set_tokens(
+                    span,
+                    int(getattr(usage, "input_tokens", 0) or 0),
+                    int(getattr(usage, "output_tokens", 0) or 0),
+                )
+                set_cache_tokens(
+                    span,
+                    int(getattr(usage, "cache_read_input_tokens", 0) or 0),
+                    int(getattr(usage, "cache_creation_input_tokens", 0) or 0),
+                )
+            return answer
 
     return ask

@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>skill-eval — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>skill-eval — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 574 nodes, 1372 edges, 29 communities. Commit: 6877c1e</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#analysis-clustering">Analysis &amp; Clustering</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#tests-fixtures">Tests &amp; Fixtures</a>
+    <a href="#community-5">Community 5</a>
+    <a href="#community-12">Community 12</a>
+    <a href="#community-28">Community 28</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>3 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>37 nodes</small>")
+    class ANALYSIS_CLUSTERING_C79796DA module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>237 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>271 nodes</small>")
+    class TESTS_FIXTURES_B84B1DCC module;
+    COMMUNITY_5_2966028D("Community 5<br/><small>12 nodes</small>")
+    class COMMUNITY_5_2966028D module;
+    COMMUNITY_12_82F13F05("Community 12<br/><small>8 nodes</small>")
+    class COMMUNITY_12_82F13F05 module;
+    COMMUNITY_28_3AE3708D("Community 28<br/><small>6 nodes</small>")
+    class COMMUNITY_28_3AE3708D module;
+    CLI_SKILLS_9964CBB8 -->|imports x57| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|imports x50| CLI_SKILLS_9964CBB8
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>3</td><td><code>13</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>37</td><td><code>6, 7, 25, 10</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>237</td><td><code>11, 16, 1, 3, 22, 23, 24, 8, 9, 26, 27, 14, 17</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>271</td><td><code>2, 4, 19, 20, 21, 0, 15, 18</code></td></tr><tr><td>Community 5</td><td>12</td><td><code>5</code></td></tr><tr><td>Community 12</td><td>8</td><td><code>12</code></td></tr><tr><td>Community 28</td><td>6</td><td><code>28</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Graph Build -&gt; Analysis &amp; Clustering -&gt; CLI &amp; Skill Installers -&gt; Tests &amp; Fixtures -&gt; Community 5 -&gt; Community 12 -&gt; Community 28</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>574 nodes · 1372 edges · 29 communities (25 shown, 4 thin omitted)</li>
+      <li>Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `RunConfig` - 67 edges</li>
+      <li>2. `Workspace` - 43 edges</li>
+      <li>3. `TakerResult` - 43 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around settingsjson, claude, hooks, pretooluse, mostly in .claude/settings.json. This section covers 3 nodes and 2 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (3 nodes, 2 edges)
+    claude_settings_d16bcfe1("settings.json")
+    claude_settings_hooks_0f8e3873("hooks<br/><small>.claude/settings.json</small>")
+    claude_settings_hooks_pretooluse_8b32d47a("PreToolUse<br/><small>.claude/settings.json</small>")
+    claude_settings_d16bcfe1 -->|contains| claude_settings_hooks_0f8e3873
+    claude_settings_hooks_0f8e3873 -->|contains| claude_settings_hooks_pretooluse_8b32d47a
+    class claude_settings_d16bcfe1 function;
+    class claude_settings_hooks_0f8e3873 ui;
+    class claude_settings_hooks_pretooluse_8b32d47a klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>settings.json</code><br><small style="color:var(--muted)">.claude/settings.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>settings.json node in .claude/settings.json.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>hooks</code><br><small style="color:var(--muted)">.claude/settings.json</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>hooks node in .claude/settings.json.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>PreToolUse</code><br><small style="color:var(--muted)">.claude/settings.json</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PreToolUse node in .claude/settings.json.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>.claude/settings.json</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. Analysis & Clustering ====== -->
+<h2 id="analysis-clustering">3. Analysis &amp; Clustering</h2>
+<p>Analysis &amp; Clustering groups implementation around 2026, ask, docs, superpowers, mostly in spikes/spike_ask_question.py, superpowers/spikes/2026-06-06-ask-question-and-metrics.md, superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md. This section covers 37 nodes and 37 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Analysis &amp; Clustering (37 nodes, 37 edges)
+    subgraph analysis_clustering_spikes_spike_ask_question_py_2ac6de12["spikes/spike_ask_question.py"]
+        spikes_spike_ask_question_dump_metrics_bd88e537("dump_metrics()<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_my_callback_d226e2b0("my_callback()<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_ask_question_ca3be6e6("ask_question()<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_main_786ae43c("main()<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_py_any_49b6a602("Any<br/><small>spikes/spike_ask_question.py</small>")
+        hookcontext_68500645("HookContext<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_count_hook_6e68a092("count_hook()<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_bb6e133d("spike_ask_question.py")
+        spikes_spike_ask_question_rationale_73_db0945e3("Discover the REAL metric attribute name...<br/><small>spikes/spike_ask_question.py</small>")
+        spikes_spike_ask_question_rationale_1_cb287e0b("Spike (4): custom ask_question tool to ...<br/><small>spikes/spike_ask_question.py</small>")
+    end
+    subgraph analysis_clustering_superpowers_decisions_2026_0_cc85583a["superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md"]
+        decisions_2026_06_08_shell_isolation_and_worktre_f6581279("1. Two shell categories → two tools<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_5a9c2c66("2. Worktree concurrency hardening (in ...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_829a73e7("2026-06-08-shell-isolation-and-worktree...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_7bc7fb4f("3. Worktrunk — not in the runtime path<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_becf2646("Decision: Shell isolation + worktree co...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_857775e8("Decisions<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_a5012f74("Deferred / future<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_8bf7b60b("Implementation<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+    end
+    spikes_spike_ask_question_my_callback_d226e2b0 -->|calls| spikes_spike_ask_question_ask_question_ca3be6e6
+    spikes_spike_ask_question_dump_metrics_bd88e537 -->|calls| spikes_spike_ask_question_main_786ae43c
+    %% Omitted for readability: 19 nodes, 0 edges
+    class spikes_spike_ask_question_dump_metrics_bd88e537 function;
+    class spikes_spike_ask_question_my_callback_d226e2b0 function;
+    class spikes_spike_ask_question_ask_question_ca3be6e6 function;
+    class spikes_spike_ask_question_main_786ae43c function;
+    class spikes_spike_ask_question_py_any_49b6a602 klass;
+    class hookcontext_68500645 ui;
+    class spikes_spike_ask_question_count_hook_6e68a092 ui;
+    class spikes_spike_ask_question_bb6e133d module;
+    class spikes_spike_ask_question_rationale_73_db0945e3 concept;
+    class spikes_spike_ask_question_rationale_1_cb287e0b concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_f6581279 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_5a9c2c66 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_829a73e7 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_7bc7fb4f concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_becf2646 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_857775e8 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_a5012f74 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_8bf7b60b concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>spike_ask_question.py</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>my_callback()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>ask_question()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td>my_callback() node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>ask_question()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>my_callback()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>ask_question() node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Any</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Any node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>count_hook()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>count_hook() node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>HookContext</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>HookContext node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>dump_metrics()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>main()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td>dump_metrics() node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>main()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>dump_metrics()</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>main() node in spikes/spike_ask_question.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Spike (#4): custom ask_question tool -&gt; Python handler; counting; metrics; timeo</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Spike (#4): custom ask_question tool -&gt; Python handler; counting; metrics; timeo.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>Discover the REAL metric attribute names on the final message.</code><br><small style="color:var(--muted)">spikes/spike_ask_question.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Discover the REAL metric attribute names on the final message..</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>2026-06-06-ask-question-and-metrics.md</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2026-06-06-ask-question-and-metrics.md.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Spike #4 — ask_question routing, counting, metrics</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Spike #4 — ask_question routing, counting, metrics.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>Confirmed WITHOUT inference (static)</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Confirmed WITHOUT inference (static).</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Real run results (credits restored, 2026-06-06)</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Real run results (credits restored, 2026-06-06).</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>ask_question round-trip</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing ask_question round-trip.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>Hook counting</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Hook counting.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Real ResultMessage field values observed</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Real ResultMessage field values observed.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>RunMetrics mapping</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing RunMetrics mapping.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>StopReason mapping</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing StopReason mapping.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>Recommendation for C2 (run_taker)</code><br><small style="color:var(--muted)">superpowers/spikes/2026-06-06-ask-question-and-metrics.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Recommendation for C2 (run_taker).</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>2026-06-08-shell-isolation-and-worktree-concurrency.md</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2026-06-08-shell-isolation-and-worktree-concurrency.md.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>Decision: Shell isolation + worktree concurrency</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Decision: Shell isolation + worktree concurrency.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>Problem</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Problem.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Decisions</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Decisions.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>1. Two shell categories → two tools</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 1. Two shell categories → two tools.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>2. Worktree concurrency hardening (in `git_ops.py`)</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2. Worktree concurrency hardening (in `git_ops.py`).</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>3. Worktrunk — not in the runtime path</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 3. Worktrunk — not in the runtime path.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>Deferred / future</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Deferred / future.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>Implementation</code><br><small style="color:var(--muted)">superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Implementation.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>2026-06-06-foundation.md</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-06-foundation.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2026-06-06-foundation.md.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>superpowers/spikes/2026-06-06-ask-question-and-metrics.md</code></td><td>10 nodes</td></tr>
+<tr><td><code>spikes/spike_ask_question.py</code></td><td>10 nodes</td></tr>
+<tr><td><code>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</code></td><td>9 nodes</td></tr>
+<tr><td><code>superpowers/plans/2026-06-06-foundation.md</code></td><td>8 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x29, references x4, explains x2, calls x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">4. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around skill, eval, 2026, docs, mostly in skill_eval/git_ops.py, skill_eval/tracing.py, skill_eval/orchestrator.py. This section covers 237 nodes and 408 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (237 nodes, 408 edges)
+    subgraph cli_skills_skill_eval_git_ops_py_c6ad4dd8["skill_eval/git_ops.py"]
+        skill_eval_git_ops_run_930b10d9("_run()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_is_lock_error_8eee1224("_is_lock_error()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_retry_git_4c172b5d("_retry_git()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_worktree_add_bc709288("worktree_add()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_worktree_remove_9004cd30("worktree_remove()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_add_all_ba7fa5c4("add_all()<br/><small>skill_eval/git_ops.py</small>")
+        skill_eval_git_ops_commit_2484a4f8("commit()<br/><small>skill_eval/git_ops.py</small>")
+    end
+    subgraph cli_skills_skill_eval_contracts_py_3ad8ff59["skill_eval/contracts.py"]
+        skill_eval_contracts_judgeinput_4652226e("JudgeInput<br/><small>skill_eval/contracts.py</small>")
+        skill_eval_contracts_armreport_10b79f43("ArmReport<br/><small>skill_eval/contracts.py</small>")
+    end
+    subgraph cli_skills_skill_eval_orchestrator_py_deb11e09["skill_eval/orchestrator.py"]
+        skill_eval_orchestrator_node_judge_68ae4846("_node_judge()<br/><small>skill_eval/orchestrator.py</small>")
+        skill_eval_orchestrator_node_assemble_51c0309c("_node_assemble()<br/><small>skill_eval/orchestrator.py</small>")
+    end
+    subgraph cli_skills_skill_eval_simulator_py_82beed3b["skill_eval/simulator.py"]
+        skill_eval_simulator_fac7312d("simulator.py")
+        skill_eval_simulator_make_simulator_bd9d8a86("make_simulator()<br/><small>skill_eval/simulator.py</small>")
+    end
+    subgraph cli_skills_skill_eval_taker_py_213cab5f["skill_eval/taker.py"]
+        skill_eval_taker_16e997d0("taker.py")
+        skill_eval_taker_run_taker_4a97b5cf("run_taker()<br/><small>skill_eval/taker.py</small>")
+    end
+    skill_eval_flagship_case_build_flagship_case_4c20dfc6("build_flagship_case()<br/><small>skill_eval/flagship_case.py</small>")
+    skill_eval_judge_62e3a1fd("judge.py")
+    tests_test_flagship_case_test_build_flagship_cas_35567845("test_build_flagship_case()<br/><small>tests/test_flagship_case.py</small>")
+    skill_eval_contracts_judgeinput_4652226e -->|calls| skill_eval_orchestrator_node_judge_68ae4846
+    skill_eval_contracts_armreport_10b79f43 -->|calls| skill_eval_orchestrator_node_assemble_51c0309c
+    skill_eval_flagship_case_build_flagship_case_4c20dfc6 -->|calls| tests_test_flagship_case_test_build_flagship_cas_35567845
+    skill_eval_git_ops_is_lock_error_8eee1224 -->|calls| skill_eval_git_ops_retry_git_4c172b5d
+    skill_eval_git_ops_retry_git_4c172b5d -->|calls| skill_eval_git_ops_worktree_add_bc709288
+    skill_eval_git_ops_retry_git_4c172b5d -->|calls| skill_eval_git_ops_worktree_remove_9004cd30
+    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_add_all_ba7fa5c4
+    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_commit_2484a4f8
+    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_worktree_add_bc709288
+    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_worktree_remove_9004cd30
+    skill_eval_contracts_judgeinput_4652226e -->|imports| skill_eval_judge_62e3a1fd
+    %% Omitted for readability: 219 nodes, 0 edges
+    class skill_eval_git_ops_run_930b10d9 function;
+    class skill_eval_git_ops_is_lock_error_8eee1224 function;
+    class skill_eval_git_ops_retry_git_4c172b5d function;
+    class skill_eval_git_ops_worktree_add_bc709288 function;
+    class skill_eval_git_ops_worktree_remove_9004cd30 function;
+    class skill_eval_git_ops_add_all_ba7fa5c4 function;
+    class skill_eval_git_ops_commit_2484a4f8 function;
+    class skill_eval_contracts_judgeinput_4652226e klass;
+    class skill_eval_contracts_armreport_10b79f43 klass;
+    class skill_eval_orchestrator_node_judge_68ae4846 function;
+    class skill_eval_orchestrator_node_assemble_51c0309c async;
+    class skill_eval_simulator_fac7312d module;
+    class skill_eval_simulator_make_simulator_bd9d8a86 function;
+    class skill_eval_taker_16e997d0 module;
+    class skill_eval_taker_run_taker_4a97b5cf function;
+    class skill_eval_flagship_case_build_flagship_case_4c20dfc6 function;
+    class skill_eval_judge_62e3a1fd module;
+    class tests_test_flagship_case_test_build_flagship_cas_35567845 test;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_invocation_parameters()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+7 more</td>
+  <td>Module file in skill_eval/judge.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>_parse_response()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td>_parse_response() node in skill_eval/judge.py.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_parse_response()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+7 more</td>
+  <td>run_judge() node in skill_eval/judge.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>JudgeScore node in skill_eval/judge.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Extract (score, rationale) from the model response.      Tries json.loads on the</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Extract (score, rationale) from the model response.      Tries json.loads on the.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+10 more</td>
+  <td>Module file in skill_eval/simulator.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>_build_gold_context()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td>_build_gold_context() node in skill_eval/simulator.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_build_gold_context()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small></td>
+  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+8 more</td>
+  <td>make_simulator() node in skill_eval/simulator.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>AskFn node in skill_eval/simulator.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>C3: Real reactive HITL simulator backed by claude-haiku-4-5.  The simulator is a</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for C3: Real reactive HITL simulator backed by claude-haiku-4-5.  The simulator is a.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>Return a bounded string describing the gold tree + task brief.</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Return a bounded string describing the gold tree + task brief..</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Return an AskFn that answers taker questions using the gold context.      Parame</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Return an AskFn that answers taker questions using the gold context.      Parame.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>taker.py</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>git_ops.py</code><br><small style="color:var(--muted)">skill_eval/git_ops.py</small></td>
+  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+9 more</td>
+  <td>Module file in skill_eval/taker.py.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small></td>
+  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+8 more</td>
+  <td>run_taker() node in skill_eval/taker.py.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>C2: Real taker backed by the Claude Agent SDK (claude-haiku-4-5).  The taker is</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for C2: Real taker backed by the Claude Agent SDK (claude-haiku-4-5).  The taker is.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Run a Claude Agent SDK session under budget and return the result.      Paramete</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Run a Claude Agent SDK session under budget and return the result.      Paramete.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>tracing.py</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br>+1 more</td>
+  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
+  <td>get_tracer() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>Tracer</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Tracer node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>set_kind()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td><code>tool_span()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td>set_kind() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>Span</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Span node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td>No direct outbound edge</td>
+  <td>set_input() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>set_output()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td>No direct outbound edge</td>
+  <td>set_output() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>set_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td>No direct outbound edge</td>
+  <td>set_tokens() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
+  <td>Caches analysis results or computes cache keys.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>set_model_name()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
+  <td>set_model_name() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>set_invocation_parameters()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
+  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
+  <td>set_invocation_parameters() node in skill_eval/tracing.py.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>Any</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Any node in skill_eval/tracing.py.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>skill_eval/git_ops.py</code></td><td>30 nodes</td></tr>
+<tr><td><code>skill_eval/tracing.py</code></td><td>29 nodes</td></tr>
+<tr><td><code>skill_eval/orchestrator.py</code></td><td>26 nodes</td></tr>
+<tr><td><code>superpowers/specs/2026-06-06-skill-eval-system-design.md</code></td><td>22 nodes</td></tr>
+<tr><td><code>superpowers/plans/2026-06-08-phase-b-real-components.md</code></td><td>12 nodes</td></tr>
+<tr><td><code>skills/disciplined/SKILL.md</code></td><td>11 nodes</td></tr>
+<tr><td><code>superpowers/spikes/2026-06-06-skill-loading.md</code></td><td>10 nodes</td></tr>
+<tr><td><code>skills/ship-it-fast/SKILL.md</code></td><td>10 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x133, calls x81, explains x58, imports x50. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">5. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around test, tests, skill, eval, mostly in tests/test_taker.py, skill_eval/contracts.py, skill_eval/reporting.py. This section covers 271 nodes and 724 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Tests &amp; Fixtures (271 nodes, 724 edges)
+    subgraph tests_fixtures_skill_eval_reporting_py_27b01eb6["skill_eval/reporting.py"]
+        skill_eval_reporting_init_phoenix_28e58143("init_phoenix()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_scores_table_f7ab4b26("scores_table()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_verdict_line_1be1811f("verdict_line()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_agent_graph_dot_e4da4de3("agent_graph_dot()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_arm_color_list_799f6465("arm_color_list()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_criterion_gap_rows_dff3a775("criterion_gap_rows()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_quality_cost_rows_31f309c1("quality_cost_rows()<br/><small>skill_eval/reporting.py</small>")
+    end
+    subgraph tests_fixtures_app_py_4137de16["app.py"]
+        app_7d104347("app.py")
+        app_main_f38e028d("main()<br/><small>app.py</small>")
+        app_run_batch_mode_cdd8fc85("_run_batch_mode()<br/><small>app.py</small>")
+        app_run_flagship_mode_8a738566("_run_flagship_mode()<br/><small>app.py</small>")
+        app_run_single_case_fc427721("_run_single_case()<br/><small>app.py</small>")
+    end
+    subgraph tests_fixtures_skill_eval_contracts_py_dde55b73["skill_eval/contracts.py"]
+        skill_eval_contracts_runconfig_a490fa9a("RunConfig<br/><small>skill_eval/contracts.py</small>")
+        skill_eval_contracts_runmetrics_34103d70("RunMetrics<br/><small>skill_eval/contracts.py</small>")
+        skill_eval_contracts_bdd252d3("contracts.py")
+        skill_eval_contracts_arm_97e32965("Arm<br/><small>skill_eval/contracts.py</small>")
+    end
+    skill_eval_sample_cases_build_sample_cases_94a753da("build_sample_cases()<br/><small>skill_eval/sample_cases.py</small>")
+    skill_eval_sample_repo_build_sample_repo_f2f08aec("build_sample_repo()<br/><small>skill_eval/sample_repo.py</small>")
+    app_main_f38e028d -->|calls| app_run_batch_mode_cdd8fc85
+    app_main_f38e028d -->|calls| app_run_flagship_mode_8a738566
+    app_main_f38e028d -->|calls| app_run_single_case_fc427721
+    app_main_f38e028d -->|calls| skill_eval_reporting_init_phoenix_28e58143
+    app_main_f38e028d -->|calls| skill_eval_reporting_scores_table_f7ab4b26
+    app_main_f38e028d -->|calls| skill_eval_reporting_verdict_line_1be1811f
+    app_main_f38e028d -->|calls| skill_eval_sample_repo_build_sample_repo_f2f08aec
+    app_run_single_case_fc427721 -->|calls| app_run_flagship_mode_8a738566
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_agent_graph_dot_e4da4de3
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_arm_color_list_799f6465
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_criterion_gap_rows_dff3a775
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_quality_cost_rows_31f309c1
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_scores_table_f7ab4b26
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_verdict_line_1be1811f
+    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_reporting_arm_color_list_799f6465
+    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_sample_cases_build_sample_cases_94a753da
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_sample_repo_build_sample_repo_f2f08aec
+    app_7d104347 -->|imports| skill_eval_reporting_agent_graph_dot_e4da4de3
+    app_7d104347 -->|imports| skill_eval_reporting_arm_color_list_799f6465
+    app_7d104347 -->|imports| skill_eval_reporting_criterion_gap_rows_dff3a775
+    app_7d104347 -->|imports| skill_eval_reporting_init_phoenix_28e58143
+    app_7d104347 -->|imports| skill_eval_reporting_quality_cost_rows_31f309c1
+    app_7d104347 -->|imports| skill_eval_reporting_scores_table_f7ab4b26
+    app_7d104347 -->|imports| skill_eval_reporting_verdict_line_1be1811f
+    %% Omitted for readability: 253 nodes, 2 edges
+    class skill_eval_reporting_init_phoenix_28e58143 function;
+    class skill_eval_reporting_scores_table_f7ab4b26 function;
+    class skill_eval_reporting_verdict_line_1be1811f function;
+    class skill_eval_reporting_agent_graph_dot_e4da4de3 function;
+    class skill_eval_reporting_arm_color_list_799f6465 function;
+    class skill_eval_reporting_criterion_gap_rows_dff3a775 function;
+    class skill_eval_reporting_quality_cost_rows_31f309c1 function;
+    class app_7d104347 module;
+    class app_main_f38e028d function;
+    class app_run_batch_mode_cdd8fc85 function;
+    class app_run_flagship_mode_8a738566 function;
+    class app_run_single_case_fc427721 function;
+    class skill_eval_contracts_runconfig_a490fa9a klass;
+    class skill_eval_contracts_runmetrics_34103d70 klass;
+    class skill_eval_contracts_bdd252d3 module;
+    class skill_eval_contracts_arm_97e32965 klass;
+    class skill_eval_sample_cases_build_sample_cases_94a753da function;
+    class skill_eval_sample_repo_build_sample_repo_f2f08aec function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>batch.py</code><br><small style="color:var(--muted)">skill_eval/batch.py</small></td>
+  <td><code>reporting.py</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>sample_cases.py</code><br><small style="color:var(--muted)">skill_eval/sample_cases.py</small><br><code>sample_repo.py</code><br><small style="color:var(--muted)">skill_eval/sample_repo.py</small><br>+11 more</td>
+  <td>Module file in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Arm</code><br><small style="color:var(--muted)">skill_eval/sandbox.py</small><br>+23 more</td>
+  <td>Arm node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>StrEnum</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>StrEnum node in project.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>StopReason</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br>+19 more</td>
+  <td>StopReason node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>batch.py</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br><code>EventFn</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br>+4 more</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_make_case()</code><br><small style="color:var(--muted)">skill_eval/sample_cases.py</small><br><code>_make_cfg()</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+37 more</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Workspace</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_make_workspace()</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+24 more</td>
+  <td>Workspace node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>RunMetrics</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_ji()</code><br><small style="color:var(--muted)">tests/test_judge.py</small><br><code>_make_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br>+29 more</td>
+  <td>RunMetrics node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>TakerResult</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_ji()</code><br><small style="color:var(--muted)">tests/test_judge.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+24 more</td>
+  <td>TakerResult node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_make_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+12 more</td>
+  <td>JudgeScore node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>prepare_workspaces()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>prepare_workspaces() node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>run_taker() node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+10 more</td>
+  <td>AskFn node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>make_simulator() node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>run_judge() node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>run_eval()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>run_eval() node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>Shared data contracts for the skill-eval harness.  This is the single integratio</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Shared data contracts for the skill-eval harness.  This is the single integratio.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Which skill a test-taker is running.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Which skill a test-taker is running..</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Why a test-taker run ended.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Why a test-taker run ended..</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>The eval&#x27;s input: commits, task, skills, and the test budget.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for The eval&#x27;s input: commits, task, skills, and the test budget..</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>Isolated dirs for one arm plus the shared gold tree.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Isolated dirs for one arm plus the shared gold tree..</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>Objective, non-LLM measurements of a single taker run.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Objective, non-LLM measurements of a single taker run..</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>Everything one taker produced, ready for judging.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Everything one taker produced, ready for judging..</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>A single judge&#x27;s 0-20 score plus rationale.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for A single judge&#x27;s 0-20 score plus rationale..</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Component 1: create git worktrees and compute the gold diff.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Component 1: create git worktrees and compute the gold diff..</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>Component 2: run a Claude Agent SDK session under budget; return result.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Component 2: run a Claude Agent SDK session under budget; return result..</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>Component 3: build the AskFn the simulator uses to answer questions.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Component 3: build the AskFn the simulator uses to answer questions..</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>Component 5: score one criterion for one taker (0-20).</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Component 5: score one criterion for one taker (0-20)..</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>Component 6: orchestrate the whole eval and return the comparison.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Component 6: orchestrate the whole eval and return the comparison..</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/sandbox.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>Workspace</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>simulated.py</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br>+5 more</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br><code>test_batch.py</code><br><small style="color:var(--muted)">tests/test_batch.py</small><br><code>test_orchestrator.py</code><br><small style="color:var(--muted)">tests/test_orchestrator.py</small><br>+1 more</td>
+  <td>Module file in skill_eval/simulated.py.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>tests/test_taker.py</code></td><td>46 nodes</td></tr>
+<tr><td><code>skill_eval/contracts.py</code></td><td>29 nodes</td></tr>
+<tr><td><code>skill_eval/reporting.py</code></td><td>29 nodes</td></tr>
+<tr><td><code>tests/test_reporting.py</code></td><td>24 nodes</td></tr>
+<tr><td><code>tests/test_judge.py</code></td><td>20 nodes</td></tr>
+<tr><td><code>skill_eval/simulated.py</code></td><td>16 nodes</td></tr>
+<tr><td><code>skill_eval/taker.py</code></td><td>13 nodes</td></tr>
+<tr><td><code>skill_eval/sample_cases.py</code></td><td>12 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x180, contains x129, imports x107, explains x83. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Community 5 ====== -->
+<h2 id="community-5">6. Community 5</h2>
+<p>Community 5 groups implementation around walking, 2026, skeletonmd, docs, mostly in superpowers/plans/2026-06-07-walking-skeleton.md. This section covers 12 nodes and 11 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 5 (12 nodes, 11 edges)
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b("Walking Skeleton — Phase A (simulated e...<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_bdbc26d1("2026-06-07-walking-skeleton.md")
+    plans_2026_06_07_walking_skeleton_design_the_inj_ce369b9b("Design: the injectable seam<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_file_structure_b1beea2e("File Structure<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_phase_a_done_c_7619aacd("Phase A done criteria<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_phase_b_previe_dcdeaaf5("Phase B preview (separate plan)<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_0_extend_2a94ed68("Task 0: Extend contracts with injection...<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_1_sample_9dd9d2f7("Task 1: Sample task-repo builder<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_2_c1_sand_2122c452("Task 2: C1 Sandbox — worktrees + gold diff<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_3_simulat_7b6b27fb("Task 3: Simulated components<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_4_c6_orch_1a9775cf("Task 4: C6 Orchestrator (LangGraph)<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_task_5_c7_visu_84af5e22("Task 5: C7 Visualization — Phoenix + St...<br/><small>superpowers/plans/2026-06-07-walking-skeleton.md</small>")
+    plans_2026_06_07_walking_skeleton_bdbc26d1 -->|contains| plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_design_the_inj_ce369b9b
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_file_structure_b1beea2e
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_phase_a_done_c_7619aacd
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_phase_b_previe_dcdeaaf5
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_0_extend_2a94ed68
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_1_sample_9dd9d2f7
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_2_c1_sand_2122c452
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_3_simulat_7b6b27fb
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_4_c6_orch_1a9775cf
+    plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b -->|contains| plans_2026_06_07_walking_skeleton_task_5_c7_visu_84af5e22
+    class plans_2026_06_07_walking_skeleton_walking_skelet_4b65772b concept;
+    class plans_2026_06_07_walking_skeleton_bdbc26d1 concept;
+    class plans_2026_06_07_walking_skeleton_design_the_inj_ce369b9b concept;
+    class plans_2026_06_07_walking_skeleton_file_structure_b1beea2e concept;
+    class plans_2026_06_07_walking_skeleton_phase_a_done_c_7619aacd concept;
+    class plans_2026_06_07_walking_skeleton_phase_b_previe_dcdeaaf5 concept;
+    class plans_2026_06_07_walking_skeleton_task_0_extend_2a94ed68 concept;
+    class plans_2026_06_07_walking_skeleton_task_1_sample_9dd9d2f7 concept;
+    class plans_2026_06_07_walking_skeleton_task_2_c1_sand_2122c452 concept;
+    class plans_2026_06_07_walking_skeleton_task_3_simulat_7b6b27fb concept;
+    class plans_2026_06_07_walking_skeleton_task_4_c6_orch_1a9775cf concept;
+    class plans_2026_06_07_walking_skeleton_task_5_c7_visu_84af5e22 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>2026-06-07-walking-skeleton.md</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2026-06-07-walking-skeleton.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Walking Skeleton — Phase A (simulated end-to-end + live visual)</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Walking Skeleton — Phase A (simulated end-to-end + live visual).</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Design: the injectable seam</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Design: the injectable seam.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>File Structure</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing File Structure.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Task 0: Extend contracts with injection/event aliases</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 0: Extend contracts with injection/event aliases.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Task 1: Sample task-repo builder</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 1: Sample task-repo builder.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Task 2: C1 Sandbox — worktrees + gold diff</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 2: C1 Sandbox — worktrees + gold diff.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Task 3: Simulated components</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 3: Simulated components.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Task 4: C6 Orchestrator (LangGraph)</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 4: C6 Orchestrator (LangGraph).</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>Task 5: C7 Visualization — Phoenix + Streamlit</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Task 5: C7 Visualization — Phoenix + Streamlit.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>Phase A done criteria</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Phase A done criteria.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Phase B preview (separate plan)</code><br><small style="color:var(--muted)">superpowers/plans/2026-06-07-walking-skeleton.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Phase B preview (separate plan).</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>superpowers/plans/2026-06-07-walking-skeleton.md</code></td><td>12 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x11. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Community 12 ====== -->
+<h2 id="community-12">7. Community 12</h2>
+<p>Community 12 groups implementation around readmemd, skill, eval, headline, mostly in README.md. This section covers 8 nodes and 7 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 12 (8 nodes, 7 edges)
+    readme_skill_eval_a36c7d08("skill-eval<br/><small>README.md</small>")
+    readme_f78a71af("README.md")
+    readme_dev_c3735087("Dev<br/><small>README.md</small>")
+    readme_how_it_works_29d8907d("How it works<br/><small>README.md</small>")
+    readme_layout_5bc5fc6c("Layout<br/><small>README.md</small>")
+    readme_quickstart_0a369063("Quickstart<br/><small>README.md</small>")
+    readme_the_headline_result_38573cb6("The headline result<br/><small>README.md</small>")
+    readme_visualizations_0e6fd459("Visualizations<br/><small>README.md</small>")
+    readme_f78a71af -->|contains| readme_skill_eval_a36c7d08
+    readme_skill_eval_a36c7d08 -->|contains| readme_dev_c3735087
+    readme_skill_eval_a36c7d08 -->|contains| readme_how_it_works_29d8907d
+    readme_skill_eval_a36c7d08 -->|contains| readme_layout_5bc5fc6c
+    readme_skill_eval_a36c7d08 -->|contains| readme_quickstart_0a369063
+    readme_skill_eval_a36c7d08 -->|contains| readme_the_headline_result_38573cb6
+    readme_skill_eval_a36c7d08 -->|contains| readme_visualizations_0e6fd459
+    class readme_skill_eval_a36c7d08 concept;
+    class readme_f78a71af concept;
+    class readme_dev_c3735087 concept;
+    class readme_how_it_works_29d8907d concept;
+    class readme_layout_5bc5fc6c concept;
+    class readme_quickstart_0a369063 concept;
+    class readme_the_headline_result_38573cb6 concept;
+    class readme_visualizations_0e6fd459 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>README.md</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing README.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>skill-eval</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing skill-eval.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>The headline result</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing The headline result.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>How it works</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing How it works.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Quickstart</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Quickstart.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Visualizations</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Visualizations.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Dev</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Dev.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Layout</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Layout.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>README.md</code></td><td>8 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x7. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Community 28 ====== -->
+<h2 id="community-28">8. Community 28</h2>
+<p>Community 28 groups implementation around demomd, demo, script, min, mostly in DEMO.md. This section covers 6 nodes and 5 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 28 (6 nodes, 5 edges)
+    demo_demo_script_2_min_5288f8ef("Demo script (~2 min)<br/><small>DEMO.md</small>")
+    demo_89e495e7("DEMO.md")
+    demo_backup_talking_points_95face73("Backup talking points<br/><small>DEMO.md</small>")
+    demo_setup_before_you_present_03a421e6("Setup (before you present)<br/><small>DEMO.md</small>")
+    demo_the_close_1fc4ea1f("The close<br/><small>DEMO.md</small>")
+    demo_the_flow_dde72a69("The flow<br/><small>DEMO.md</small>")
+    demo_89e495e7 -->|contains| demo_demo_script_2_min_5288f8ef
+    demo_demo_script_2_min_5288f8ef -->|contains| demo_backup_talking_points_95face73
+    demo_demo_script_2_min_5288f8ef -->|contains| demo_setup_before_you_present_03a421e6
+    demo_demo_script_2_min_5288f8ef -->|contains| demo_the_close_1fc4ea1f
+    demo_demo_script_2_min_5288f8ef -->|contains| demo_the_flow_dde72a69
+    class demo_demo_script_2_min_5288f8ef concept;
+    class demo_89e495e7 concept;
+    class demo_backup_talking_points_95face73 concept;
+    class demo_setup_before_you_present_03a421e6 concept;
+    class demo_the_close_1fc4ea1f concept;
+    class demo_the_flow_dde72a69 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>DEMO.md</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing DEMO.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Demo script (~2 min)</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Demo script (~2 min).</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Setup (before you present)</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Setup (before you present).</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>The flow</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing The flow.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>The close</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing The close.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Backup talking points</code><br><small style="color:var(--muted)">DEMO.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Backup talking points.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>DEMO.md</code></td><td>6 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x5. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>574</td></tr>
+      <tr><td>Edges</td><td>1372</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>29</td></tr>
+      <tr><td>Documented Sections</td><td>7</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>1129</td></tr>
+      <tr><td>INFERRED</td><td>243</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>skill-eval — Architecture Documentation</p>
+  <p>Generated: 2026-06-09 06:39 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -482,29 +482,156 @@ def _run_single_case(
             st.error("Eval did not return a report — check logs.")
             return
 
+        import altair as alt
+
+        from skill_eval.reporting import (
+            ARM_COLORS,
+            arm_color_list,
+            criterion_gap_rows,
+            quality_cost_rows,
+        )
+
         st.divider()
         st.subheader("Results: Baseline vs Challenger")
 
-        # Grouped bar chart via scores_table -> DataFrame
+        # Resolve the two arms once (order not assumed).
+        baseline_ar = next((ar for ar in report.arms if ar.arm.value == "baseline"), None)
+        challenger_ar = next((ar for ar in report.arms if ar.arm.value == "challenger"), None)
+
+        # --- Headline delta metrics (challenger framed against baseline) ---
+        if baseline_ar is not None and challenger_ar is not None:
+            b_m, c_m = baseline_ar.metrics, challenger_ar.metrics
+            k1, k2, k3, k4 = st.columns(4)
+            k1.metric(
+                "Challenger total",
+                f"{challenger_ar.total_score}/120",
+                delta=challenger_ar.total_score - baseline_ar.total_score,
+            )
+            k2.metric("Baseline total", f"{baseline_ar.total_score}/120")
+            k3.metric(
+                "Questions asked",
+                c_m.num_questions,
+                delta=c_m.num_questions - b_m.num_questions,
+            )
+            k4.metric(
+                "Tokens",
+                f"{c_m.total_tokens:,}",
+                delta=c_m.total_tokens - b_m.total_tokens,
+                delta_color="inverse",  # more tokens = more cost = "worse"
+            )
+
+        # --- Grouped 0–20 bars per criterion (consistent arm colours) ---
         rows = scores_table(report)
         df = pd.DataFrame(rows).set_index("criterion")
-        st.bar_chart(df, use_container_width=True, stack=False)
+        ordered_cols = [c for c in ("baseline", "challenger") if c in df.columns]
+        st.bar_chart(
+            df[ordered_cols],
+            use_container_width=True,
+            stack=False,
+            color=arm_color_list(ordered_cols),
+        )
 
-        # Objective metrics table
-        st.subheader("Objective metrics")
-        metrics_rows = []
-        for ar in report.arms:
-            m = ar.metrics
-            metrics_rows.append(
-                {
-                    "arm": ar.arm.value,
-                    "total_tokens": m.total_tokens,
-                    "wall_seconds": round(m.wall_seconds, 2),
-                    "num_turns": m.num_turns,
-                    "num_questions": m.num_questions,
-                }
+        # --- Dumbbell / gap chart: the difference per criterion, biggest first ---
+        st.subheader("Where the skills differ (per-criterion gap)")
+        st.caption(
+            "Each line connects the two scores; the longer the line, the bigger the gap."
+            " Sorted by challenger − baseline."
+        )
+        gap_rows = criterion_gap_rows(report)
+        if gap_rows:
+            order = [r["criterion"] for r in gap_rows]
+            df_gap = pd.DataFrame(gap_rows)
+            long = df_gap.melt(
+                id_vars=["criterion", "gap"],
+                value_vars=["baseline", "challenger"],
+                var_name="arm",
+                value_name="score",
             )
-        st.dataframe(pd.DataFrame(metrics_rows).set_index("arm"), use_container_width=True)
+            y_enc = alt.Y("criterion:N", sort=order, title=None)
+            color_enc = alt.Color(
+                "arm:N",
+                scale=alt.Scale(
+                    domain=["baseline", "challenger"],
+                    range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
+                ),
+                title="Arm",
+            )
+            connector = (
+                alt.Chart(df_gap)
+                .mark_rule(color="#bbbbbb", strokeWidth=2)
+                .encode(
+                    y=y_enc,
+                    x=alt.X("baseline:Q", title="Score (0–20)", scale=alt.Scale(domain=[0, 20])),
+                    x2="challenger:Q",
+                )
+            )
+            dots = (
+                alt.Chart(long)
+                .mark_circle(size=170, opacity=1.0)
+                .encode(
+                    y=y_enc,
+                    x=alt.X("score:Q", scale=alt.Scale(domain=[0, 20])),
+                    color=color_enc,
+                    tooltip=["criterion:N", "arm:N", "score:Q", "gap:Q"],
+                )
+            )
+            st.altair_chart((connector + dots).properties(height=280), use_container_width=True)
+
+        # --- Objective metrics + quality-vs-cost scatter ---
+        st.subheader("Quality vs cost")
+        st.caption("Up-and-to-the-left is better: higher score for fewer tokens.")
+        qc_rows = quality_cost_rows(report)
+        col_scatter, col_table = st.columns([3, 2])
+        with col_scatter:
+            if qc_rows:
+                df_qc = pd.DataFrame(qc_rows)
+                scatter = (
+                    alt.Chart(df_qc)
+                    .mark_circle(size=400, opacity=0.85)
+                    .encode(
+                        x=alt.X("total_tokens:Q", title="Cost — total tokens"),
+                        y=alt.Y(
+                            "total_score:Q",
+                            title="Quality — total score",
+                            scale=alt.Scale(domain=[0, 120]),
+                        ),
+                        color=alt.Color(
+                            "arm:N",
+                            scale=alt.Scale(
+                                domain=["baseline", "challenger"],
+                                range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
+                            ),
+                            title="Arm",
+                        ),
+                        tooltip=[
+                            "arm:N",
+                            "total_score:Q",
+                            "total_tokens:Q",
+                            "wall_seconds:Q",
+                            "num_turns:Q",
+                            "num_questions:Q",
+                        ],
+                    )
+                    .properties(height=300)
+                )
+                labels = scatter.mark_text(align="left", dx=10, fontWeight="bold").encode(
+                    text="arm:N"
+                )
+                st.altair_chart(scatter + labels, use_container_width=True)
+        with col_table:
+            metrics_rows = []
+            for ar in report.arms:
+                m = ar.metrics
+                metrics_rows.append(
+                    {
+                        "arm": ar.arm.value,
+                        "total_tokens": m.total_tokens,
+                        "wall_seconds": round(m.wall_seconds, 2),
+                        "num_turns": m.num_turns,
+                        "num_questions": m.num_questions,
+                    }
+                )
+            st.dataframe(pd.DataFrame(metrics_rows).set_index("arm"), use_container_width=True)
 
         # Verdict
         st.success(f"Verdict: {verdict_line(report)}")
@@ -722,24 +849,75 @@ def _run_batch_mode(
     col_b.metric("Baseline wins", win_summary["baseline"])
     col_t.metric("Ties", win_summary["tie"])
 
+    import altair as alt
+
+    from skill_eval.reporting import ARM_COLORS, arm_color_list, batch_criterion_gap_rows
+
+    _arm_scale = alt.Scale(
+        domain=["baseline", "challenger"],
+        range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
+    )
+
     # 2. Per-case totals bar chart
     st.subheader("Per-case total scores")
     per_case = batch_per_case_totals(reports)
     df_cases = pd.DataFrame(per_case).set_index("case")
-    st.bar_chart(df_cases[["baseline", "challenger"]], use_container_width=True, stack=False)
+    st.bar_chart(
+        df_cases[["baseline", "challenger"]],
+        use_container_width=True,
+        stack=False,
+        color=arm_color_list(["baseline", "challenger"]),
+    )
 
     # 3. Per-criterion averages bar chart
     st.subheader("Per-criterion averages")
     per_crit = batch_per_criterion_avg(reports)
     df_crit = pd.DataFrame(per_crit).set_index("criterion")
-    st.bar_chart(df_crit[["baseline", "challenger"]], use_container_width=True, stack=False)
+    st.bar_chart(
+        df_crit[["baseline", "challenger"]],
+        use_container_width=True,
+        stack=False,
+        color=arm_color_list(["baseline", "challenger"]),
+    )
+
+    # 3b. Per-criterion gap (dumbbell) — biggest average difference first
+    st.subheader("Where the skills differ (avg per-criterion gap)")
+    gap_rows = batch_criterion_gap_rows(reports)
+    if gap_rows:
+        order = [r["criterion"] for r in gap_rows]
+        df_gap = pd.DataFrame(gap_rows)
+        long = df_gap.melt(
+            id_vars=["criterion", "gap"],
+            value_vars=["baseline", "challenger"],
+            var_name="arm",
+            value_name="score",
+        )
+        y_enc = alt.Y("criterion:N", sort=order, title=None)
+        connector = (
+            alt.Chart(df_gap)
+            .mark_rule(color="#bbbbbb", strokeWidth=2)
+            .encode(
+                y=y_enc,
+                x=alt.X("baseline:Q", title="Avg score (0–20)", scale=alt.Scale(domain=[0, 20])),
+                x2="challenger:Q",
+            )
+        )
+        dots = (
+            alt.Chart(long)
+            .mark_circle(size=170, opacity=1.0)
+            .encode(
+                y=y_enc,
+                x=alt.X("score:Q", scale=alt.Scale(domain=[0, 20])),
+                color=alt.Color("arm:N", scale=_arm_scale, title="Arm"),
+                tooltip=["criterion:N", "arm:N", "score:Q", "gap:Q"],
+            )
+        )
+        st.altair_chart((connector + dots).properties(height=280), use_container_width=True)
 
     # 4. Score distributions (grouped boxplot per criterion, baseline vs challenger)
     st.subheader("Score distributions")
     dist_rows = batch_score_distribution(reports)
     if dist_rows:
-        import altair as alt
-
         df_dist = pd.DataFrame(dist_rows)
         chart = (
             alt.Chart(df_dist)
@@ -747,7 +925,7 @@ def _run_batch_mode(
             .encode(
                 x=alt.X("criterion:N", title="Criterion"),
                 y=alt.Y("score:Q", title="Score", scale=alt.Scale(domain=[0, 20])),
-                color=alt.Color("arm:N", title="Arm"),
+                color=alt.Color("arm:N", title="Arm", scale=_arm_scale),
                 xOffset=alt.XOffset("arm:N"),
             )
             .properties(height=350)

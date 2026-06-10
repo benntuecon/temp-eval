@@ -1,132 +1,252 @@
 {
   ".claude/settings.json": {
-    "mtime": 1780904497.8566678,
+    "mtime": 1780909778.7098427,
     "ast_hash": "bfee062c3962c14264fd704e975a6b38",
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1780899019.602555,
-    "ast_hash": "a63285cbb85ae3e09b357bb777f80cfd",
+    "mtime": 1780986681.514858,
+    "ast_hash": "a6bd16e9b7cc215e06e616d1b7343873",
     "semantic_hash": ""
   },
   "skill_eval/__init__.py": {
-    "mtime": 1780819328.817257,
+    "mtime": 1780909778.715827,
     "ast_hash": "cee175491dbf14d6c2752dee12dd9b61",
     "semantic_hash": ""
   },
   "skill_eval/contracts.py": {
-    "mtime": 1780877720.287829,
-    "ast_hash": "1c3d9e05617351a7cf6a6df58c087ca9",
+    "mtime": 1780980976.6887693,
+    "ast_hash": "b3f20e59ac5660b31328ab2699277ec9",
     "semantic_hash": ""
   },
   "skill_eval/orchestrator.py": {
-    "mtime": 1780899007.166704,
-    "ast_hash": "b5f0484b506e05df27467dbe8866157f",
+    "mtime": 1780987111.5828056,
+    "ast_hash": "cc5a29cd707ea2e11dce3dcdb0ed2fea",
     "semantic_hash": ""
   },
   "skill_eval/reporting.py": {
-    "mtime": 1780898205.346804,
-    "ast_hash": "39e08f78b5074e2a40b0d23a6109c1b0",
+    "mtime": 1780986759.591658,
+    "ast_hash": "d341bdffe06432447ac10a1d7e7e4d3b",
     "semantic_hash": ""
   },
   "skill_eval/sample_repo.py": {
-    "mtime": 1780877755.9153101,
-    "ast_hash": "942f25209ce3446c05122289286de80f",
+    "mtime": 1780948348.9528532,
+    "ast_hash": "f919d23b330f7a8a14be6d233cffd5ae",
     "semantic_hash": ""
   },
   "skill_eval/sandbox.py": {
-    "mtime": 1780899026.4801762,
-    "ast_hash": "e7ebd53f299900113ff3a2b4cacb5435",
+    "mtime": 1780948348.9530745,
+    "ast_hash": "f5e83600308b97f67ad823b356e5eb36",
     "semantic_hash": ""
   },
   "skill_eval/simulated.py": {
-    "mtime": 1780877852.8338828,
-    "ast_hash": "90a79fb3e810ae1d3f459ed665b19cd0",
+    "mtime": 1780950979.0505054,
+    "ast_hash": "ed9cd104e2a05d7ab616ef115ecaf098",
     "semantic_hash": ""
   },
   "spikes/spike_ask_question.py": {
-    "mtime": 1780877365.429173,
+    "mtime": 1780909778.718571,
     "ast_hash": "da4a2695193c755180c55780f97ca02f",
     "semantic_hash": ""
   },
   "spikes/spike_skill_loading.py": {
-    "mtime": 1780877361.2376964,
+    "mtime": 1780909778.7187855,
     "ast_hash": "8adce32c335352bf30b00a39586a9231",
     "semantic_hash": ""
   },
   "tests/test_contracts.py": {
-    "mtime": 1780877724.2612689,
-    "ast_hash": "1750621b46583211fc3952393144688e",
+    "mtime": 1780980976.6902702,
+    "ast_hash": "d05f632066c2a4f05dfb76180d05cb63",
     "semantic_hash": ""
   },
   "tests/test_orchestrator.py": {
-    "mtime": 1780897922.118077,
-    "ast_hash": "b57dcec72811087025fc53d6a15e4b1a",
+    "mtime": 1780980976.6909175,
+    "ast_hash": "8f57a5781c1e3845ac0cc82b9f22e2bc",
     "semantic_hash": ""
   },
   "tests/test_reporting.py": {
-    "mtime": 1780898081.0687282,
-    "ast_hash": "7978091882e0743357f79db6d84a6dd9",
+    "mtime": 1780986724.2434697,
+    "ast_hash": "75d9ea4df2435d81cf041e8a16f6d91f",
     "semantic_hash": ""
   },
   "tests/test_sample_repo.py": {
-    "mtime": 1780877741.5580242,
+    "mtime": 1780909778.7205827,
     "ast_hash": "fb28d4a7059ffd7afee13c0d30e0f2a4",
     "semantic_hash": ""
   },
   "tests/test_sandbox.py": {
-    "mtime": 1780877775.6339626,
+    "mtime": 1780909778.7207909,
     "ast_hash": "86aa6662ef04bdecd183b84a6df75411",
     "semantic_hash": ""
   },
   "tests/test_simulated.py": {
-    "mtime": 1780877814.0773437,
+    "mtime": 1780909778.7210069,
     "ast_hash": "687625662953788c17be661c6bdb3495",
     "semantic_hash": ""
   },
   "tests/test_smoke.py": {
-    "mtime": 1780816668.8958025,
+    "mtime": 1780909778.721395,
     "ast_hash": "6834a727c269545cdc5cc99b13d4b667",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1780904497.856236,
+    "mtime": 1780909778.7105374,
     "ast_hash": "82efb97a359f5c7290bf2513d14686be",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1780819346.554212,
-    "ast_hash": "b1723fe93575133988a4072dbb3d50f7",
+    "mtime": 1780976258.7122016,
+    "ast_hash": "2a1daa7e6b5dd89ee2b3a5dd6d719bb3",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-06-foundation.md": {
-    "mtime": 1780816980.7666433,
+    "mtime": 1780909778.7115839,
     "ast_hash": "cabcbf6441a1aaee7895f407d8a2b3b6",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-07-walking-skeleton.md": {
-    "mtime": 1780877631.1547177,
+    "mtime": 1780909778.712021,
     "ast_hash": "64466c9e9f8f7586ff1a35db5441975f",
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-06-06-skill-eval-system-design.md": {
-    "mtime": 1780810985.5281925,
-    "ast_hash": "a1a1582ed360d5b79da6ed0929c4f3a5",
+    "mtime": 1780909778.712639,
+    "ast_hash": "c0d457be79ad16cb6c1df9101ace02f7",
     "semantic_hash": ""
   },
   "docs/superpowers/spikes/2026-06-06-ask-question-and-metrics.md": {
-    "mtime": 1780877353.117608,
+    "mtime": 1780909778.71296,
     "ast_hash": "f7eab481bd60c48f280973dad450db88",
     "semantic_hash": ""
   },
   "docs/superpowers/spikes/2026-06-06-skill-loading.md": {
-    "mtime": 1780877304.8574078,
+    "mtime": 1780909778.7132168,
     "ast_hash": "5fb8f945bd7e6edcbc72b2804be3ee57",
     "semantic_hash": ""
   },
   "tests/fixtures/skills/haiku-only/SKILL.md": {
-    "mtime": 1780821538.5986423,
+    "mtime": 1780909778.7191703,
     "ast_hash": "18c6b7d57ad69a7e5ba7ce3914a29e56",
+    "semantic_hash": ""
+  },
+  "skill_eval/batch.py": {
+    "mtime": 1780950979.0492742,
+    "ast_hash": "88ea3ef7f4d31f639e13bc5bcacbe0d9",
+    "semantic_hash": ""
+  },
+  "skill_eval/flagship_case.py": {
+    "mtime": 1780980976.6891468,
+    "ast_hash": "27f7bb432fa6c51b2ec0def3b000a6a9",
+    "semantic_hash": ""
+  },
+  "skill_eval/git_ops.py": {
+    "mtime": 1780948348.9524362,
+    "ast_hash": "5157a03b145f584176c580267d501459",
+    "semantic_hash": ""
+  },
+  "skill_eval/judge.py": {
+    "mtime": 1780986499.8554723,
+    "ast_hash": "62e4227b918e05b9988c329d90363258",
+    "semantic_hash": ""
+  },
+  "skill_eval/sample_cases.py": {
+    "mtime": 1780950979.0500596,
+    "ast_hash": "1dd1556d8501d544e6e1c9785dcdda90",
+    "semantic_hash": ""
+  },
+  "skill_eval/simulator.py": {
+    "mtime": 1780986480.5302143,
+    "ast_hash": "6df16b87e231d0331383fd7eafa52e24",
+    "semantic_hash": ""
+  },
+  "skill_eval/taker.py": {
+    "mtime": 1780986529.4147584,
+    "ast_hash": "9fc6e8604f53fcd8db2368b3e7841059",
+    "semantic_hash": ""
+  },
+  "skill_eval/tracing.py": {
+    "mtime": 1780986759.5918627,
+    "ast_hash": "4f86eb514d4a3df70fd039cdd7e491a1",
+    "semantic_hash": ""
+  },
+  "tests/test_batch.py": {
+    "mtime": 1780950979.0508554,
+    "ast_hash": "65fc25faeda023ab59f4f6351eb07b02",
+    "semantic_hash": ""
+  },
+  "tests/test_flagship_case.py": {
+    "mtime": 1780980976.6905599,
+    "ast_hash": "ed9050e71cb29e9a38ad969ff20f33e4",
+    "semantic_hash": ""
+  },
+  "tests/test_git_ops.py": {
+    "mtime": 1780948348.9537795,
+    "ast_hash": "47f36bcf9122ed4a8b4fe8d06813039f",
+    "semantic_hash": ""
+  },
+  "tests/test_judge.py": {
+    "mtime": 1780975281.9495645,
+    "ast_hash": "e0240c2bba19d212434656ff0c6b27b7",
+    "semantic_hash": ""
+  },
+  "tests/test_live_smoke.py": {
+    "mtime": 1780909778.7197802,
+    "ast_hash": "b3b0f8987b75ae80149577b34d7de7cc",
+    "semantic_hash": ""
+  },
+  "tests/test_sample_cases.py": {
+    "mtime": 1780950979.051521,
+    "ast_hash": "d7846a5d2ec07a33d42002e8f094d517",
+    "semantic_hash": ""
+  },
+  "tests/test_simulator.py": {
+    "mtime": 1780986833.8685894,
+    "ast_hash": "3ac0b497667d7244e03dd5131fa02b4c",
+    "semantic_hash": ""
+  },
+  "tests/test_taker.py": {
+    "mtime": 1780980976.6912344,
+    "ast_hash": "ad1efadfdea0e47825e03fc89cee005b",
+    "semantic_hash": ""
+  },
+  "tests/test_tracing.py": {
+    "mtime": 1780986749.34764,
+    "ast_hash": "b254edcca9195c553617ea9c52ed75c6",
+    "semantic_hash": ""
+  },
+  "DEMO.md": {
+    "mtime": 1780976258.7119892,
+    "ast_hash": "cc0da1c6fec31cc7b1ab8fa13e505ed8",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md": {
+    "mtime": 1780948348.951767,
+    "ast_hash": "3b42c56441bb0c00b467efd8a6c5c61c",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-06-08-batch-cases.md": {
+    "mtime": 1780950979.0488813,
+    "ast_hash": "185e32ea44c535df0d149d8f9f9b519b",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-06-08-phase-b-real-components.md": {
+    "mtime": 1780909778.7123332,
+    "ast_hash": "b92397a6efa2f957b790fa28dae7fede",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-06-08-flagship-comparison.md": {
+    "mtime": 1780975281.9478562,
+    "ast_hash": "c02d793bea665f960d7216426da35839",
+    "semantic_hash": ""
+  },
+  "flagship/skills/disciplined/SKILL.md": {
+    "mtime": 1780975281.9483564,
+    "ast_hash": "01e56398245284a4ef52204658aabbc4",
+    "semantic_hash": ""
+  },
+  "flagship/skills/ship-it-fast/SKILL.md": {
+    "mtime": 1780975281.948587,
+    "ast_hash": "0e369bc497cccbd9d7712b949dcbc01e",
     "semantic_hash": ""
   }
 }

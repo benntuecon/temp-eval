@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>/ — graphify tree viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      margin: 20px 0 0 24px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #1e3a56;
+    }
+    .controls {
+      margin: 20px 0 15px 24px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 8px 18px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:active {
+      background: #004085;
+    }
+    #tree-container {
+      width: calc(100vw - 48px); /* Adjust for body margin/padding */
+      height: 85vh;
+      overflow: auto;
+      border-radius: 8px;
+      background: #fff;
+      margin-left: 24px;
+      margin-right: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
+    }
+    svg {
+      background: #fff;
+      border-radius: 8px;
+      display: block; /* Important for D3 */
+    }
+    .node circle {
+      stroke-width: 2.5px;
+    }
+    .node text { /* Base style for the <text> container */
+      font: 13px 'Segoe UI', sans-serif;
+      paint-order: stroke fill; /* Ensures text is readable over lines */
+      stroke: #fff; /* White halo */
+      stroke-width: 3px; /* Halo thickness */
+      stroke-linejoin: round;
+      stroke-opacity: 0.85; /* Halo opacity */
+    }
+    .link {
+      fill: none;
+      stroke-opacity: 0.7;
+      stroke-width: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>/ — Knowledge Graph</h1>
+  <div class="controls">
+    <button onclick="expandAll()">Expand All</button>
+    <button onclick="collapseAll()">Collapse All</button>
+    <button onclick="resetView()">Reset View</button>
+  </div>
+  <div id="tree-container">
+    <svg id="tree-svg" width="6000" height="8000"></svg>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const initialJsonData = {"name":"/","total_count":194,"children":[{"name":".claude","total_count":2,"children":[{"name":"settings.json","total_count":2,"children":[{"name":"hooks","total_count":1,"children":[]},{"name":"PreToolUse","total_count":1,"children":[]}]}]},{"name":"app.py","total_count":4,"children":[{"name":"_is_streamlit()","total_count":1,"children":[]},{"name":"main()","total_count":1,"children":[]},{"name":"Return True when this file is being executed by Streamlit.","total_count":1,"children":[]},{"name":"Streamlit dashboard for the skill-eval Phase A walking skeleton.  Run with:","total_count":1,"children":[]}]},{"name":"CLAUDE.md","total_count":2,"children":[{"name":"CLAUDE.md","total_count":1,"children":[]},{"name":"graphify","total_count":1,"children":[]}]},{"name":"docs","total_count":62,"children":[{"name":"superpowers","total_count":62,"children":[{"name":"plans","total_count":20,"children":[{"name":"2026-06-06-foundation.md","total_count":8,"children":[{"name":"2026-06-06-foundation.md","total_count":1,"children":[]},{"name":"Done criteria for this plan","total_count":1,"children":[]},{"name":"File Structure","total_count":1,"children":[]},{"name":"Skill Eval — Foundation Implementation Plan","total_count":1,"children":[]},{"name":"Task 1: Project scaffolding with uv (issue #1)","total_count":1,"children":[]},{"name":"Task 2: Shared data contracts (issue #2)","total_count":1,"children":[]},{"name":"Task 3: Spike — isolated skill loading (issue #3)","total_count":1,"children":[]},{"name":"Task 4: Spike — ask_question routing, counting & metrics (issue #4)","total_count":1,"children":[]}]},{"name":"2026-06-07-walking-skeleton.md","total_count":12,"children":[{"name":"2026-06-07-walking-skeleton.md","total_count":1,"children":[]},{"name":"Design: the injectable seam","total_count":1,"children":[]},{"name":"File Structure","total_count":1,"children":[]},{"name":"Phase A done criteria","total_count":1,"children":[]},{"name":"Phase B preview (separate plan)","total_count":1,"children":[]},{"name":"Task 0: Extend contracts with injection/event aliases","total_count":1,"children":[]},{"name":"Task 1: Sample task-repo builder","total_count":1,"children":[]},{"name":"Task 2: C1 Sandbox — worktrees + gold diff","total_count":1,"children":[]},{"name":"Task 3: Simulated components","total_count":1,"children":[]},{"name":"Task 4: C6 Orchestrator (LangGraph)","total_count":1,"children":[]},{"name":"Task 5: C7 Visualization — Phoenix + Streamlit","total_count":1,"children":[]},{"name":"Walking Skeleton — Phase A (simulated end-to-end + live visual)","total_count":1,"children":[]}]}]},{"name":"specs","total_count":22,"children":[{"name":"2026-06-06-skill-eval-system-design.md","total_count":22,"children":[{"name":"1. Goal","total_count":1,"children":[]},{"name":"10. Build order & parallelization plan","total_count":1,"children":[]},{"name":"11. Out of scope (YAGNI for the hackathon)","total_count":1,"children":[]},{"name":"12. Risks & open questions","total_count":1,"children":[]},{"name":"2. Inputs & Outputs","total_count":1,"children":[]},{"name":"2026-06-06-skill-eval-system-design.md","total_count":1,"children":[]},{"name":"3. Architecture — two layers","total_count":1,"children":[]},{"name":"4. Tech stack & rationale","total_count":1,"children":[]},{"name":"5. Components","total_count":1,"children":[]},{"name":"6. Data contracts (`contracts.py`)","total_count":1,"children":[]},{"name":"7. Control flow (LangGraph)","total_count":1,"children":[]},{"name":"8. Component details","total_count":1,"children":[]},{"name":"8.1 Sandbox/Repo Manager (1)","total_count":1,"children":[]},{"name":"8.2 Test-taker Runner (2)","total_count":1,"children":[]},{"name":"8.3 HITL Simulator (3)","total_count":1,"children":[]},{"name":"8.4 Metrics Collector (4)","total_count":1,"children":[]},{"name":"8.5 Judge Panel (5)","total_count":1,"children":[]},{"name":"8.6 Reporting / Dashboards (7)","total_count":1,"children":[]},{"name":"9. Visualization summary (covers \"both equally\")","total_count":1,"children":[]},{"name":"Inputs","total_count":1,"children":[]},{"name":"Output","total_count":1,"children":[]},{"name":"Skill Eval System — Design Spec","total_count":1,"children":[]}]}]},{"name":"spikes","total_count":20,"children":[{"name":"2026-06-06-ask-question-and-metrics.md","total_count":10,"children":[{"name":"2026-06-06-ask-question-and-metrics.md","total_count":1,"children":[]},{"name":"ask_question round-trip","total_count":1,"children":[]},{"name":"Confirmed WITHOUT inference (static)","total_count":1,"children":[]},{"name":"Hook counting","total_count":1,"children":[]},{"name":"Real ResultMessage field values observed","total_count":1,"children":[]},{"name":"Real run results (credits restored, 2026-06-06)","total_count":1,"children":[]},{"name":"Recommendation for C2 (run_taker)","total_count":1,"children":[]},{"name":"RunMetrics mapping","total_count":1,"children":[]},{"name":"Spike #4 — ask_question routing, counting, metrics","total_count":1,"children":[]},{"name":"StopReason mapping","total_count":1,"children":[]}]},{"name":"2026-06-06-skill-loading.md","total_count":10,"children":[{"name":"2026-06-06-skill-loading.md","total_count":1,"children":[]},{"name":"Approach A (use when testing real skill-trigger machinery)","total_count":1,"children":[]},{"name":"Approach A — `cwd` + `setting_sources` + `skills` + `allowed_tools=[\"Skill\"]`","total_count":1,"children":[]},{"name":"Approach B (recommended default)","total_count":1,"children":[]},{"name":"Approach B — inject SKILL.md into `system_prompt`","total_count":1,"children":[]},{"name":"Real run results (credits restored, 2026-06-06)","total_count":1,"children":[]},{"name":"Recommendation for C2 (run_taker)","total_count":1,"children":[]},{"name":"Result summary","total_count":1,"children":[]},{"name":"Skill directory layout for Approach A","total_count":1,"children":[]},{"name":"Spike #3 — Isolated skill loading","total_count":1,"children":[]}]}]}]}]},{"name":"README.md","total_count":4,"children":[{"name":"Develop","total_count":1,"children":[]},{"name":"README.md","total_count":1,"children":[]},{"name":"Setup","total_count":1,"children":[]},{"name":"skill-eval","total_count":1,"children":[]}]},{"name":"skill_eval","total_count":83,"children":[{"name":"__init__.py","total_count":1,"children":[{"name":"Skill Eval — eval/comparison harness for two Claude Code Skills.","total_count":1,"children":[]}]},{"name":"contracts.py","total_count":34,"children":[{"name":"A single judge's 0-20 score plus rationale.","total_count":1,"children":[]},{"name":"Aggregated result for one arm (one model).","total_count":1,"children":[]},{"name":"Arm","total_count":1,"children":[]},{"name":"ArmReport","total_count":1,"children":[]},{"name":"AskFn","total_count":1,"children":[]},{"name":"ComparisonReport","total_count":1,"children":[]},{"name":"Component 1: create git worktrees and compute the gold diff.","total_count":1,"children":[]},{"name":"Component 2: run a Claude Agent SDK session under budget; return result.","total_count":1,"children":[]},{"name":"Component 3: build the AskFn the simulator uses to answer questions.","total_count":1,"children":[]},{"name":"Component 5: score one criterion for one taker (0-20).","total_count":1,"children":[]},{"name":"Component 6: orchestrate the whole eval and return the comparison.","total_count":1,"children":[]},{"name":"Criterion","total_count":1,"children":[]},{"name":"Everything one judge needs to score one criterion for one taker.","total_count":1,"children":[]},{"name":"Everything one taker produced, ready for judging.","total_count":1,"children":[]},{"name":"Isolated dirs for one arm plus the shared gold tree.","total_count":1,"children":[]},{"name":"JudgeInput","total_count":1,"children":[]},{"name":"JudgeScore","total_count":1,"children":[]},{"name":"make_simulator()","total_count":1,"children":[]},{"name":"Objective, non-LLM measurements of a single taker run.","total_count":1,"children":[]},{"name":"One judged dimension. Each becomes its own concurrent judge.","total_count":1,"children":[]},{"name":"prepare_workspaces()","total_count":1,"children":[]},{"name":"run_eval()","total_count":1,"children":[]},{"name":"run_judge()","total_count":1,"children":[]},{"name":"run_taker()","total_count":1,"children":[]},{"name":"RunConfig","total_count":1,"children":[]},{"name":"RunMetrics","total_count":1,"children":[]},{"name":"Shared data contracts for the skill-eval harness.  This is the single integratio","total_count":1,"children":[]},{"name":"StopReason","total_count":1,"children":[]},{"name":"TakerResult","total_count":1,"children":[]},{"name":"The eval's input: commits, task, skills, and the test budget.","total_count":1,"children":[]},{"name":"The system's output: baseline vs challenger, per model.","total_count":1,"children":[]},{"name":"Which skill a test-taker is running.","total_count":1,"children":[]},{"name":"Why a test-taker run ended.","total_count":1,"children":[]},{"name":"Workspace","total_count":1,"children":[]}]},{"name":"orchestrator.py","total_count":18,"children":[{"name":"_build_graph()","total_count":1,"children":[]},{"name":"_emit()","total_count":1,"children":[]},{"name":"_EvalState","total_count":1,"children":[]},{"name":"_node_assemble()","total_count":1,"children":[]},{"name":"_node_judges()","total_count":1,"children":[]},{"name":"_node_prepare()","total_count":1,"children":[]},{"name":"_node_takers()","total_count":1,"children":[]},{"name":"Any","total_count":1,"children":[]},{"name":"C6 LangGraph orchestrator for skill-eval.  Wires sandbox → takers (concurrent) →","total_count":1,"children":[]},{"name":"ComparisonReport","total_count":1,"children":[]},{"name":"Emit sandbox stage events; workspaces are already created by run_eval.","total_count":1,"children":[]},{"name":"EventFn","total_count":1,"children":[]},{"name":"JudgeFn","total_count":1,"children":[]},{"name":"MakeSimulator","total_count":1,"children":[]},{"name":"Orchestrate a full eval: sandbox → takers → judges → report.      Phase A: pass","total_count":1,"children":[]},{"name":"run_eval()","total_count":1,"children":[]},{"name":"RunConfig","total_count":1,"children":[]},{"name":"TakerFn","total_count":1,"children":[]}]},{"name":"reporting.py","total_count":8,"children":[{"name":"ComparisonReport","total_count":1,"children":[]},{"name":"init_phoenix()","total_count":1,"children":[]},{"name":"Launch / register Phoenix tracing and instrument LangChain.      Returns the Pho","total_count":1,"children":[]},{"name":"Re-derive the winner from total scores and return a human-readable verdict.","total_count":1,"children":[]},{"name":"Reporting helpers and Phoenix initialisation for the skill-eval dashboard.  Pure","total_count":1,"children":[]},{"name":"Return one row per Criterion with a score column per arm.      Each row is ``{\"c","total_count":1,"children":[]},{"name":"scores_table()","total_count":1,"children":[]},{"name":"verdict_line()","total_count":1,"children":[]}]},{"name":"sample_repo.py","total_count":3,"children":[{"name":"_git()","total_count":1,"children":[]},{"name":"build_sample_repo()","total_count":1,"children":[]},{"name":"RunConfig","total_count":1,"children":[]}]},{"name":"sandbox.py","total_count":6,"children":[{"name":"_git()","total_count":1,"children":[]},{"name":"Arm","total_count":1,"children":[]},{"name":"cleanup_workspaces()","total_count":1,"children":[]},{"name":"prepare_workspaces()","total_count":1,"children":[]},{"name":"RunConfig","total_count":1,"children":[]},{"name":"Workspace","total_count":1,"children":[]}]},{"name":"simulated.py","total_count":13,"children":[{"name":"AskFn","total_count":1,"children":[]},{"name":"Deterministic simulated components for Phase A walking skeleton.  These make no","total_count":1,"children":[]},{"name":"JudgeInput","total_count":1,"children":[]},{"name":"JudgeScore","total_count":1,"children":[]},{"name":"Return a canned AskFn that gives helpful, deterministic answers.","total_count":1,"children":[]},{"name":"Return a deterministic 0-20 score for one criterion.","total_count":1,"children":[]},{"name":"RunConfig","total_count":1,"children":[]},{"name":"sim_make_simulator()","total_count":1,"children":[]},{"name":"sim_run_judge()","total_count":1,"children":[]},{"name":"sim_run_taker()","total_count":1,"children":[]},{"name":"Simulate a taker: ask a clarifying question, write a fix, return result.","total_count":1,"children":[]},{"name":"TakerResult","total_count":1,"children":[]},{"name":"Workspace","total_count":1,"children":[]}]}]},{"name":"spikes","total_count":17,"children":[{"name":"spike_ask_question.py","total_count":9,"children":[{"name":"Any","total_count":1,"children":[]},{"name":"ask_question()","total_count":1,"children":[]},{"name":"count_hook()","total_count":1,"children":[]},{"name":"Discover the REAL metric attribute names on the final message.","total_count":1,"children":[]},{"name":"dump_metrics()","total_count":1,"children":[]},{"name":"HookContext","total_count":1,"children":[]},{"name":"main()","total_count":1,"children":[]},{"name":"my_callback()","total_count":1,"children":[]},{"name":"Spike (#4): custom ask_question tool -> Python handler; counting; metrics; timeo","total_count":1,"children":[]}]},{"name":"spike_skill_loading.py","total_count":8,"children":[{"name":"_collect_text()","total_count":1,"children":[]},{"name":"approach_a_setting_sources()","total_count":1,"children":[]},{"name":"approach_b_system_prompt()","total_count":1,"children":[]},{"name":"Best-effort concatenation of assistant text across SDK message shapes.","total_count":1,"children":[]},{"name":"Fallback: inject the SKILL.md straight into the system prompt.","total_count":1,"children":[]},{"name":"main()","total_count":1,"children":[]},{"name":"Point the SDK at a project dir that contains only the fixture skill.","total_count":1,"children":[]},{"name":"Spike (#3): can we load ONE specific Claude Code Skill into an isolated session?","total_count":1,"children":[]}]}]},{"name":"tests","total_count":20,"children":[{"name":"fixtures","total_count":2,"children":[{"name":"skills","total_count":2,"children":[{"name":"haiku-only","total_count":2,"children":[{"name":"SKILL.md","total_count":2,"children":[{"name":"Haiku Only","total_count":1,"children":[]},{"name":"SKILL.md","total_count":1,"children":[]}]}]}]}]},{"name":"test_contracts.py","total_count":7,"children":[{"name":"test_callable_aliases_importable()","total_count":1,"children":[]},{"name":"test_enum_values()","total_count":1,"children":[]},{"name":"test_full_report_composition()","total_count":1,"children":[]},{"name":"test_judge_input_constructs()","total_count":1,"children":[]},{"name":"test_phase_a_aliases_importable()","total_count":1,"children":[]},{"name":"test_runconfig_defaults_and_frozen()","total_count":1,"children":[]},{"name":"test_workspace_frozen()","total_count":1,"children":[]}]},{"name":"test_orchestrator.py","total_count":1,"children":[{"name":"test_run_eval_simulated_end_to_end()","total_count":1,"children":[]}]},{"name":"test_reporting.py","total_count":3,"children":[{"name":"_report()","total_count":1,"children":[]},{"name":"test_scores_table_shape()","total_count":1,"children":[]},{"name":"test_verdict_line()","total_count":1,"children":[]}]},{"name":"test_sample_repo.py","total_count":2,"children":[{"name":"_commit_exists()","total_count":1,"children":[]},{"name":"test_build_sample_repo()","total_count":1,"children":[]}]},{"name":"test_sandbox.py","total_count":1,"children":[{"name":"test_prepare_workspaces()","total_count":1,"children":[]}]},{"name":"test_simulated.py","total_count":3,"children":[{"name":"test_sim_judge_scores_in_range()","total_count":1,"children":[]},{"name":"test_sim_simulator_answers()","total_count":1,"children":[]},{"name":"test_sim_taker_asks_and_returns()","total_count":1,"children":[]}]},{"name":"test_smoke.py","total_count":1,"children":[{"name":"test_package_imports()","total_count":1,"children":[]}]}]}]};
+
+    function transformData(jsonData) {
+        // Helper function to recursively build the children structure
+        function processNode(node, parentL1StageName) {
+            let displayName = node.name;
+            // Append total_count if it exists and is not already in the name
+            if (node.total_count !== undefined) {
+                if (!/\(Total Count: \d+\)$/.test(displayName)) {
+                    displayName += ` (Total Count: ${node.total_count})`;
+                }
+            }
+
+            const newNode = { name: displayName };
+
+            if (parentL1StageName === "Root") {
+                 newNode.originalStageName = node.name;
+            } else {
+                newNode.originalStageName = parentL1StageName;
+            }
+
+            if (node.children && node.children.length > 0) {
+                const stageNameToPass = (parentL1StageName === "Root") ? node.name : parentL1StageName;
+                newNode.children = node.children.map(child => processNode(child, stageNameToPass));
+            }
+
+            return newNode;
+        }
+
+        let rootDisplayName = jsonData.name;
+        if (jsonData.total_count !== undefined && !/\(Total Count: \d+\)$/.test(rootDisplayName)) {
+            rootDisplayName += ` (Total Count: ${jsonData.total_count})`;
+        }
+
+        return {
+            name: rootDisplayName,
+            originalStageName: "Root",
+            children: (jsonData.children || []).map(child => processNode(child, "Root"))
+        };
+    }
+
+    const treeData = transformData(initialJsonData);
+
+    // Auto-populated phaseColors: every depth-1 child of the root gets
+    // a stable colour from a bigger palette so all top-level dirs are
+    // distinguishable.
+    const PALETTE = [
+      ["#3498DB","#2980B9","#AED6F1"], ["#2ECC71","#27AE60","#A9DFBF"],
+      ["#E74C3C","#C0392B","#F5B7B1"], ["#9B59B6","#8E44AD","#D7BDE2"],
+      ["#F39C12","#D68910","#FAD7A0"], ["#1ABC9C","#117864","#A2D9CE"],
+      ["#34495E","#1B2631","#ABB2B9"], ["#E67E22","#BA4A00","#F5CBA7"],
+      ["#16A085","#0E6655","#A2D9CE"], ["#D35400","#A04000","#EDBB99"],
+      ["#7F8C8D","#566573","#D5DBDB"], ["#C0392B","#7B241C","#F5B7B1"],
+      ["#2E86C1","#1B4F72","#A9CCE3"], ["#28B463","#196F3D","#A9DFBF"],
+      ["#AF7AC5","#6C3483","#D2B4DE"],
+    ];
+    const phaseColors = { "Root": { fill: "#4A4A4A", stroke: "#333333", collapsedFill: "#6C757D" },
+                          "Default": { fill: "#BDC3C7", stroke: "#95A5A6", collapsedFill: "#ECF0F1" } };
+    (initialJsonData.children || []).forEach((c, i) => {
+      const pal = PALETTE[i % PALETTE.length];
+      phaseColors[c.name] = { fill: pal[0], stroke: pal[1], collapsedFill: pal[2] };
+    });
+
+    const levelSpecificPalettes = {
+      0: { fill: "#4A4A4A", stroke: "#333333", collapsedFill: "#6C757D" },
+      2: { fill: "#6ab04c", stroke: "#508a38", collapsedFill: "#a3d391" },
+      3: { fill: "#f0932b", stroke: "#d0730f", collapsedFill: "#f6c07e" },
+      4: { fill: "#be2edd", stroke: "#a01cb3", collapsedFill: "#e08bf2" },
+      5: { fill: "#00a8ff", stroke: "#007ac1", collapsedFill: "#74d2ff" },
+      6: { fill: "#e55039", stroke: "#c23620", collapsedFill: "#f09a8d" },
+      default: { fill: "#747d8c", stroke: "#57606f", collapsedFill: "#a4b0be" }
+    };
+
+    const svgElement = d3.select("#tree-svg");
+    const initialSvgWidth = +svgElement.attr("width");
+    const initialSvgHeight = +svgElement.attr("height");
+    const margin = { top: 40, right: 120, bottom: 80, left: 450 };
+    let width = initialSvgWidth - margin.left - margin.right;
+    let height = initialSvgHeight - margin.top - margin.bottom;
+    const duration = 500;
+    let nodeCounter = 0;
+    const g = svgElement.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const treemap = d3.tree().nodeSize([40, 0]);
+    let rootNode = d3.hierarchy(treeData, d => d.children);
+    rootNode.x0 = 0;
+    rootNode.y0 = 0;
+
+    if (rootNode.children) {
+      rootNode.children.forEach(d_child => {
+        if (d_child.children) { collapseBranch(d_child); }
+      });
+    }
+    updateTree(rootNode);
+
+    function collapseBranch(d) { if (d.children) { d._children = d.children; d._children.forEach(collapseBranch); d.children = null; } }
+    function expandBranch(d) { if (d._children) { d.children = d._children; d._children = null; } if (d.children) { d.children.forEach(expandBranch); } }
+    window.expandAll = () => { expandBranch(rootNode); updateTree(rootNode); };
+    window.collapseAll = () => { if (rootNode.children) { rootNode.children.forEach(collapseBranch); } updateTree(rootNode); };
+    window.resetView = () => { if (rootNode.children) { rootNode.children.forEach(d_child => { if (d_child.children || d_child._children) { collapseBranch(d_child); } }); } if (rootNode._children && !rootNode.children) { rootNode.children = rootNode._children; rootNode._children = null; } updateTree(rootNode); };
+
+    function updateTree(source) {
+      const treeLayoutData = treemap(rootNode);
+      let nodes = treeLayoutData.descendants();
+      let links = treeLayoutData.descendants().slice(1);
+
+      let minX = 0;
+      let maxX = 0;
+      if (nodes.length > 0) {
+        minX = d3.min(nodes, d => d.x);
+        maxX = d3.max(nodes, d => d.x);
+      }
+
+      let neededHeight = Math.max(initialSvgHeight, maxX - minX + margin.top + margin.bottom + 100);
+      svgElement.transition().duration(duration / 2).attr("height", neededHeight);
+      g.transition().duration(duration / 2).attr("transform", `translate(${margin.left},${margin.top - minX + 40})`);
+
+      nodes.forEach(d => { d.y = d.depth * 400; }); // Adjust horizontal separation if needed
+
+      const node = g.selectAll('g.node').data(nodes, d => d.id || (d.id = ++nodeCounter));
+      const nodeEnter = node.enter().append('g')
+        .attr('class', d => "node" + (d.children || d._children ? " node--internal" : " node--leaf") + (d._children ? " _children" : ""))
+        .attr('transform', d => `translate(${source.y0},${source.x0})`)
+        .on('click', (event, d) => { if (d.children) { d._children = d.children; d.children = null; } else if (d._children) { d.children = d._children; d._children = null; } updateTree(d); })
+        .style('cursor', d => (d.children || d._children) ? 'pointer' : 'default');
+
+      nodeEnter.append('circle').attr('r', 1e-6);
+
+      nodeEnter.append('text')
+        .attr('dy', '.35em')
+        .attr('x', d => d.children || d._children ? -14 : 14)
+        .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
+        .style("fill-opacity", 1e-6)
+        .call(wrapText, 380);
+
+      const nodeUpdate = nodeEnter.merge(node);
+      nodeUpdate.transition().duration(duration)
+        .attr('transform', d => `translate(${d.y},${d.x})`)
+        .attr('class', d => "node" + (d.children ? " node--internal" : " node--leaf") + (d._children ? " node--internal _children" : ""));
+
+      nodeUpdate.select('circle').attr('r', 8.5)
+        .style('fill', d => {
+            let palette;
+            if (d.depth === 0) {
+                palette = levelSpecificPalettes[0];
+            } else if (d.depth === 1) {
+                palette = phaseColors[d.data.originalStageName] || phaseColors.Default;
+            } else {
+                palette = levelSpecificPalettes[d.depth] || levelSpecificPalettes.default;
+            }
+            if (d._children) return palette.collapsedFill;
+            if (d.children) return palette.fill;
+            return "#fff";
+        })
+        .style('stroke', d => {
+            let palette;
+            if (d.depth === 0) {
+                palette = levelSpecificPalettes[0];
+            } else if (d.depth === 1) {
+                palette = phaseColors[d.data.originalStageName] || phaseColors.Default;
+            } else {
+                palette = levelSpecificPalettes[d.depth] || levelSpecificPalettes.default;
+            }
+            return palette.stroke;
+        });
+      nodeUpdate.select('text').style("fill-opacity", 1).call(wrapText, 380);
+
+      const nodeExit = node.exit().transition().duration(duration).attr('transform', d => `translate(${source.y},${source.x})`).remove();
+      nodeExit.select('circle').attr('r', 1e-6);
+      nodeExit.select('text').style('fill-opacity', 1e-6);
+
+      const link = g.selectAll('path.link').data(links, d => d.id);
+      const linkEnter = link.enter().insert('path', "g").attr('class', 'link').attr('d', d => { const o = { x: source.x0, y: source.y0 }; return diagonal(o, o); });
+
+      linkEnter.merge(link).transition().duration(duration).attr('d', d => diagonal(d, d.parent))
+        .style('stroke', d => {
+            const sourceNode = d.parent;
+            if (!sourceNode) return phaseColors.Default.stroke;
+            const l1AncestorName = sourceNode.data.originalStageName;
+            const colorPalette = phaseColors[l1AncestorName] || phaseColors.Default;
+            return colorPalette.stroke;
+        });
+      link.exit().transition().duration(duration).attr('d', d => { const o = { x: source.x, y: source.y }; return diagonal(o, o); }).remove();
+      nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+    }
+
+    function diagonal(s, d) { return `M ${s.y} ${s.x} C ${(s.y + d.y) / 2} ${s.x}, ${(s.y + d.y) / 2} ${d.x}, ${d.y} ${d.x}`; }
+
+    function wrapText(textElements, maxWidth) {
+        const textPartColors = {
+            name: '#343a40',
+            count: '#0056b3'
+        };
+        const countRegex = /(\s\(Total Count: \d+\))$/;
+
+        textElements.each(function () {
+            const textD3 = d3.select(this);
+            const originalNodeText = textD3.datum().data.name;
+            const x = parseFloat(textD3.attr("x") || 0);
+            const initialDy = textD3.attr("dy");
+            const textAnchor = textD3.attr("text-anchor");
+            const lineHeight = 1.1;
+
+            textD3.text(null);
+
+            let namePart = originalNodeText;
+            let countPartText = "";
+
+            const countMatch = originalNodeText.match(countRegex);
+            if (countMatch && originalNodeText.endsWith(countMatch[0])) {
+                namePart = originalNodeText.substring(0, originalNodeText.length - countMatch[0].length).trim();
+                countPartText = countMatch[0].trim();
+            }
+
+            const tokens = [];
+            namePart.split(/\s+/).filter(Boolean).forEach(word => {
+                tokens.push({ text: word, type: 'name' });
+            });
+            if (countPartText) {
+                tokens.push({ text: countPartText, type: 'count' });
+            }
+
+            if (tokens.length === 0 && originalNodeText) {
+                tokens.push({ text: originalNodeText, type: 'name' });
+            }
+
+            let currentTspan = textD3.append("tspan").attr("x", x).attr("dy", initialDy);
+            if (textAnchor === "end") currentTspan.attr("text-anchor", "end");
+
+            let lineTokens = [];
+
+            for (let i = 0; i < tokens.length; i++) {
+                const tokenObj = tokens[i];
+
+                lineTokens.push(tokenObj);
+                currentTspan.text(lineTokens.map(t => t.text).join(" "));
+
+                if (currentTspan.node().getComputedTextLength() > maxWidth && lineTokens.length > 1) {
+                    lineTokens.pop();
+
+                    currentTspan.text(null);
+                    lineTokens.forEach((prevToken, idx) => {
+                        currentTspan.append("tspan")
+                            .text((idx > 0 ? " " : "") + prevToken.text)
+                            .style("fill", textPartColors[prevToken.type] || textPartColors.name)
+                            .style("font-weight", prevToken.type === 'count' ? "bold" : "normal");
+                    });
+
+                    lineTokens = [tokenObj];
+                    currentTspan = textD3.append("tspan").attr("x", x).attr("dy", lineHeight + "em");
+                    if (textAnchor === "end") currentTspan.attr("text-anchor", "end");
+                }
+            }
+
+            currentTspan.text(null);
+            lineTokens.forEach((token, idx) => {
+                currentTspan.append("tspan")
+                    .text((idx > 0 ? " " : "") + token.text)
+                    .style("fill", textPartColors[token.type] || textPartColors.name)
+                    .style("font-weight", token.type === 'count' ? "bold" : "normal");
+            });
+
+            if (textD3.selectAll("tspan > tspan").empty() && textD3.select("tspan").text().length === 0 && originalNodeText) {
+                let t = textD3.select("tspan");
+                let displayText = originalNodeText;
+                t.text(displayText).style("fill", textPartColors.name);
+                if (t.node() && t.node().getComputedTextLength() > maxWidth && displayText.length > 20) {
+                    let estimatedChars = Math.floor(maxWidth / (t.node().getComputedTextLength()/displayText.length) );
+                    displayText = displayText.substring(0, Math.max(0, estimatedChars - 3)) + "...";
+                    t.text(displayText);
+                }
+            }
+        });
+    }
+  </script>
+</body>
+</html>

@@ -52,13 +52,22 @@ In the dashboard pick a **Mode**:
 
 ## Visualizations
 - **Live agent graph** — the eval fan-out as a Graphviz DAG, nodes lighting grey→gold→green.
-- **Control room** — per-arm panels, a 12-tile judges grid, grouped 0–20 comparison bars.
-- **Phoenix** (`localhost:6006`) — per-agent traces: the taker's tool timeline (Read/Edit/Bash/ask_question), each judge's prompt + rationale + tokens, and judge scores as span annotations.
+- **Control room** — per-arm panels, a 12-tile judges grid, headline delta metrics.
+- **Comparison dataviz** (best-practice, one colour per arm everywhere):
+  - **Grouped 0–20 bars** per criterion.
+  - **Dumbbell / gap chart** — connects each arm's score per criterion, sorted by the gap, so the *difference* is the primary visual (the canonical way to compare two series across many dimensions).
+  - **Quality-vs-cost scatter** — total score against total tokens, answering "is the better skill worth what it costs?".
+  - Batch adds per-criterion gap dumbbells and score-distribution boxplots.
+- **Phoenix** (`localhost:6006`) — deep per-agent traces, all grouped into **one Session** per run:
+  - **Taker** (AGENT): tool timeline (Read/Edit/Bash/ask_question), thinking trajectory, an LLM `model` child span carrying real prompt/completion/cache token counts, and metadata (skill, stop_reason, thinking budget).
+  - **HITL simulator** (LLM): every stakeholder answer captured as its own span — model, tokens, and the structured system/user/assistant messages it saw.
+  - **Judges** (LLM): each prompt + rationale as structured input/output messages, model name, invocation parameters, and token counts.
+  - Judge scores logged as span annotations; auto-instrumentation adds raw Anthropic `messages.create` and LangGraph node spans on top.
 
 ## Dev
 
 ```bash
-just check        # ruff format + lint + mypy + pytest  (81 tests, no network)
+just check        # ruff format + lint + mypy + pytest  (92 tests, no network)
 just test-live    # the one real end-to-end smoke test (needs API + credits)
 just phoenix      # standalone Phoenix (just app auto-starts it otherwise)
 just graph        # refresh the graphify code knowledge graph

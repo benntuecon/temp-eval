@@ -61,3 +61,51 @@ def test_eval_emits_spans(tmp_path):
     judge_spans = [s for s in spans if s.name == "judge"]
     assert all("score" in s.attributes for s in judge_spans)
     assert all(0 <= s.attributes["score"] <= 20 for s in judge_spans)
+
+    # Every run-scoped span carries the SAME session.id so Phoenix groups them.
+    root = next(s for s in spans if s.name == "skill_eval.run")
+    session_id = root.attributes.get("session.id")
+    assert session_id  # non-empty
+    for s in spans:
+        if s.name in ("skill_eval.run", "sandbox", "taker", "judge"):
+            assert s.attributes.get("session.id") == session_id
+
+
+def test_span_enrichment_helpers():
+    """The new LLM-detail helpers set the expected OpenInference attributes."""
+    _EXPORTER.clear()
+
+    from skill_eval.tracing import (
+        get_tracer,
+        set_cache_tokens,
+        set_invocation_parameters,
+        set_messages,
+        set_metadata,
+        set_model_name,
+        set_session,
+    )
+
+    with get_tracer().start_as_current_span("probe") as span:
+        set_model_name(span, "claude-haiku-4-5")
+        set_invocation_parameters(span, {"max_tokens": 500})
+        set_messages(
+            span,
+            input_messages=[{"role": "user", "content": "hi"}],
+            output_messages=[{"role": "assistant", "content": "yo"}],
+        )
+        set_cache_tokens(span, 123, 0)
+        set_metadata(span, {"k": "v"})
+        set_session(span, "sess123")
+
+    probe = next(s for s in _EXPORTER.get_finished_spans() if s.name == "probe")
+    a = probe.attributes
+    assert a["llm.model_name"] == "claude-haiku-4-5"
+    assert "llm.invocation_parameters" in a
+    assert a["llm.input_messages.0.message.role"] == "user"
+    assert a["llm.input_messages.0.message.content"] == "hi"
+    assert a["llm.output_messages.0.message.content"] == "yo"
+    assert a["llm.token_count.prompt_details.cache_read"] == 123
+    # zero cache-write is omitted (no noise on spans)
+    assert "llm.token_count.prompt_details.cache_write" not in a
+    assert a["metadata"] == '{"k": "v"}'
+    assert a["session.id"] == "sess123"
