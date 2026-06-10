@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1781077424.444276,
-    "ast_hash": "f948f0d24120fac35ae16b776cbd6e51",
+    "mtime": 1781079104.6595457,
+    "ast_hash": "ed2f899eb844fc4687aa9db0218aef2d",
     "semantic_hash": ""
   },
   "skill_eval/__init__.py": {
@@ -15,18 +15,18 @@
     "semantic_hash": ""
   },
   "skill_eval/contracts.py": {
-    "mtime": 1781076850.0474894,
-    "ast_hash": "a42b2a69de6fd51a9702b1303eb3167c",
+    "mtime": 1781078616.91516,
+    "ast_hash": "f5163a3bec4efa1a9e8a5942dc8c2dd9",
     "semantic_hash": ""
   },
   "skill_eval/orchestrator.py": {
-    "mtime": 1781076879.0648673,
-    "ast_hash": "d56833ad4e6c25bac09a245f29686932",
+    "mtime": 1781078663.7137861,
+    "ast_hash": "1b72c95a34aa568895e9928737f463f9",
     "semantic_hash": ""
   },
   "skill_eval/reporting.py": {
-    "mtime": 1781076915.1100557,
-    "ast_hash": "5aa6c4ab06e0417aa116ceb31fe650a8",
+    "mtime": 1781078881.5231898,
+    "ast_hash": "859b353009a3d40c0fbbc7e63a64e4c1",
     "semantic_hash": ""
   },
   "skill_eval/sample_repo.py": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "skill_eval/simulated.py": {
-    "mtime": 1780950979.0505054,
-    "ast_hash": "ed9cd104e2a05d7ab616ef115ecaf098",
+    "mtime": 1781078471.6311328,
+    "ast_hash": "e00209ff8f93980c1229077831aab1cb",
     "semantic_hash": ""
   },
   "spikes/spike_ask_question.py": {
@@ -60,13 +60,13 @@
     "semantic_hash": ""
   },
   "tests/test_orchestrator.py": {
-    "mtime": 1781076367.418451,
-    "ast_hash": "7a152a51b8adc78588ec08d9e5662fa4",
+    "mtime": 1781079104.6585402,
+    "ast_hash": "7128e2db857f6c430f4fd7217df381e2",
     "semantic_hash": ""
   },
   "tests/test_reporting.py": {
-    "mtime": 1781076924.1868238,
-    "ast_hash": "8e902eb4fcffe19af4c9fdb468ddebba",
+    "mtime": 1781078898.1759636,
+    "ast_hash": "180f996086466f7942565c8f9261750e",
     "semantic_hash": ""
   },
   "tests/test_sample_repo.py": {
@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1781077574.1739469,
-    "ast_hash": "0a44a6bee09daa46da3463749a055eb6",
+    "mtime": 1781079176.7526503,
+    "ast_hash": "28d6fb82656164081252eb1fe1f0ba5c",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-06-foundation.md": {
@@ -145,23 +145,23 @@
     "semantic_hash": ""
   },
   "skill_eval/judge.py": {
-    "mtime": 1780986499.8554723,
-    "ast_hash": "62e4227b918e05b9988c329d90363258",
+    "mtime": 1781079104.6582747,
+    "ast_hash": "ebd341a18cf6723e2a0e44e4b8f12199",
     "semantic_hash": ""
   },
   "skill_eval/sample_cases.py": {
-    "mtime": 1780950979.0500596,
-    "ast_hash": "1dd1556d8501d544e6e1c9785dcdda90",
+    "mtime": 1781078688.3920264,
+    "ast_hash": "b1eb43db260b55a720ddb31aefe1f5e2",
     "semantic_hash": ""
   },
   "skill_eval/simulator.py": {
-    "mtime": 1780986480.5302143,
-    "ast_hash": "6df16b87e231d0331383fd7eafa52e24",
+    "mtime": 1781079104.658107,
+    "ast_hash": "792a673bbc876c3e85ba21b51ab5b07c",
     "semantic_hash": ""
   },
   "skill_eval/taker.py": {
-    "mtime": 1781076841.1854613,
-    "ast_hash": "4ea173caf0fd328040c832b4702d9305",
+    "mtime": 1781078460.134748,
+    "ast_hash": "24cb3a42f35f3721cfc7358880fb9dab",
     "semantic_hash": ""
   },
   "skill_eval/tracing.py": {
@@ -185,8 +185,8 @@
     "semantic_hash": ""
   },
   "tests/test_judge.py": {
-    "mtime": 1780975281.9495645,
-    "ast_hash": "e0240c2bba19d212434656ff0c6b27b7",
+    "mtime": 1781078729.7922268,
+    "ast_hash": "669b4fcc6ba888012ceaeecb5ffc6ef2",
     "semantic_hash": ""
   },
   "tests/test_live_smoke.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_sample_cases.py": {
-    "mtime": 1780950979.051521,
-    "ast_hash": "d7846a5d2ec07a33d42002e8f094d517",
+    "mtime": 1781078774.2725341,
+    "ast_hash": "660cc5f235e8ceb499653b833635ccd0",
     "semantic_hash": ""
   },
   "tests/test_simulator.py": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "tests/test_app.py": {
-    "mtime": 1781077471.9243116,
-    "ast_hash": "e3973e74eb07c6d5bceac43a64a4413f",
+    "mtime": 1781079078.8193696,
+    "ast_hash": "2cca1e65b5b7ae259e159a947202579e",
     "semantic_hash": ""
   }
 }

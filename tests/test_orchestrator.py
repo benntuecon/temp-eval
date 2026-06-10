@@ -29,10 +29,56 @@ def test_run_eval_simulated_end_to_end(tmp_path):
     for arm_report in report.arms:
         assert arm_report.diff  # simulated taker writes a marker change
         assert arm_report.stop_reason == "completed"
+        # Q&A pairs: one per question, with a non-empty simulator answer
+        assert len(arm_report.qa) == len(arm_report.questions)
+        assert all(q and a for q, a in arm_report.qa)
     assert report.pairwise_verdict
     # events captured the workflow stages
     stages = {e.get("stage") for e in events}
     assert {"sandbox", "taker", "judge", "report"} <= stages
+
+
+def test_k_judges_median_aggregation(tmp_path):
+    """judges_per_criterion=3 fans out 3 replicates per cell but the report
+    still carries ONE aggregated (median) score per criterion, with the
+    replicate spread recorded in the rationale."""
+    import dataclasses
+
+    cfg = dataclasses.replace(build_sample_repo(str(tmp_path / "repo")), judges_per_criterion=3)
+    report = run_eval(
+        cfg,
+        taker_fn=sim_run_taker,
+        simulator_factory=sim_make_simulator,
+        judge_fn=sim_run_judge,
+    )
+    for arm_report in report.arms:
+        assert {s.criterion for s in arm_report.scores} == set(Criterion)
+        assert len(arm_report.scores) == len(Criterion)  # aggregated, not 18
+        for s in arm_report.scores:
+            assert s.rationale.startswith("[k=3, scores=")
+        assert arm_report.total_score == sum(s.score for s in arm_report.scores)
+
+
+def test_judge_model_decoupling_reaches_judges(tmp_path):
+    """cfg.judge_model (not the taker model) must be handed to judge_fn."""
+    import dataclasses
+
+    seen_models: list[str] = []
+
+    def spy_judge(ji, model):
+        seen_models.append(model)
+        return sim_run_judge(ji, model)
+
+    cfg = dataclasses.replace(
+        build_sample_repo(str(tmp_path / "repo")), judge_model="claude-sonnet-4-6"
+    )
+    run_eval(
+        cfg,
+        taker_fn=sim_run_taker,
+        simulator_factory=sim_make_simulator,
+        judge_fn=spy_judge,
+    )
+    assert seen_models and set(seen_models) == {"claude-sonnet-4-6"}
 
 
 def test_reducer_counts(tmp_path):

@@ -92,10 +92,12 @@ def sim_run_taker(
         num_q = 1 + (task_seed % 2)  # 1 or 2
 
     questions_asked: list[str] = []
+    qa_pairs: list[tuple[str, str]] = []
     for i in range(num_q):
         q = _CLARIFYING_QUESTIONS[i % len(_CLARIFYING_QUESTIONS)]
-        ask_fn(q)
+        answer = ask_fn(q)
         questions_asked.append(q)
+        qa_pairs.append((q, answer))
 
     # Write a small marker change into the worktree so diff is non-empty.
     # Find the first .py file (excluding test files) and append a comment,
@@ -153,6 +155,7 @@ def sim_run_taker(
         questions=tuple(questions_asked),
         stop_reason=StopReason.COMPLETED,
         metrics=metrics,
+        qa=tuple(qa_pairs),
     )
 
 

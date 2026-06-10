@@ -89,12 +89,15 @@ def make_simulator(after_dir: str, task_brief: str, model: str) -> AskFn:
             set_kind(span, "LLM")
             set_model_name(span, model)
             set_input(span, question)
-            set_invocation_parameters(span, {"model": model, "max_tokens": 400})
+            set_invocation_parameters(span, {"model": model, "max_tokens": 400, "temperature": 0})
             set_metadata(span, {"role": "hitl_simulator", "gold_context_chars": len(system)})
 
+            # temperature=0: the stakeholder must answer the same question the
+            # same way across arms/repeats, or it becomes a confound.
             response = client.messages.create(
                 model=model,
                 max_tokens=400,
+                temperature=0,
                 system=system,
                 messages=[{"role": "user", "content": question}],
             )

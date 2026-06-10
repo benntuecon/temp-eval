@@ -108,6 +108,15 @@ _CRITERION_DEFINITION: dict[str, str] = {
 }
 
 
+# Criteria judged WITHOUT seeing the gold diff. Showing the reference solution
+# while judging style/process leaks "the right answer" into criteria that are
+# supposed to assess the work on its own merits. Gold stays visible for the
+# criteria that are *defined* against it (correctness, completeness,
+# distance_to_gold) and for question_quality (ambiguities are derived by
+# diffing the brief against the gold's decisions).
+_GOLD_BLIND_CRITERIA: frozenset[str] = frozenset({"code_quality", "approach"})
+
+
 def _build_prompt(ji: JudgeInput) -> str:
     """Build the judge prompt for a single criterion evaluation.
 
@@ -148,6 +157,16 @@ def _build_prompt(ji: JudgeInput) -> str:
     else:
         criterion_extra = ""
 
+    if criterion in _GOLD_BLIND_CRITERIA:
+        gold_block = (
+            "## Gold diff\n(withheld for this criterion — judge the taker's work on its own merits)"
+        )
+    else:
+        gold_block = (
+            "## Gold diff (reference solution — encodes the authoritative decisions)\n"
+            f"```diff\n{ji.gold_diff}\n```"
+        )
+
     return f"""\
 You are an expert code-review judge. Score the taker's work on the criterion \
 **{criterion}** for the following task.
@@ -165,10 +184,7 @@ or wall-clock). Judge only what is present in their diff and questions.
 ## Task brief (may be deliberately under-specified)
 {ji.task_brief}
 
-## Gold diff (reference solution — encodes the authoritative decisions)
-```diff
-{ji.gold_diff}
-```
+{gold_block}
 
 ## Taker diff (what the taker submitted)
 ```diff
@@ -227,7 +243,7 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
     set_kind(judge_span, "LLM")
     set_model_name(judge_span, model)
     set_input(judge_span, prompt)
-    set_invocation_parameters(judge_span, {"model": model, "max_tokens": 500})
+    set_invocation_parameters(judge_span, {"model": model, "max_tokens": 500, "temperature": 0})
     set_metadata(
         judge_span,
         {
@@ -237,9 +253,12 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
         },
     )
 
+    # temperature=0: judging must be as deterministic as the API allows —
+    # a graded verdict that changes between identical runs is not a measurement.
     response = client.messages.create(
         model=model,
         max_tokens=500,
+        temperature=0,
         messages=[{"role": "user", "content": prompt}],
     )
 

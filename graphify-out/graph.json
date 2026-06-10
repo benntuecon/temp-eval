@@ -64,10 +64,20 @@
       "norm_label": "_slug()"
     },
     {
+      "label": "_runs_dir()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "app_runs_dir",
+      "community": 4,
+      "norm_label": "_runs_dir()"
+    },
+    {
       "label": "main()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L49",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "app_main",
       "community": 4,
@@ -77,7 +87,7 @@
       "label": "_run_single_case()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L196",
+      "source_location": "L219",
       "_origin": "ast",
       "id": "app_run_single_case",
       "community": 4,
@@ -87,7 +97,7 @@
       "label": "_render_single_results()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L568",
+      "source_location": "L597",
       "_origin": "ast",
       "id": "app_render_single_results",
       "community": 4,
@@ -97,7 +107,7 @@
       "label": "_run_flagship_mode()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L862",
+      "source_location": "L892",
       "_origin": "ast",
       "id": "app_run_flagship_mode",
       "community": 4,
@@ -107,30 +117,40 @@
       "label": "_run_custom_mode()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L906",
+      "source_location": "L936",
       "_origin": "ast",
       "id": "app_run_custom_mode",
       "community": 4,
       "norm_label": "_run_custom_mode()"
     },
     {
+      "label": "_run_history_mode()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L1101",
+      "_origin": "ast",
+      "id": "app_run_history_mode",
+      "community": 4,
+      "norm_label": "_run_history_mode()"
+    },
+    {
       "label": "_run_batch_mode()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L1051",
+      "source_location": "L1204",
       "_origin": "ast",
       "id": "app_run_batch_mode",
-      "community": 4,
+      "community": 30,
       "norm_label": "_run_batch_mode()"
     },
     {
       "label": "_render_batch_results()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L1193",
+      "source_location": "L1346",
       "_origin": "ast",
       "id": "app_render_batch_results",
-      "community": 4,
+      "community": 30,
       "norm_label": "_render_batch_results()"
     },
     {
@@ -164,12 +184,22 @@
       "norm_label": "slugify a user-supplied skill name into a safe directory name."
     },
     {
+      "label": "Directory where completed runs are archived as JSON.      Defaults to the projec",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "app_rationale_45",
+      "community": 4,
+      "norm_label": "directory where completed runs are archived as json.      defaults to the projec"
+    },
+    {
       "label": "Single-case control-room view.      Parameters     ----------     build_cfg:",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L217",
+      "source_location": "L240",
       "_origin": "ast",
-      "id": "app_rationale_217",
+      "id": "app_rationale_240",
       "community": 4,
       "norm_label": "single-case control-room view.      parameters     ----------     build_cfg:"
     },
@@ -177,9 +207,9 @@
       "label": "Render the full results funnel for a completed single-case report.      Funnel (",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L578",
+      "source_location": "L607",
       "_origin": "ast",
-      "id": "app_rationale_578",
+      "id": "app_rationale_607",
       "community": 4,
       "norm_label": "render the full results funnel for a completed single-case report.      funnel ("
     },
@@ -187,9 +217,9 @@
       "label": "Flagship mode: disciplined vs ship-it-fast on prorate_refund with real Haiku age",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L877",
+      "source_location": "L907",
       "_origin": "ast",
-      "id": "app_rationale_877",
+      "id": "app_rationale_907",
       "community": 4,
       "norm_label": "flagship mode: disciplined vs ship-it-fast on prorate_refund with real haiku age"
     },
@@ -197,30 +227,40 @@
       "label": "Custom mode: bring-your-own skills (and budgets) on a chosen task fixture.",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L921",
+      "source_location": "L951",
       "_origin": "ast",
-      "id": "app_rationale_921",
+      "id": "app_rationale_951",
       "community": 4,
       "norm_label": "custom mode: bring-your-own skills (and budgets) on a chosen task fixture."
+    },
+    {
+      "label": "History mode: browse archived runs and diff two of them (run-over-run).      The",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L1108",
+      "_origin": "ast",
+      "id": "app_rationale_1108",
+      "community": 4,
+      "norm_label": "history mode: browse archived runs and diff two of them (run-over-run).      the"
     },
     {
       "label": "Batch (10 cases) view: run all sample cases and show aggregate viz.",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L1067",
+      "source_location": "L1220",
       "_origin": "ast",
-      "id": "app_rationale_1067",
-      "community": 4,
+      "id": "app_rationale_1220",
+      "community": 30,
       "norm_label": "batch (10 cases) view: run all sample cases and show aggregate viz."
     },
     {
       "label": "Render aggregate visualisations for a completed batch.",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L1202",
+      "source_location": "L1355",
       "_origin": "ast",
-      "id": "app_rationale_1202",
-      "community": 4,
+      "id": "app_rationale_1355",
+      "community": 30,
       "norm_label": "render aggregate visualisations for a completed batch."
     },
     {
@@ -407,7 +447,7 @@
       "label": "Workspace",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L66",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "skill_eval_contracts_workspace",
       "community": 2,
@@ -417,7 +457,7 @@
       "label": "RunMetrics",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L79",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "skill_eval_contracts_runmetrics",
       "community": 2,
@@ -427,7 +467,7 @@
       "label": "TakerResult",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L98",
+      "source_location": "L100",
       "_origin": "ast",
       "id": "skill_eval_contracts_takerresult",
       "community": 2,
@@ -437,7 +477,7 @@
       "label": "JudgeInput",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L122",
+      "source_location": "L125",
       "_origin": "ast",
       "id": "skill_eval_contracts_judgeinput",
       "community": 2,
@@ -447,7 +487,7 @@
       "label": "JudgeScore",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L133",
+      "source_location": "L136",
       "_origin": "ast",
       "id": "skill_eval_contracts_judgescore",
       "community": 2,
@@ -457,7 +497,7 @@
       "label": "ArmReport",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L145",
+      "source_location": "L148",
       "_origin": "ast",
       "id": "skill_eval_contracts_armreport",
       "community": 2,
@@ -467,7 +507,7 @@
       "label": "ComparisonReport",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L159",
+      "source_location": "L163",
       "_origin": "ast",
       "id": "skill_eval_contracts_comparisonreport",
       "community": 20,
@@ -477,7 +517,7 @@
       "label": "prepare_workspaces()",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L182",
+      "source_location": "L186",
       "_origin": "ast",
       "id": "skill_eval_contracts_prepare_workspaces",
       "community": 2,
@@ -487,7 +527,7 @@
       "label": "run_taker()",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L187",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_taker",
       "community": 2,
@@ -497,7 +537,7 @@
       "label": "AskFn",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L187",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "skill_eval_contracts_py_askfn",
       "community": 2,
@@ -507,7 +547,7 @@
       "label": "make_simulator()",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L198",
+      "source_location": "L202",
       "_origin": "ast",
       "id": "skill_eval_contracts_make_simulator",
       "community": 2,
@@ -517,7 +557,7 @@
       "label": "run_judge()",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L203",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_judge",
       "community": 2,
@@ -527,7 +567,7 @@
       "label": "run_eval()",
       "file_type": "code",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L208",
+      "source_location": "L212",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_eval",
       "community": 20,
@@ -587,9 +627,9 @@
       "label": "Isolated dirs for one arm plus the shared gold tree.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L67",
+      "source_location": "L69",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_67",
+      "id": "skill_eval_contracts_rationale_69",
       "community": 2,
       "norm_label": "isolated dirs for one arm plus the shared gold tree."
     },
@@ -597,9 +637,9 @@
       "label": "Objective, non-LLM measurements of a single taker run.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L80",
+      "source_location": "L82",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_80",
+      "id": "skill_eval_contracts_rationale_82",
       "community": 2,
       "norm_label": "objective, non-llm measurements of a single taker run."
     },
@@ -607,9 +647,9 @@
       "label": "Everything one taker produced, ready for judging.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L99",
+      "source_location": "L101",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_99",
+      "id": "skill_eval_contracts_rationale_101",
       "community": 2,
       "norm_label": "everything one taker produced, ready for judging."
     },
@@ -617,9 +657,9 @@
       "label": "Everything one judge needs to score one criterion for one taker.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L123",
+      "source_location": "L126",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_123",
+      "id": "skill_eval_contracts_rationale_126",
       "community": 2,
       "norm_label": "everything one judge needs to score one criterion for one taker."
     },
@@ -627,9 +667,9 @@
       "label": "A single judge's 0-20 score plus rationale.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L134",
+      "source_location": "L137",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_134",
+      "id": "skill_eval_contracts_rationale_137",
       "community": 2,
       "norm_label": "a single judge's 0-20 score plus rationale."
     },
@@ -637,9 +677,9 @@
       "label": "Aggregated result for one arm (one model).",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L146",
+      "source_location": "L149",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_146",
+      "id": "skill_eval_contracts_rationale_149",
       "community": 2,
       "norm_label": "aggregated result for one arm (one model)."
     },
@@ -647,9 +687,9 @@
       "label": "The system's output: baseline vs challenger, per model.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L160",
+      "source_location": "L164",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_160",
+      "id": "skill_eval_contracts_rationale_164",
       "community": 20,
       "norm_label": "the system's output: baseline vs challenger, per model."
     },
@@ -657,9 +697,9 @@
       "label": "Component 1: create git worktrees and compute the gold diff.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L183",
+      "source_location": "L187",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_183",
+      "id": "skill_eval_contracts_rationale_187",
       "community": 2,
       "norm_label": "component 1: create git worktrees and compute the gold diff."
     },
@@ -667,9 +707,9 @@
       "label": "Component 2: run a Claude Agent SDK session under budget; return result.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L194",
+      "source_location": "L198",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_194",
+      "id": "skill_eval_contracts_rationale_198",
       "community": 2,
       "norm_label": "component 2: run a claude agent sdk session under budget; return result."
     },
@@ -677,9 +717,9 @@
       "label": "Component 3: build the AskFn the simulator uses to answer questions.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L199",
+      "source_location": "L203",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_199",
+      "id": "skill_eval_contracts_rationale_203",
       "community": 2,
       "norm_label": "component 3: build the askfn the simulator uses to answer questions."
     },
@@ -687,9 +727,9 @@
       "label": "Component 5: score one criterion for one taker (0-20).",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L204",
+      "source_location": "L208",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_204",
+      "id": "skill_eval_contracts_rationale_208",
       "community": 2,
       "norm_label": "component 5: score one criterion for one taker (0-20)."
     },
@@ -697,9 +737,9 @@
       "label": "Component 6: orchestrate the whole eval and return the comparison.",
       "file_type": "rationale",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L209",
+      "source_location": "L213",
       "_origin": "ast",
-      "id": "skill_eval_contracts_rationale_209",
+      "id": "skill_eval_contracts_rationale_213",
       "community": 20,
       "norm_label": "component 6: orchestrate the whole eval and return the comparison."
     },
@@ -710,7 +750,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_flagship_case",
-      "community": 29,
+      "community": 16,
       "norm_label": "flagship_case.py"
     },
     {
@@ -720,7 +760,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "skill_eval_flagship_case_build_flagship_case",
-      "community": 29,
+      "community": 16,
       "norm_label": "build_flagship_case()"
     },
     {
@@ -730,7 +770,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "skill_eval_flagship_case_py_runconfig",
-      "community": 29,
+      "community": 16,
       "norm_label": "runconfig"
     },
     {
@@ -1047,7 +1087,7 @@
       "label": "_build_prompt()",
       "file_type": "code",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L111",
+      "source_location": "L120",
       "_origin": "ast",
       "id": "skill_eval_judge_build_prompt",
       "community": 21,
@@ -1057,7 +1097,7 @@
       "label": "JudgeInput",
       "file_type": "code",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L111",
+      "source_location": "L120",
       "_origin": "ast",
       "id": "skill_eval_judge_py_judgeinput",
       "community": 21,
@@ -1067,7 +1107,7 @@
       "label": "_parse_response()",
       "file_type": "code",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L189",
+      "source_location": "L205",
       "_origin": "ast",
       "id": "skill_eval_judge_parse_response",
       "community": 11,
@@ -1077,7 +1117,7 @@
       "label": "run_judge()",
       "file_type": "code",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L212",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "skill_eval_judge_run_judge",
       "community": 11,
@@ -1087,10 +1127,10 @@
       "label": "JudgeScore",
       "file_type": "code",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L212",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "skill_eval_judge_py_judgescore",
-      "community": 11,
+      "community": 2,
       "norm_label": "judgescore"
     },
     {
@@ -1107,9 +1147,9 @@
       "label": "Build the judge prompt for a single criterion evaluation.      This is a pure fu",
       "file_type": "rationale",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L112",
+      "source_location": "L121",
       "_origin": "ast",
-      "id": "skill_eval_judge_rationale_112",
+      "id": "skill_eval_judge_rationale_121",
       "community": 21,
       "norm_label": "build the judge prompt for a single criterion evaluation.      this is a pure fu"
     },
@@ -1117,9 +1157,9 @@
       "label": "Extract (score, rationale) from the model response.      Tries json.loads on the",
       "file_type": "rationale",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L190",
+      "source_location": "L206",
       "_origin": "ast",
-      "id": "skill_eval_judge_rationale_190",
+      "id": "skill_eval_judge_rationale_206",
       "community": 11,
       "norm_label": "extract (score, rationale) from the model response.      tries json.loads on the"
     },
@@ -1127,9 +1167,9 @@
       "label": "Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet",
       "file_type": "rationale",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L213",
+      "source_location": "L229",
       "_origin": "ast",
-      "id": "skill_eval_judge_rationale_213",
+      "id": "skill_eval_judge_rationale_229",
       "community": 11,
       "norm_label": "score one criterion for one taker result on a 0-20 anchored rubric.      paramet"
     },
@@ -1277,7 +1317,7 @@
       "label": "_node_judge()",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L232",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_node_judge",
       "community": 1,
@@ -1287,7 +1327,7 @@
       "label": "_node_assemble()",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L285",
+      "source_location": "L291",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_node_assemble",
       "community": 1,
@@ -1297,7 +1337,7 @@
       "label": "_build_graph()",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L346",
+      "source_location": "L372",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_build_graph",
       "community": 1,
@@ -1307,17 +1347,17 @@
       "label": "run_eval()",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_run_eval",
-      "community": 2,
+      "community": 1,
       "norm_label": "run_eval()"
     },
     {
       "label": "RunConfig",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_py_runconfig",
       "community": 2,
@@ -1327,7 +1367,7 @@
       "label": "TakerFn",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_py_takerfn",
       "community": 2,
@@ -1337,7 +1377,7 @@
       "label": "MakeSimulator",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_py_makesimulator",
       "community": 2,
@@ -1347,7 +1387,7 @@
       "label": "JudgeFn",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_py_judgefn",
       "community": 2,
@@ -1357,7 +1397,7 @@
       "label": "ComparisonReport",
       "file_type": "code",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L372",
+      "source_location": "L398",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_py_comparisonreport",
       "community": 2,
@@ -1397,10 +1437,10 @@
       "label": "Orchestrate a full eval: sandbox \u2192 takers \u2192 judges \u2192 report.      Phase A: pass",
       "file_type": "rationale",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L380",
+      "source_location": "L406",
       "_origin": "ast",
-      "id": "skill_eval_orchestrator_rationale_380",
-      "community": 2,
+      "id": "skill_eval_orchestrator_rationale_406",
+      "community": 1,
       "norm_label": "orchestrate a full eval: sandbox \u2192 takers \u2192 judges \u2192 report.      phase a: pass"
     },
     {
@@ -1410,7 +1450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_reporting",
-      "community": 4,
+      "community": 31,
       "norm_label": "reporting.py"
     },
     {
@@ -1420,7 +1460,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "skill_eval_reporting_arm_color_list",
-      "community": 4,
+      "community": 30,
       "norm_label": "arm_color_list()"
     },
     {
@@ -1440,7 +1480,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "skill_eval_reporting_py_comparisonreport",
-      "community": 4,
+      "community": 31,
       "norm_label": "comparisonreport"
     },
     {
@@ -1460,7 +1500,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_gap_rows",
-      "community": 4,
+      "community": 31,
       "norm_label": "criterion_gap_rows()"
     },
     {
@@ -1470,7 +1510,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_winners",
-      "community": 4,
+      "community": 31,
       "norm_label": "criterion_winners()"
     },
     {
@@ -1490,7 +1530,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "skill_eval_reporting_report_to_json",
-      "community": 4,
+      "community": 29,
       "norm_label": "report_to_json()"
     },
     {
@@ -1500,54 +1540,104 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "skill_eval_reporting_reports_to_json",
-      "community": 4,
+      "community": 31,
       "norm_label": "reports_to_json()"
+    },
+    {
+      "label": "report_from_json()",
+      "file_type": "code",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L177",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_report_from_json",
+      "community": 31,
+      "norm_label": "report_from_json()"
+    },
+    {
+      "label": "save_report()",
+      "file_type": "code",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L245",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_save_report",
+      "community": 29,
+      "norm_label": "save_report()"
+    },
+    {
+      "label": "list_saved_runs()",
+      "file_type": "code",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L266",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_list_saved_runs",
+      "community": 29,
+      "norm_label": "list_saved_runs()"
+    },
+    {
+      "label": "load_report()",
+      "file_type": "code",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L277",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_load_report",
+      "community": 31,
+      "norm_label": "load_report()"
+    },
+    {
+      "label": "run_delta_rows()",
+      "file_type": "code",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L284",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_run_delta_rows",
+      "community": 31,
+      "norm_label": "run_delta_rows()"
     },
     {
       "label": "batch_win_summary()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L182",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_win_summary",
-      "community": 4,
+      "community": 30,
       "norm_label": "batch_win_summary()"
     },
     {
       "label": "batch_per_case_totals()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L204",
+      "source_location": "L346",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_per_case_totals",
-      "community": 4,
+      "community": 30,
       "norm_label": "batch_per_case_totals()"
     },
     {
       "label": "batch_per_criterion_avg()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L232",
+      "source_location": "L374",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_per_criterion_avg",
-      "community": 4,
+      "community": 32,
       "norm_label": "batch_per_criterion_avg()"
     },
     {
       "label": "batch_criterion_gap_rows()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L263",
+      "source_location": "L405",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_criterion_gap_rows",
-      "community": 4,
+      "community": 32,
       "norm_label": "batch_criterion_gap_rows()"
     },
     {
       "label": "agent_graph_dot()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L303",
+      "source_location": "L445",
       "_origin": "ast",
       "id": "skill_eval_reporting_agent_graph_dot",
       "community": 4,
@@ -1557,27 +1647,27 @@
       "label": "log_judge_evaluations()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L425",
+      "source_location": "L567",
       "_origin": "ast",
       "id": "skill_eval_reporting_log_judge_evaluations",
-      "community": 4,
+      "community": 34,
       "norm_label": "log_judge_evaluations()"
     },
     {
       "label": "batch_score_distribution()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L471",
+      "source_location": "L613",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_score_distribution",
-      "community": 4,
+      "community": 33,
       "norm_label": "batch_score_distribution()"
     },
     {
       "label": "init_phoenix()",
       "file_type": "code",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L497",
+      "source_location": "L639",
       "_origin": "ast",
       "id": "skill_eval_reporting_init_phoenix",
       "community": 4,
@@ -1590,7 +1680,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_1",
-      "community": 4,
+      "community": 31,
       "norm_label": "reporting helpers and phoenix initialisation for the skill-eval dashboard.  pure"
     },
     {
@@ -1600,7 +1690,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_31",
-      "community": 4,
+      "community": 30,
       "norm_label": "return a colour per column in ``columns`` order (for ``st.bar_chart``)."
     },
     {
@@ -1630,7 +1720,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_86",
-      "community": 4,
+      "community": 31,
       "norm_label": "return one row per criterion with baseline, challenger, and the gap.      ``gap"
     },
     {
@@ -1640,7 +1730,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_110",
-      "community": 4,
+      "community": 31,
       "norm_label": "return one row per criterion with the per-criterion winner and margin.      each"
     },
     {
@@ -1660,7 +1750,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_158",
-      "community": 4,
+      "community": 30,
       "norm_label": "serialise a comparisonreport to pretty-printed json.      strenum members serial"
     },
     {
@@ -1670,56 +1760,106 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_170",
-      "community": 4,
+      "community": 31,
       "norm_label": "serialise a batch of comparisonreports to one json array."
+    },
+    {
+      "label": "Reconstruct a ComparisonReport (with real dataclasses/enums) from JSON.      Tol",
+      "file_type": "rationale",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L178",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_rationale_178",
+      "community": 31,
+      "norm_label": "reconstruct a comparisonreport (with real dataclasses/enums) from json.      tol"
+    },
+    {
+      "label": "Persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path.",
+      "file_type": "rationale",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L246",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_rationale_246",
+      "community": 29,
+      "norm_label": "persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path."
+    },
+    {
+      "label": "Return saved run files, newest first: ``{\"name\", \"path\"}`` per run.",
+      "file_type": "rationale",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L267",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_rationale_267",
+      "community": 29,
+      "norm_label": "return saved run files, newest first: ``{\"name\", \"path\"}`` per run."
+    },
+    {
+      "label": "Load one saved run back into a ComparisonReport.",
+      "file_type": "rationale",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L278",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_rationale_278",
+      "community": 31,
+      "norm_label": "load one saved run back into a comparisonreport."
+    },
+    {
+      "label": "Per-(criterion, arm) score deltas between two runs (B \u2212 A).      The Langfuse co",
+      "file_type": "rationale",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L285",
+      "_origin": "ast",
+      "id": "skill_eval_reporting_rationale_285",
+      "community": 31,
+      "norm_label": "per-(criterion, arm) score deltas between two runs (b \u2212 a).      the langfuse co"
     },
     {
       "label": "Count wins for challenger, baseline, and ties across a batch of reports.      Co",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L183",
+      "source_location": "L325",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_183",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_325",
+      "community": 30,
       "norm_label": "count wins for challenger, baseline, and ties across a batch of reports.      co"
     },
     {
       "label": "Return one row per report with ``case``, ``baseline``, and ``challenger`` totals",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L205",
+      "source_location": "L347",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_205",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_347",
+      "community": 30,
       "norm_label": "return one row per report with ``case``, ``baseline``, and ``challenger`` totals"
     },
     {
       "label": "Return one row per Criterion with average baseline and challenger scores.      A",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L233",
+      "source_location": "L375",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_233",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_375",
+      "community": 32,
       "norm_label": "return one row per criterion with average baseline and challenger scores.      a"
     },
     {
       "label": "Return per-Criterion average baseline, challenger, and gap across a batch.",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L264",
+      "source_location": "L406",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_264",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_406",
+      "community": 32,
       "norm_label": "return per-criterion average baseline, challenger, and gap across a batch."
     },
     {
       "label": "Return a Graphviz DOT digraph string representing the eval fan-out.      Paramet",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L308",
+      "source_location": "L450",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_308",
+      "id": "skill_eval_reporting_rationale_450",
       "community": 4,
       "norm_label": "return a graphviz dot digraph string representing the eval fan-out.      paramet"
     },
@@ -1727,29 +1867,29 @@
       "label": "Log per-judge scores to Phoenix as span evaluations.      Parameters     -------",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L426",
+      "source_location": "L568",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_426",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_568",
+      "community": 34,
       "norm_label": "log per-judge scores to phoenix as span evaluations.      parameters     -------"
     },
     {
       "label": "Return long-form rows for per-criterion, per-arm score distributions.      Each",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L472",
+      "source_location": "L614",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_472",
-      "community": 4,
+      "id": "skill_eval_reporting_rationale_614",
+      "community": 33,
       "norm_label": "return long-form rows for per-criterion, per-arm score distributions.      each"
     },
     {
       "label": "Register tracing against a Phoenix server, auto-starting one if needed.      If",
       "file_type": "rationale",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L498",
+      "source_location": "L640",
       "_origin": "ast",
-      "id": "skill_eval_reporting_rationale_498",
+      "id": "skill_eval_reporting_rationale_640",
       "community": 4,
       "norm_label": "register tracing against a phoenix server, auto-starting one if needed.      if"
     },
@@ -1784,10 +1924,20 @@
       "norm_label": "path"
     },
     {
+      "label": "_flagship_skill_text()",
+      "file_type": "code",
+      "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "skill_eval_sample_cases_flagship_skill_text",
+      "community": 20,
+      "norm_label": "_flagship_skill_text()"
+    },
+    {
       "label": "_add_skills()",
       "file_type": "code",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L21",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "skill_eval_sample_cases_add_skills",
       "community": 20,
@@ -1797,7 +1947,7 @@
       "label": "_make_case()",
       "file_type": "code",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L35",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "skill_eval_sample_cases_make_case",
       "community": 20,
@@ -1807,7 +1957,7 @@
       "label": "RunConfig",
       "file_type": "code",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L35",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "skill_eval_sample_cases_py_runconfig",
       "community": 20,
@@ -1817,7 +1967,7 @@
       "label": "build_sample_cases()",
       "file_type": "code",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L73",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "skill_eval_sample_cases_build_sample_cases",
       "community": 20,
@@ -1844,22 +1994,32 @@
       "norm_label": "initialise a git repo with standard eval config."
     },
     {
-      "label": "Create placeholder skill dirs; return (baseline_path, challenger_path).",
+      "label": "Read a real flagship skill's SKILL.md, falling back to an inline skill.",
       "file_type": "rationale",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L22",
+      "source_location": "L53",
       "_origin": "ast",
-      "id": "skill_eval_sample_cases_rationale_22",
+      "id": "skill_eval_sample_cases_rationale_53",
       "community": 20,
-      "norm_label": "create placeholder skill dirs; return (baseline_path, challenger_path)."
+      "norm_label": "read a real flagship skill's skill.md, falling back to an inline skill."
+    },
+    {
+      "label": "Create REAL contrasting skill dirs; return (baseline_path, challenger_path).",
+      "file_type": "rationale",
+      "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "skill_eval_sample_cases_rationale_62",
+      "community": 20,
+      "norm_label": "create real contrasting skill dirs; return (baseline_path, challenger_path)."
     },
     {
       "label": "Build one case repo and return its RunConfig.",
       "file_type": "rationale",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L44",
+      "source_location": "L92",
       "_origin": "ast",
-      "id": "skill_eval_sample_cases_rationale_44",
+      "id": "skill_eval_sample_cases_rationale_92",
       "community": 20,
       "norm_label": "build one case repo and return its runconfig."
     },
@@ -1867,9 +2027,9 @@
       "label": "Build 10 sample task repos under *base_dir*; return one RunConfig each.",
       "file_type": "rationale",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L74",
+      "source_location": "L122",
       "_origin": "ast",
-      "id": "skill_eval_sample_cases_rationale_74",
+      "id": "skill_eval_sample_cases_rationale_122",
       "community": 20,
       "norm_label": "build 10 sample task repos under *base_dir*; return one runconfig each."
     },
@@ -1890,7 +2050,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "skill_eval_sample_repo_build_sample_repo",
-      "community": 2,
+      "community": 1,
       "norm_label": "build_sample_repo()"
     },
     {
@@ -1900,7 +2060,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "skill_eval_sample_repo_py_runconfig",
-      "community": 2,
+      "community": 1,
       "norm_label": "runconfig"
     },
     {
@@ -2047,7 +2207,7 @@
       "label": "sim_run_judge()",
       "file_type": "code",
       "source_file": "skill_eval/simulated.py",
-      "source_location": "L175",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_run_judge",
       "community": 2,
@@ -2057,7 +2217,7 @@
       "label": "JudgeInput",
       "file_type": "code",
       "source_file": "skill_eval/simulated.py",
-      "source_location": "L175",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_judgeinput",
       "community": 2,
@@ -2067,7 +2227,7 @@
       "label": "JudgeScore",
       "file_type": "code",
       "source_file": "skill_eval/simulated.py",
-      "source_location": "L175",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_judgescore",
       "community": 2,
@@ -2117,9 +2277,9 @@
       "label": "Return a deterministic 0-20 score for one criterion using sha256-based hash.",
       "file_type": "rationale",
       "source_file": "skill_eval/simulated.py",
-      "source_location": "L176",
+      "source_location": "L179",
       "_origin": "ast",
-      "id": "skill_eval_simulated_rationale_176",
+      "id": "skill_eval_simulated_rationale_179",
       "community": 2,
       "norm_label": "return a deterministic 0-20 score for one criterion using sha256-based hash."
     },
@@ -2854,10 +3014,20 @@
       "norm_label": "test_app.py"
     },
     {
+      "label": "_isolate_runs_dir()",
+      "file_type": "code",
+      "source_file": "tests/test_app.py",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "tests_test_app_isolate_runs_dir",
+      "community": 0,
+      "norm_label": "_isolate_runs_dir()"
+    },
+    {
       "label": "_boot()",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L12",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "tests_test_app_boot",
       "community": 0,
@@ -2867,7 +3037,7 @@
       "label": "AppTest",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L12",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "apptest",
       "community": 0,
@@ -2877,7 +3047,7 @@
       "label": "_click_button()",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L18",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "tests_test_app_click_button",
       "community": 0,
@@ -2887,7 +3057,7 @@
       "label": "test_app_boots_without_errors()",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L25",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_app_test_app_boots_without_errors",
       "community": 0,
@@ -2897,7 +3067,7 @@
       "label": "test_single_case_results_persist_across_reruns()",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L30",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_app_test_single_case_results_persist_across_reruns",
       "community": 0,
@@ -2907,11 +3077,31 @@
       "label": "test_custom_mode_runs_user_skills_through_the_harness()",
       "file_type": "code",
       "source_file": "tests/test_app.py",
-      "source_location": "L48",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "tests_test_app_test_custom_mode_runs_user_skills_through_the_harness",
       "community": 0,
       "norm_label": "test_custom_mode_runs_user_skills_through_the_harness()"
+    },
+    {
+      "label": "test_batch_mode_renders_aggregates_and_persists()",
+      "file_type": "code",
+      "source_file": "tests/test_app.py",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "tests_test_app_test_batch_mode_renders_aggregates_and_persists",
+      "community": 0,
+      "norm_label": "test_batch_mode_renders_aggregates_and_persists()"
+    },
+    {
+      "label": "test_history_mode_lists_and_renders_archived_runs()",
+      "file_type": "code",
+      "source_file": "tests/test_app.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_app_test_history_mode_lists_and_renders_archived_runs",
+      "community": 0,
+      "norm_label": "test_history_mode_lists_and_renders_archived_runs()"
     },
     {
       "label": "Headless UI tests via Streamlit's official AppTest framework.  These boot the re",
@@ -3120,7 +3310,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_flagship_case",
-      "community": 29,
+      "community": 16,
       "norm_label": "test_flagship_case.py"
     },
     {
@@ -3130,7 +3320,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_flagship_case_commit_exists",
-      "community": 29,
+      "community": 16,
       "norm_label": "_commit_exists()"
     },
     {
@@ -3140,7 +3330,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_test_flagship_case_show_file",
-      "community": 29,
+      "community": 16,
       "norm_label": "_show_file()"
     },
     {
@@ -3150,7 +3340,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_test_flagship_case_test_build_flagship_case",
-      "community": 29,
+      "community": 16,
       "norm_label": "test_build_flagship_case()"
     },
     {
@@ -3160,7 +3350,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_flagship_case_rationale_11",
-      "community": 29,
+      "community": 16,
       "norm_label": "return file contents at a given commit, or none if the file doesn't exist."
     },
     {
@@ -3344,10 +3534,40 @@
       "norm_label": "test_build_prompt_correctness_anchor_phrase()"
     },
     {
-      "label": "test_build_prompt_question_quality_brief_vs_gold_instruction()",
+      "label": "test_build_prompt_blind_criteria_never_see_gold()",
       "file_type": "code",
       "source_file": "tests/test_judge.py",
       "source_location": "L109",
+      "_origin": "ast",
+      "id": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "community": 21,
+      "norm_label": "test_build_prompt_blind_criteria_never_see_gold()"
+    },
+    {
+      "label": "test_build_prompt_gold_based_criteria_see_gold()",
+      "file_type": "code",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "community": 2,
+      "norm_label": "test_build_prompt_gold_based_criteria_see_gold()"
+    },
+    {
+      "label": "test_run_judge_is_deterministic_temperature_zero()",
+      "file_type": "code",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "tests_test_judge_test_run_judge_is_deterministic_temperature_zero",
+      "community": 21,
+      "norm_label": "test_run_judge_is_deterministic_temperature_zero()"
+    },
+    {
+      "label": "test_build_prompt_question_quality_brief_vs_gold_instruction()",
+      "file_type": "code",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L145",
       "_origin": "ast",
       "id": "tests_test_judge_test_build_prompt_question_quality_brief_vs_gold_instruction",
       "community": 21,
@@ -3357,7 +3577,7 @@
       "label": "test_build_prompt_contains_task_brief_and_diffs()",
       "file_type": "code",
       "source_file": "tests/test_judge.py",
-      "source_location": "L118",
+      "source_location": "L154",
       "_origin": "ast",
       "id": "tests_test_judge_test_build_prompt_contains_task_brief_and_diffs",
       "community": 21,
@@ -3424,12 +3644,42 @@
       "norm_label": "correctness prompt must include concrete anchor descriptors from the spec."
     },
     {
-      "label": "question_quality prompt must instruct the judge to derive ambiguities from brief",
+      "label": "code_quality and approach are judged blind \u2014 the gold diff must not leak.",
       "file_type": "rationale",
       "source_file": "tests/test_judge.py",
       "source_location": "L110",
       "_origin": "ast",
       "id": "tests_test_judge_rationale_110",
+      "community": 21,
+      "norm_label": "code_quality and approach are judged blind \u2014 the gold diff must not leak."
+    },
+    {
+      "label": "Criteria defined against the gold must still receive the gold diff.",
+      "file_type": "rationale",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L121",
+      "_origin": "ast",
+      "id": "tests_test_judge_rationale_121",
+      "community": 2,
+      "norm_label": "criteria defined against the gold must still receive the gold diff."
+    },
+    {
+      "label": "Judging must request temperature=0 \u2014 graded verdicts may not be sampled.",
+      "file_type": "rationale",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L136",
+      "_origin": "ast",
+      "id": "tests_test_judge_rationale_136",
+      "community": 21,
+      "norm_label": "judging must request temperature=0 \u2014 graded verdicts may not be sampled."
+    },
+    {
+      "label": "question_quality prompt must instruct the judge to derive ambiguities from brief",
+      "file_type": "rationale",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "tests_test_judge_rationale_146",
       "community": 21,
       "norm_label": "question_quality prompt must instruct the judge to derive ambiguities from brief"
     },
@@ -3437,9 +3687,9 @@
       "label": "Prompt must embed the task brief, gold diff, and taker diff.",
       "file_type": "rationale",
       "source_file": "tests/test_judge.py",
-      "source_location": "L119",
+      "source_location": "L155",
       "_origin": "ast",
-      "id": "tests_test_judge_rationale_119",
+      "id": "tests_test_judge_rationale_155",
       "community": 21,
       "norm_label": "prompt must embed the task brief, gold diff, and taker diff."
     },
@@ -3450,7 +3700,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_live_smoke",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_live_smoke.py"
     },
     {
@@ -3460,7 +3710,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_test_live_smoke_test_real_end_to_end",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_real_end_to_end()"
     },
     {
@@ -3470,7 +3720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_live_smoke_rationale_1",
-      "community": 2,
+      "community": 1,
       "norm_label": "live end-to-end smoke test.  marked ``@pytest.mark.live`` and skipped unless ``a"
     },
     {
@@ -3490,26 +3740,66 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_run_eval_simulated_end_to_end",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_run_eval_simulated_end_to_end()"
+    },
+    {
+      "label": "test_k_judges_median_aggregation()",
+      "file_type": "code",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "tests_test_orchestrator_test_k_judges_median_aggregation",
+      "community": 1,
+      "norm_label": "test_k_judges_median_aggregation()"
+    },
+    {
+      "label": "test_judge_model_decoupling_reaches_judges()",
+      "file_type": "code",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "community": 2,
+      "norm_label": "test_judge_model_decoupling_reaches_judges()"
     },
     {
       "label": "test_reducer_counts()",
       "file_type": "code",
       "source_file": "tests/test_orchestrator.py",
-      "source_location": "L38",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_reducer_counts",
       "community": 2,
       "norm_label": "test_reducer_counts()"
     },
     {
+      "label": "judges_per_criterion=3 fans out 3 replicates per cell but the report     still c",
+      "file_type": "rationale",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "tests_test_orchestrator_rationale_42",
+      "community": 1,
+      "norm_label": "judges_per_criterion=3 fans out 3 replicates per cell but the report     still c"
+    },
+    {
+      "label": "cfg.judge_model (not the taker model) must be handed to judge_fn.",
+      "file_type": "rationale",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "tests_test_orchestrator_rationale_63",
+      "community": 2,
+      "norm_label": "cfg.judge_model (not the taker model) must be handed to judge_fn."
+    },
+    {
       "label": "Send-based fan-out must produce exactly 2 taker_results and 12 score entries.",
       "file_type": "rationale",
       "source_file": "tests/test_orchestrator.py",
-      "source_location": "L39",
+      "source_location": "L85",
       "_origin": "ast",
-      "id": "tests_test_orchestrator_rationale_39",
+      "id": "tests_test_orchestrator_rationale_85",
       "community": 2,
       "norm_label": "send-based fan-out must produce exactly 2 taker_results and 12 score entries."
     },
@@ -3520,84 +3810,124 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_reporting",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_reporting.py"
     },
     {
       "label": "_make_report()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L30",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "tests_test_reporting_make_report",
-      "community": 4,
+      "community": 29,
       "norm_label": "_make_report()"
     },
     {
       "label": "_report()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L46",
+      "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_reporting_report",
-      "community": 4,
+      "community": 29,
       "norm_label": "_report()"
     },
     {
       "label": "test_report_to_json_round_trips()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L50",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "tests_test_reporting_test_report_to_json_round_trips",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_report_to_json_round_trips()"
     },
     {
       "label": "test_reports_to_json_is_array()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L63",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "tests_test_reporting_test_reports_to_json_is_array",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_reports_to_json_is_array()"
+    },
+    {
+      "label": "test_report_json_round_trip_reconstructs_dataclasses()",
+      "file_type": "code",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
+      "community": 29,
+      "norm_label": "test_report_json_round_trip_reconstructs_dataclasses()"
+    },
+    {
+      "label": "test_save_list_load_runs()",
+      "file_type": "code",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "tests_test_reporting_test_save_list_load_runs",
+      "community": 29,
+      "norm_label": "test_save_list_load_runs()"
+    },
+    {
+      "label": "test_list_saved_runs_missing_dir_is_empty()",
+      "file_type": "code",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_reporting_test_list_saved_runs_missing_dir_is_empty",
+      "community": 29,
+      "norm_label": "test_list_saved_runs_missing_dir_is_empty()"
+    },
+    {
+      "label": "test_run_delta_rows()",
+      "file_type": "code",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "tests_test_reporting_test_run_delta_rows",
+      "community": 29,
+      "norm_label": "test_run_delta_rows()"
     },
     {
       "label": "test_scores_table_shape()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L70",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "tests_test_reporting_test_scores_table_shape",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_scores_table_shape()"
     },
     {
       "label": "test_verdict_line()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L77",
+      "source_location": "L118",
       "_origin": "ast",
       "id": "tests_test_reporting_test_verdict_line",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_verdict_line()"
     },
     {
       "label": "test_criterion_gap_rows_shape_and_gap()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L86",
+      "source_location": "L127",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_shape_and_gap",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_criterion_gap_rows_shape_and_gap()"
     },
     {
       "label": "test_criterion_gap_rows_sorted_by_gap_desc()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L95",
+      "source_location": "L136",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_sorted_by_gap_desc",
       "community": 2,
@@ -3607,210 +3937,210 @@
       "label": "test_criterion_winners()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L114",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_winners",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_criterion_winners()"
     },
     {
       "label": "test_quality_cost_rows()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L122",
+      "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_reporting_test_quality_cost_rows",
-      "community": 4,
+      "community": 29,
       "norm_label": "test_quality_cost_rows()"
     },
     {
       "label": "test_arm_color_palette()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L132",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "tests_test_reporting_test_arm_color_palette",
-      "community": 4,
+      "community": 30,
       "norm_label": "test_arm_color_palette()"
     },
     {
       "label": "test_batch_win_summary_counts()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L154",
+      "source_location": "L195",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_win_summary_counts",
-      "community": 4,
+      "community": 30,
       "norm_label": "test_batch_win_summary_counts()"
     },
     {
       "label": "test_batch_per_case_totals_shape()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L163",
+      "source_location": "L204",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_per_case_totals_shape",
-      "community": 4,
+      "community": 30,
       "norm_label": "test_batch_per_case_totals_shape()"
     },
     {
       "label": "test_batch_per_case_totals_label_derived_from_brief()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L172",
+      "source_location": "L213",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_per_case_totals_label_derived_from_brief",
-      "community": 4,
+      "community": 30,
       "norm_label": "test_batch_per_case_totals_label_derived_from_brief()"
     },
     {
       "label": "test_batch_per_criterion_avg_shape()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L178",
+      "source_location": "L219",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_per_criterion_avg_shape",
-      "community": 4,
+      "community": 32,
       "norm_label": "test_batch_per_criterion_avg_shape()"
     },
     {
       "label": "test_batch_per_criterion_avg_values_are_rounded()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L187",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_per_criterion_avg_values_are_rounded",
-      "community": 4,
+      "community": 32,
       "norm_label": "test_batch_per_criterion_avg_values_are_rounded()"
     },
     {
       "label": "test_batch_criterion_gap_rows()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L197",
+      "source_location": "L238",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_criterion_gap_rows",
-      "community": 4,
+      "community": 32,
       "norm_label": "test_batch_criterion_gap_rows()"
     },
     {
       "label": "test_agent_graph_dot()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L212",
+      "source_location": "L253",
       "_origin": "ast",
       "id": "tests_test_reporting_test_agent_graph_dot",
-      "community": 4,
+      "community": 35,
       "norm_label": "test_agent_graph_dot()"
     },
     {
       "label": "test_batch_score_distribution_row_count()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L270",
+      "source_location": "L311",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_row_count",
-      "community": 4,
+      "community": 33,
       "norm_label": "test_batch_score_distribution_row_count()"
     },
     {
       "label": "test_batch_score_distribution_schema()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L277",
+      "source_location": "L318",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_schema",
-      "community": 4,
+      "community": 33,
       "norm_label": "test_batch_score_distribution_schema()"
     },
     {
       "label": "test_batch_score_distribution_empty()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L288",
+      "source_location": "L329",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_empty",
-      "community": 4,
+      "community": 33,
       "norm_label": "test_batch_score_distribution_empty()"
     },
     {
       "label": "test_log_judge_evaluations_best_effort_no_phoenix()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L297",
+      "source_location": "L338",
       "_origin": "ast",
       "id": "tests_test_reporting_test_log_judge_evaluations_best_effort_no_phoenix",
-      "community": 4,
+      "community": 34,
       "norm_label": "test_log_judge_evaluations_best_effort_no_phoenix()"
     },
     {
       "label": "test_log_judge_evaluations_empty()",
       "file_type": "code",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L308",
+      "source_location": "L349",
       "_origin": "ast",
       "id": "tests_test_reporting_test_log_judge_evaluations_empty",
-      "community": 4,
+      "community": 34,
       "norm_label": "test_log_judge_evaluations_empty()"
     },
     {
       "label": "Build a fake ComparisonReport with deterministic scores.",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L33",
+      "source_location": "L38",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_33",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_38",
+      "community": 29,
       "norm_label": "build a fake comparisonreport with deterministic scores."
     },
     {
       "label": "Build a sample state and verify the returned DOT string.",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L213",
+      "source_location": "L254",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_213",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_254",
+      "community": 35,
       "norm_label": "build a sample state and verify the returned dot string."
     },
     {
       "label": "len(reports) * 12 rows (2 arms \u00d7 6 criteria per report).",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L271",
+      "source_location": "L312",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_271",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_312",
+      "community": 33,
       "norm_label": "len(reports) * 12 rows (2 arms \u00d7 6 criteria per report)."
     },
     {
       "label": "Every row has criterion, arm, and score keys.",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L278",
+      "source_location": "L319",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_278",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_319",
+      "community": 33,
       "norm_label": "every row has criterion, arm, and score keys."
     },
     {
       "label": "Should return False (or at minimum not raise) when no Phoenix is running.",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L298",
+      "source_location": "L339",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_298",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_339",
+      "community": 34,
       "norm_label": "should return false (or at minimum not raise) when no phoenix is running."
     },
     {
       "label": "Empty records: no crash, returns False.",
       "file_type": "rationale",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L309",
+      "source_location": "L350",
       "_origin": "ast",
-      "id": "tests_test_reporting_rationale_309",
-      "community": 4,
+      "id": "tests_test_reporting_rationale_350",
+      "community": 34,
       "norm_label": "empty records: no crash, returns false."
     },
     {
@@ -3894,13 +4224,33 @@
       "norm_label": "test_sample_cases_skill_dirs_exist()"
     },
     {
+      "label": "test_sample_cases_skills_are_real_and_contrasting()",
+      "file_type": "code",
+      "source_file": "tests/test_sample_cases.py",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "tests_test_sample_cases_test_sample_cases_skills_are_real_and_contrasting",
+      "community": 20,
+      "norm_label": "test_sample_cases_skills_are_real_and_contrasting()"
+    },
+    {
+      "label": "Batch arms must load DIFFERENT, substantive skills \u2014 a real batch run     agains",
+      "file_type": "rationale",
+      "source_file": "tests/test_sample_cases.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_test_sample_cases_rationale_50",
+      "community": 20,
+      "norm_label": "batch arms must load different, substantive skills \u2014 a real batch run     agains"
+    },
+    {
       "label": "test_sample_repo.py",
       "file_type": "code",
       "source_file": "tests/test_sample_repo.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sample_repo",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_sample_repo.py"
     },
     {
@@ -3910,7 +4260,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_sample_repo_commit_exists",
-      "community": 2,
+      "community": 1,
       "norm_label": "_commit_exists()"
     },
     {
@@ -3920,7 +4270,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_test_sample_repo_test_build_sample_repo",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_build_sample_repo()"
     },
     {
@@ -4270,7 +4620,7 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "tests_test_taker_make_workspace",
-      "community": 2,
+      "community": 19,
       "norm_label": "_make_workspace()"
     },
     {
@@ -4360,7 +4710,7 @@
       "source_location": "L350",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_thinking_budget_sets_option",
-      "community": 2,
+      "community": 19,
       "norm_label": "test_run_taker_thinking_budget_sets_option()"
     },
     {
@@ -4460,7 +4810,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_188",
-      "community": 2,
+      "community": 19,
       "norm_label": "create a temp git repo and return a workspace pointing at it."
     },
     {
@@ -4520,7 +4870,7 @@
       "source_location": "L351",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_351",
-      "community": 2,
+      "community": 19,
       "norm_label": "when thinking_budget is set in cfg, the options include a thinking dict."
     },
     {
@@ -4550,7 +4900,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_test_tracing_test_eval_emits_spans",
-      "community": 2,
+      "community": 1,
       "norm_label": "test_eval_emits_spans()"
     },
     {
@@ -4714,10 +5064,20 @@
       "norm_label": "quickstart"
     },
     {
+      "label": "Measurement validity",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "readme_measurement_validity",
+      "community": 12,
+      "norm_label": "measurement validity"
+    },
+    {
       "label": "Visualizations",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L56",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "readme_visualizations",
       "community": 12,
@@ -4727,7 +5087,7 @@
       "label": "Dev",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L74",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "readme_dev",
       "community": 12,
@@ -4737,7 +5097,7 @@
       "label": "Layout",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L83",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "readme_layout",
       "community": 12,
@@ -6011,9 +6371,9 @@
       "source_file": "app.py",
       "source_location": "L1193",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app",
-      "target": "app_render_batch_results",
-      "confidence_score": 1.0
+      "target": "app_render_batch_results"
     },
     {
       "relation": "contains",
@@ -6021,9 +6381,9 @@
       "source_file": "app.py",
       "source_location": "L568",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app",
-      "target": "app_render_single_results",
-      "confidence_score": 1.0
+      "target": "app_render_single_results"
     },
     {
       "relation": "contains",
@@ -6041,9 +6401,9 @@
       "source_file": "app.py",
       "source_location": "L906",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app",
-      "target": "app_run_custom_mode",
-      "confidence_score": 1.0
+      "target": "app_run_custom_mode"
     },
     {
       "relation": "contains",
@@ -6059,6 +6419,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L1101",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_run_history_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L166",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6069,11 +6439,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L36",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "app",
-      "target": "app_slug",
+      "target": "app_runs_dir",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_slug"
     },
     {
       "relation": "imports",
@@ -6223,6 +6603,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L1115",
+      "weight": 1.0,
+      "source": "app",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1115",
+      "weight": 1.0,
+      "source": "app",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L487",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6236,9 +6638,9 @@
       "source_file": "app.py",
       "source_location": "L587",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app",
-      "target": "skill_eval_reporting_report_to_json",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_report_to_json"
     },
     {
       "relation": "imports",
@@ -6247,8 +6649,30 @@
       "source_file": "app.py",
       "source_location": "L1205",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app",
-      "target": "skill_eval_reporting_reports_to_json",
+      "target": "skill_eval_reporting_reports_to_json"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1115",
+      "weight": 1.0,
+      "source": "app",
+      "target": "skill_eval_reporting_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L573",
+      "weight": 1.0,
+      "source": "app",
+      "target": "skill_eval_reporting_save_report",
       "confidence_score": 1.0
     },
     {
@@ -6366,9 +6790,9 @@
       "source_file": "app.py",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_rationale_27",
-      "target": "app_is_streamlit",
-      "confidence_score": 1.0
+      "target": "app_is_streamlit"
     },
     {
       "relation": "rationale_for",
@@ -6376,9 +6800,9 @@
       "source_file": "app.py",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_rationale_37",
-      "target": "app_slug",
-      "confidence_score": 1.0
+      "target": "app_slug"
     },
     {
       "relation": "calls",
@@ -6387,8 +6811,40 @@
       "source_file": "app.py",
       "source_location": "L1002",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_run_custom_mode",
-      "target": "app_slug",
+      "target": "app_slug"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "app_rationale_45",
+      "target": "app_runs_dir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1122",
+      "weight": 1.0,
+      "source": "app_run_history_mode",
+      "target": "app_runs_dir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L575",
+      "weight": 1.0,
+      "source": "app_run_single_case",
+      "target": "app_runs_dir",
       "confidence_score": 1.0
     },
     {
@@ -6409,9 +6865,9 @@
       "source_file": "app.py",
       "source_location": "L163",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_main",
-      "target": "app_run_custom_mode",
-      "confidence_score": 1.0
+      "target": "app_run_custom_mode"
     },
     {
       "relation": "calls",
@@ -6423,6 +6879,17 @@
       "confidence_score": 1.0,
       "source": "app_main",
       "target": "app_run_flagship_mode"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L194",
+      "weight": 1.0,
+      "source": "app_main",
+      "target": "app_run_history_mode",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -6494,9 +6961,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L217",
+      "source_location": "L240",
       "weight": 1.0,
-      "source": "app_rationale_217",
+      "source": "app_rationale_240",
       "target": "app_run_single_case",
       "confidence_score": 1.0
     },
@@ -6507,9 +6974,9 @@
       "source_file": "app.py",
       "source_location": "L1030",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_run_custom_mode",
-      "target": "app_run_single_case",
-      "confidence_score": 1.0
+      "target": "app_run_single_case"
     },
     {
       "relation": "calls",
@@ -6529,9 +6996,9 @@
       "source_file": "app.py",
       "source_location": "L557",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_run_single_case",
-      "target": "app_render_single_results",
-      "confidence_score": 1.0
+      "target": "app_render_single_results"
     },
     {
       "relation": "calls",
@@ -6593,6 +7060,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L575",
+      "weight": 1.0,
+      "source": "app_run_single_case",
+      "target": "skill_eval_reporting_save_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L524",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6614,9 +7092,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L578",
+      "source_location": "L607",
       "weight": 1.0,
-      "source": "app_rationale_578",
+      "source": "app_rationale_607",
       "target": "app_render_single_results",
       "confidence_score": 1.0
     },
@@ -6627,9 +7105,9 @@
       "source_file": "app.py",
       "source_location": "L856",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_single_results",
-      "target": "skill_eval_reporting_agent_graph_dot",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_agent_graph_dot"
     },
     {
       "relation": "calls",
@@ -6638,9 +7116,9 @@
       "source_file": "app.py",
       "source_location": "L649",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_single_results",
-      "target": "skill_eval_reporting_criterion_gap_rows",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_criterion_gap_rows"
     },
     {
       "relation": "calls",
@@ -6649,9 +7127,9 @@
       "source_file": "app.py",
       "source_location": "L733",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_single_results",
-      "target": "skill_eval_reporting_quality_cost_rows",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_quality_cost_rows"
     },
     {
       "relation": "calls",
@@ -6660,9 +7138,9 @@
       "source_file": "app.py",
       "source_location": "L836",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_single_results",
-      "target": "skill_eval_reporting_report_to_json",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_report_to_json"
     },
     {
       "relation": "calls",
@@ -6671,17 +7149,28 @@
       "source_file": "app.py",
       "source_location": "L786",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_single_results",
-      "target": "skill_eval_reporting_verdict_line",
+      "target": "skill_eval_reporting_verdict_line"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1193",
+      "weight": 1.0,
+      "source": "app_run_history_mode",
+      "target": "app_render_single_results",
       "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L877",
+      "source_location": "L907",
       "weight": 1.0,
-      "source": "app_rationale_877",
+      "source": "app_rationale_907",
       "target": "app_run_flagship_mode",
       "confidence_score": 1.0
     },
@@ -6689,9 +7178,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L921",
+      "source_location": "L951",
       "weight": 1.0,
-      "source": "app_rationale_921",
+      "source": "app_rationale_951",
       "target": "app_run_custom_mode",
       "confidence_score": 1.0
     },
@@ -6699,9 +7188,52 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L1067",
+      "source_location": "L1108",
       "weight": 1.0,
-      "source": "app_rationale_1067",
+      "source": "app_rationale_1108",
+      "target": "app_run_history_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1122",
+      "weight": 1.0,
+      "source": "app_run_history_mode",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1132",
+      "weight": 1.0,
+      "source": "app_run_history_mode",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1159",
+      "weight": 1.0,
+      "source": "app_run_history_mode",
+      "target": "skill_eval_reporting_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1220",
+      "weight": 1.0,
+      "source": "app_rationale_1220",
       "target": "app_run_batch_mode",
       "confidence_score": 1.0
     },
@@ -6712,9 +7244,9 @@
       "source_file": "app.py",
       "source_location": "L1183",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_run_batch_mode",
-      "target": "app_render_batch_results",
-      "confidence_score": 1.0
+      "target": "app_render_batch_results"
     },
     {
       "relation": "calls",
@@ -6808,9 +7340,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
-      "source_location": "L1202",
+      "source_location": "L1355",
       "weight": 1.0,
-      "source": "app_rationale_1202",
+      "source": "app_rationale_1355",
       "target": "app_render_batch_results",
       "confidence_score": 1.0
     },
@@ -6821,9 +7353,9 @@
       "source_file": "app.py",
       "source_location": "L1234",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_arm_color_list",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_arm_color_list"
     },
     {
       "relation": "calls",
@@ -6832,9 +7364,9 @@
       "source_file": "app.py",
       "source_location": "L1239",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_batch_criterion_gap_rows",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_batch_criterion_gap_rows"
     },
     {
       "relation": "calls",
@@ -6843,9 +7375,9 @@
       "source_file": "app.py",
       "source_location": "L1229",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_batch_per_case_totals",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_batch_per_case_totals"
     },
     {
       "relation": "calls",
@@ -6854,9 +7386,9 @@
       "source_file": "app.py",
       "source_location": "L1279",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_batch_score_distribution",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_batch_score_distribution"
     },
     {
       "relation": "calls",
@@ -6865,9 +7397,9 @@
       "source_file": "app.py",
       "source_location": "L1216",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_batch_win_summary",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_batch_win_summary"
     },
     {
       "relation": "calls",
@@ -6876,9 +7408,9 @@
       "source_file": "app.py",
       "source_location": "L1335",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_render_batch_results",
-      "target": "skill_eval_reporting_reports_to_json",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_reports_to_json"
     },
     {
       "relation": "rationale_for",
@@ -7802,6 +8334,17 @@
       "target": "skill_eval_contracts_arm"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L219",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_arm",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -8451,6 +8994,17 @@
       "target": "skill_eval_contracts_criterion"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L211",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_criterion",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -8742,6 +9296,38 @@
       "confidence_score": 0.5,
       "source": "skill_eval_orchestrator_py_tracer",
       "target": "skill_eval_contracts_runconfig"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_contracts_runconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 0.8,
+      "source": "skill_eval_reporting_py_comparisonreport",
+      "target": "skill_eval_contracts_runconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L204",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_runconfig",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -9196,11 +9782,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L67",
+      "source_location": "L69",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_67",
-      "target": "skill_eval_contracts_workspace"
+      "source": "skill_eval_contracts_rationale_69",
+      "target": "skill_eval_contracts_workspace",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -9596,11 +10182,43 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L80",
+      "source_location": "L82",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_80",
-      "target": "skill_eval_contracts_runmetrics"
+      "source": "skill_eval_contracts_rationale_82",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 0.8,
+      "source": "skill_eval_reporting_py_comparisonreport",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L208",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -9823,6 +10441,28 @@
       "target": "skill_eval_contracts_runmetrics"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "target": "skill_eval_contracts_runmetrics",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -9973,11 +10613,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L99",
+      "source_location": "L101",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_99",
-      "target": "skill_eval_contracts_takerresult"
+      "source": "skill_eval_contracts_rationale_101",
+      "target": "skill_eval_contracts_takerresult",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -10301,6 +10941,28 @@
       "target": "skill_eval_contracts_takerresult"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "target": "skill_eval_contracts_takerresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "target": "skill_eval_contracts_takerresult",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -10387,11 +11049,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L123",
+      "source_location": "L126",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_123",
-      "target": "skill_eval_contracts_judgeinput"
+      "source": "skill_eval_contracts_rationale_126",
+      "target": "skill_eval_contracts_judgeinput",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -10663,6 +11325,28 @@
       "target": "skill_eval_contracts_judgeinput"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "target": "skill_eval_contracts_judgeinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "target": "skill_eval_contracts_judgeinput",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -10698,11 +11382,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L134",
+      "source_location": "L137",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_134",
-      "target": "skill_eval_contracts_judgescore"
+      "source": "skill_eval_contracts_rationale_137",
+      "target": "skill_eval_contracts_judgescore",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -10777,6 +11461,17 @@
       "confidence_score": 0.5,
       "source": "skill_eval_orchestrator_evalstate",
       "target": "skill_eval_contracts_judgescore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/orchestrator.py",
+      "source_location": "L314",
+      "weight": 1.0,
+      "source": "skill_eval_orchestrator_node_assemble",
+      "target": "skill_eval_contracts_judgescore",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -10857,6 +11552,38 @@
       "confidence_score": 0.5,
       "source": "skill_eval_orchestrator_py_tracer",
       "target": "skill_eval_contracts_judgescore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_contracts_judgescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 0.8,
+      "source": "skill_eval_reporting_py_comparisonreport",
+      "target": "skill_eval_contracts_judgescore",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_judgescore",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -11020,11 +11747,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L146",
+      "source_location": "L149",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_contracts_rationale_146",
-      "target": "skill_eval_contracts_armreport"
+      "source": "skill_eval_contracts_rationale_149",
+      "target": "skill_eval_contracts_armreport",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -11142,6 +11869,38 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_contracts_armreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L186",
+      "weight": 0.8,
+      "source": "skill_eval_reporting_py_comparisonreport",
+      "target": "skill_eval_contracts_armreport",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_armreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_contracts.py",
       "source_location": "L5",
       "weight": 1.0,
@@ -11218,9 +11977,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L160",
+      "source_location": "L164",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_160",
+      "source": "skill_eval_contracts_rationale_164",
       "target": "skill_eval_contracts_comparisonreport",
       "confidence_score": 1.0
     },
@@ -11369,6 +12128,17 @@
       "target": "skill_eval_contracts_comparisonreport"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L231",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_contracts_comparisonreport",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -11460,9 +12230,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L183",
+      "source_location": "L187",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_183",
+      "source": "skill_eval_contracts_rationale_187",
       "target": "skill_eval_contracts_prepare_workspaces",
       "confidence_score": 1.0
     },
@@ -11470,9 +12240,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L194",
+      "source_location": "L198",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_194",
+      "source": "skill_eval_contracts_rationale_198",
       "target": "skill_eval_contracts_run_taker",
       "confidence_score": 1.0
     },
@@ -11642,9 +12412,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L199",
+      "source_location": "L203",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_199",
+      "source": "skill_eval_contracts_rationale_203",
       "target": "skill_eval_contracts_make_simulator",
       "confidence_score": 1.0
     },
@@ -11652,9 +12422,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L204",
+      "source_location": "L208",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_204",
+      "source": "skill_eval_contracts_rationale_208",
       "target": "skill_eval_contracts_run_judge",
       "confidence_score": 1.0
     },
@@ -11662,9 +12432,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/contracts.py",
-      "source_location": "L209",
+      "source_location": "L213",
       "weight": 1.0,
-      "source": "skill_eval_contracts_rationale_209",
+      "source": "skill_eval_contracts_rationale_213",
       "target": "skill_eval_contracts_run_eval",
       "confidence_score": 1.0
     },
@@ -12420,11 +13190,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L112",
+      "source_location": "L121",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_judge_rationale_112",
-      "target": "skill_eval_judge_build_prompt"
+      "source": "skill_eval_judge_rationale_121",
+      "target": "skill_eval_judge_build_prompt",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12447,6 +13217,17 @@
       "confidence_score": 1.0,
       "source": "tests_test_judge",
       "target": "skill_eval_judge_build_prompt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "target": "skill_eval_judge_build_prompt",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12491,6 +13272,17 @@
       "confidence_score": 1.0,
       "source": "tests_test_judge_test_build_prompt_correctness_anchor_phrase",
       "target": "skill_eval_judge_build_prompt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "target": "skill_eval_judge_build_prompt",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12551,11 +13343,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L190",
+      "source_location": "L206",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_judge_rationale_190",
-      "target": "skill_eval_judge_parse_response"
+      "source": "skill_eval_judge_rationale_206",
+      "target": "skill_eval_judge_parse_response",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12572,11 +13364,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/judge.py",
-      "source_location": "L213",
+      "source_location": "L229",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_judge_rationale_213",
-      "target": "skill_eval_judge_run_judge"
+      "source": "skill_eval_judge_rationale_229",
+      "target": "skill_eval_judge_run_judge",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -13314,9 +14106,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/orchestrator.py",
-      "source_location": "L380",
+      "source_location": "L406",
       "weight": 1.0,
-      "source": "skill_eval_orchestrator_rationale_380",
+      "source": "skill_eval_orchestrator_rationale_406",
       "target": "skill_eval_orchestrator_run_eval",
       "confidence_score": 1.0
     },
@@ -13440,6 +14232,28 @@
       "confidence_score": 1.0,
       "source": "tests_test_orchestrator",
       "target": "skill_eval_orchestrator_run_eval"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "target": "skill_eval_orchestrator_run_eval",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_test_k_judges_median_aggregation",
+      "target": "skill_eval_orchestrator_run_eval",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -13578,6 +14392,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L277",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
       "source_location": "L382",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13598,11 +14432,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L157",
+      "source_location": "L177",
       "weight": 1.0,
       "source": "skill_eval_reporting",
-      "target": "skill_eval_reporting_report_to_json",
+      "target": "skill_eval_reporting_report_from_json",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L157",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_reporting_report_to_json"
     },
     {
       "relation": "contains",
@@ -13610,8 +14454,28 @@
       "source_file": "skill_eval/reporting.py",
       "source_location": "L169",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "skill_eval_reporting",
-      "target": "skill_eval_reporting_reports_to_json",
+      "target": "skill_eval_reporting_reports_to_json"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_reporting_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L245",
+      "weight": 1.0,
+      "source": "skill_eval_reporting",
+      "target": "skill_eval_reporting_save_report",
       "confidence_score": 1.0
     },
     {
@@ -13798,6 +14662,17 @@
     },
     {
       "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L277",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_load_report",
+      "target": "skill_eval_reporting_py_comparisonreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
@@ -13809,14 +14684,25 @@
     },
     {
       "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_report_from_json",
+      "target": "skill_eval_reporting_py_comparisonreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
       "source_location": "L157",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "skill_eval_reporting_report_to_json",
-      "target": "skill_eval_reporting_py_comparisonreport",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_py_comparisonreport"
     },
     {
       "relation": "references",
@@ -13825,7 +14711,29 @@
       "source_file": "skill_eval/reporting.py",
       "source_location": "L169",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "skill_eval_reporting_reports_to_json",
+      "target": "skill_eval_reporting_py_comparisonreport"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_run_delta_rows",
+      "target": "skill_eval_reporting_py_comparisonreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L245",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_save_report",
       "target": "skill_eval_reporting_py_comparisonreport",
       "confidence_score": 1.0
     },
@@ -13996,7 +14904,18 @@
       "source_file": "skill_eval/reporting.py",
       "source_location": "L158",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "skill_eval_reporting_rationale_158",
+      "target": "skill_eval_reporting_report_to_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L260",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_save_report",
       "target": "skill_eval_reporting_report_to_json",
       "confidence_score": 1.0
     },
@@ -14007,7 +14926,18 @@
       "source_file": "tests/test_reporting.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_report_to_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
       "target": "skill_eval_reporting_report_to_json",
       "confidence_score": 1.0
     },
@@ -14018,9 +14948,9 @@
       "source_file": "tests/test_reporting.py",
       "source_location": "L53",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_reporting_test_report_to_json_round_trips",
-      "target": "skill_eval_reporting_report_to_json",
-      "confidence_score": 1.0
+      "target": "skill_eval_reporting_report_to_json"
     },
     {
       "relation": "rationale_for",
@@ -14028,8 +14958,51 @@
       "source_file": "skill_eval/reporting.py",
       "source_location": "L170",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "skill_eval_reporting_rationale_170",
-      "target": "skill_eval_reporting_reports_to_json",
+      "target": "skill_eval_reporting_reports_to_json"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_reports_to_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_reporting_test_reports_to_json_is_array",
+      "target": "skill_eval_reporting_reports_to_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L281",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_load_report",
+      "target": "skill_eval_reporting_report_from_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L178",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_rationale_178",
+      "target": "skill_eval_reporting_report_from_json",
       "confidence_score": 1.0
     },
     {
@@ -14040,7 +15013,7 @@
       "source_location": "L10",
       "weight": 1.0,
       "source": "tests_test_reporting",
-      "target": "skill_eval_reporting_reports_to_json",
+      "target": "skill_eval_reporting_report_from_json",
       "confidence_score": 1.0
     },
     {
@@ -14048,10 +15021,149 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L66",
+      "source_location": "L77",
       "weight": 1.0,
-      "source": "tests_test_reporting_test_reports_to_json_is_array",
-      "target": "skill_eval_reporting_reports_to_json",
+      "source": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
+      "target": "skill_eval_reporting_report_from_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L246",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_rationale_246",
+      "target": "skill_eval_reporting_save_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_save_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_save_list_load_runs",
+      "target": "skill_eval_reporting_save_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_rationale_267",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_list_saved_runs_missing_dir_is_empty",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_save_list_load_runs",
+      "target": "skill_eval_reporting_list_saved_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L278",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_rationale_278",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_save_list_load_runs",
+      "target": "skill_eval_reporting_load_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/reporting.py",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "skill_eval_reporting_rationale_285",
+      "target": "skill_eval_reporting_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "skill_eval_reporting_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_run_delta_rows",
+      "target": "skill_eval_reporting_run_delta_rows",
       "confidence_score": 1.0
     },
     {
@@ -14068,9 +15180,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L183",
+      "source_location": "L325",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_183",
+      "source": "skill_eval_reporting_rationale_325",
       "target": "skill_eval_reporting_batch_win_summary",
       "confidence_score": 1.0
     },
@@ -14100,9 +15212,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L205",
+      "source_location": "L347",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_205",
+      "source": "skill_eval_reporting_rationale_347",
       "target": "skill_eval_reporting_batch_per_case_totals",
       "confidence_score": 1.0
     },
@@ -14154,9 +15266,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L233",
+      "source_location": "L375",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_233",
+      "source": "skill_eval_reporting_rationale_375",
       "target": "skill_eval_reporting_batch_per_criterion_avg",
       "confidence_score": 1.0
     },
@@ -14197,9 +15309,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L264",
+      "source_location": "L406",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_264",
+      "source": "skill_eval_reporting_rationale_406",
       "target": "skill_eval_reporting_batch_criterion_gap_rows",
       "confidence_score": 1.0
     },
@@ -14229,9 +15341,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L308",
+      "source_location": "L450",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_308",
+      "source": "skill_eval_reporting_rationale_450",
       "target": "skill_eval_reporting_agent_graph_dot",
       "confidence_score": 1.0
     },
@@ -14261,9 +15373,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L426",
+      "source_location": "L568",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_426",
+      "source": "skill_eval_reporting_rationale_568",
       "target": "skill_eval_reporting_log_judge_evaluations",
       "confidence_score": 1.0
     },
@@ -14304,9 +15416,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L472",
+      "source_location": "L614",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_472",
+      "source": "skill_eval_reporting_rationale_614",
       "target": "skill_eval_reporting_batch_score_distribution",
       "confidence_score": 1.0
     },
@@ -14358,9 +15470,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/reporting.py",
-      "source_location": "L498",
+      "source_location": "L640",
       "weight": 1.0,
-      "source": "skill_eval_reporting_rationale_498",
+      "source": "skill_eval_reporting_rationale_640",
       "target": "skill_eval_reporting_init_phoenix",
       "confidence_score": 1.0
     },
@@ -14383,6 +15495,16 @@
       "confidence_score": 1.0,
       "source": "skill_eval_sample_cases",
       "target": "skill_eval_sample_cases_build_sample_cases"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "skill_eval_sample_cases",
+      "target": "skill_eval_sample_cases_flagship_skill_text",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14484,11 +15606,43 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "skill_eval_sample_cases_flagship_skill_text",
+      "target": "skill_eval_sample_cases_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/sample_cases.py",
       "source_location": "L45",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "skill_eval_sample_cases_make_case",
       "target": "skill_eval_sample_cases_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "skill_eval_sample_cases_add_skills",
+      "target": "skill_eval_sample_cases_flagship_skill_text",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/sample_cases.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "skill_eval_sample_cases_rationale_53",
+      "target": "skill_eval_sample_cases_flagship_skill_text",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -14505,11 +15659,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L22",
+      "source_location": "L62",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_sample_cases_rationale_22",
-      "target": "skill_eval_sample_cases_add_skills"
+      "source": "skill_eval_sample_cases_rationale_62",
+      "target": "skill_eval_sample_cases_add_skills",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -14537,11 +15691,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L44",
+      "source_location": "L92",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_sample_cases_rationale_44",
-      "target": "skill_eval_sample_cases_make_case"
+      "source": "skill_eval_sample_cases_rationale_92",
+      "target": "skill_eval_sample_cases_make_case",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -14558,11 +15712,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/sample_cases.py",
-      "source_location": "L74",
+      "source_location": "L122",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_sample_cases_rationale_74",
-      "target": "skill_eval_sample_cases_build_sample_cases"
+      "source": "skill_eval_sample_cases_rationale_122",
+      "target": "skill_eval_sample_cases_build_sample_cases",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -14701,6 +15855,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_sample_cases.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "tests_test_sample_cases_test_sample_cases_skills_are_real_and_contrasting",
+      "target": "skill_eval_sample_cases_build_sample_cases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_sample_cases.py",
       "source_location": "L35",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -14815,6 +15980,28 @@
       "confidence_score": 1.0,
       "source": "tests_test_orchestrator",
       "target": "skill_eval_sample_repo_build_sample_repo"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "target": "skill_eval_sample_repo_build_sample_repo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_test_k_judges_median_aggregation",
+      "target": "skill_eval_sample_repo_build_sample_repo",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -15470,11 +16657,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/simulated.py",
-      "source_location": "L176",
+      "source_location": "L179",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "skill_eval_simulated_rationale_176",
-      "target": "skill_eval_simulated_sim_run_judge"
+      "source": "skill_eval_simulated_rationale_179",
+      "target": "skill_eval_simulated_sim_run_judge",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -15519,6 +16706,17 @@
       "confidence_score": 1.0,
       "source": "tests_test_orchestrator",
       "target": "skill_eval_simulated_sim_run_judge"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "target": "skill_eval_simulated_sim_run_judge",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -17474,9 +18672,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app",
-      "target": "tests_test_app_boot",
-      "confidence_score": 1.0
+      "target": "tests_test_app_boot"
     },
     {
       "relation": "contains",
@@ -17484,8 +18682,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app",
-      "target": "tests_test_app_click_button",
+      "target": "tests_test_app_click_button"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_test_app",
+      "target": "tests_test_app_isolate_runs_dir",
       "confidence_score": 1.0
     },
     {
@@ -17494,8 +18702,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app",
-      "target": "tests_test_app_test_app_boots_without_errors",
+      "target": "tests_test_app_test_app_boots_without_errors"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "tests_test_app",
+      "target": "tests_test_app_test_batch_mode_renders_aggregates_and_persists",
       "confidence_score": 1.0
     },
     {
@@ -17504,8 +18722,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app",
-      "target": "tests_test_app_test_custom_mode_runs_user_skills_through_the_harness",
+      "target": "tests_test_app_test_custom_mode_runs_user_skills_through_the_harness"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_app",
+      "target": "tests_test_app_test_history_mode_lists_and_renders_archived_runs",
       "confidence_score": 1.0
     },
     {
@@ -17514,9 +18742,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app",
-      "target": "tests_test_app_test_single_case_results_persist_across_reruns",
-      "confidence_score": 1.0
+      "target": "tests_test_app_test_single_case_results_persist_across_reruns"
     },
     {
       "relation": "rationale_for",
@@ -17524,9 +18752,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_rationale_1",
-      "target": "tests_test_app",
-      "confidence_score": 1.0
+      "target": "tests_test_app"
     },
     {
       "relation": "references",
@@ -17535,9 +18763,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_boot",
-      "target": "apptest",
-      "confidence_score": 1.0
+      "target": "apptest"
     },
     {
       "relation": "calls",
@@ -17546,7 +18774,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_test_app_boots_without_errors",
+      "target": "tests_test_app_boot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_test_app_test_batch_mode_renders_aggregates_and_persists",
       "target": "tests_test_app_boot",
       "confidence_score": 1.0
     },
@@ -17557,7 +18796,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_test_custom_mode_runs_user_skills_through_the_harness",
+      "target": "tests_test_app_boot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "tests_test_app_test_history_mode_lists_and_renders_archived_runs",
       "target": "tests_test_app_boot",
       "confidence_score": 1.0
     },
@@ -17568,9 +18818,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_test_single_case_results_persist_across_reruns",
-      "target": "tests_test_app_boot",
-      "confidence_score": 1.0
+      "target": "tests_test_app_boot"
     },
     {
       "relation": "references",
@@ -17579,8 +18829,19 @@
       "source_file": "tests/test_app.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_click_button",
-      "target": "apptest",
+      "target": "apptest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "tests_test_app_test_batch_mode_renders_aggregates_and_persists",
+      "target": "tests_test_app_click_button",
       "confidence_score": 1.0
     },
     {
@@ -17590,7 +18851,18 @@
       "source_file": "tests/test_app.py",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_test_custom_mode_runs_user_skills_through_the_harness",
+      "target": "tests_test_app_click_button"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "tests_test_app_test_history_mode_lists_and_renders_archived_runs",
       "target": "tests_test_app_click_button",
       "confidence_score": 1.0
     },
@@ -17601,9 +18873,9 @@
       "source_file": "tests/test_app.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_app_test_single_case_results_persist_across_reruns",
-      "target": "tests_test_app_click_button",
-      "confidence_score": 1.0
+      "target": "tests_test_app_click_button"
     },
     {
       "relation": "contains",
@@ -17955,6 +19227,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_judge.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "tests_test_judge",
+      "target": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
       "source_location": "L51",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -17990,6 +19272,16 @@
       "confidence_score": 1.0,
       "source": "tests_test_judge",
       "target": "tests_test_judge_test_build_prompt_correctness_anchor_phrase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "tests_test_judge",
+      "target": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18040,6 +19332,16 @@
       "confidence_score": 1.0,
       "source": "tests_test_judge",
       "target": "tests_test_judge_test_run_judge_clamps"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "tests_test_judge",
+      "target": "tests_test_judge_test_run_judge_is_deterministic_temperature_zero",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18155,6 +19457,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_judge.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "tests_test_judge_test_run_judge_is_deterministic_temperature_zero",
+      "target": "tests_test_judge_ji",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
       "source_location": "L22",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18227,6 +19540,36 @@
       "source_file": "tests/test_judge.py",
       "source_location": "L110",
       "weight": 1.0,
+      "source": "tests_test_judge_rationale_110",
+      "target": "tests_test_judge_test_build_prompt_blind_criteria_never_see_gold",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "tests_test_judge_rationale_121",
+      "target": "tests_test_judge_test_build_prompt_gold_based_criteria_see_gold",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "tests_test_judge_rationale_136",
+      "target": "tests_test_judge_test_run_judge_is_deterministic_temperature_zero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L110",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_judge_rationale_110",
       "target": "tests_test_judge_test_build_prompt_question_quality_brief_vs_gold_instruction"
@@ -18235,11 +19578,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_judge.py",
-      "source_location": "L119",
+      "source_location": "L146",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_judge_rationale_119",
-      "target": "tests_test_judge_test_build_prompt_contains_task_brief_and_diffs"
+      "source": "tests_test_judge_rationale_146",
+      "target": "tests_test_judge_test_build_prompt_question_quality_brief_vs_gold_instruction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_judge.py",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "tests_test_judge_rationale_155",
+      "target": "tests_test_judge_test_build_prompt_contains_task_brief_and_diffs",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18265,6 +19618,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_orchestrator.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator",
+      "target": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator",
+      "target": "tests_test_orchestrator_test_k_judges_median_aggregation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
       "source_location": "L34",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18285,9 +19658,29 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_orchestrator.py",
-      "source_location": "L39",
+      "source_location": "L42",
       "weight": 1.0,
-      "source": "tests_test_orchestrator_rationale_39",
+      "source": "tests_test_orchestrator_rationale_42",
+      "target": "tests_test_orchestrator_test_k_judges_median_aggregation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_rationale_63",
+      "target": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_orchestrator.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "tests_test_orchestrator_rationale_85",
       "target": "tests_test_orchestrator_test_reducer_counts",
       "confidence_score": 1.0
     },
@@ -18455,6 +19848,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "tests_test_reporting_test_list_saved_runs_missing_dir_is_empty",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
       "source_location": "L266",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18485,11 +19888,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L50",
+      "source_location": "L75",
       "weight": 1.0,
       "source": "tests_test_reporting",
-      "target": "tests_test_reporting_test_report_to_json_round_trips",
+      "target": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_reporting",
+      "target": "tests_test_reporting_test_report_to_json_round_trips"
     },
     {
       "relation": "contains",
@@ -18497,8 +19910,28 @@
       "source_file": "tests/test_reporting.py",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_reporting",
-      "target": "tests_test_reporting_test_reports_to_json_is_array",
+      "target": "tests_test_reporting_test_reports_to_json_is_array"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "tests_test_reporting_test_run_delta_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "tests_test_reporting",
+      "target": "tests_test_reporting_test_save_list_load_runs",
       "confidence_score": 1.0
     },
     {
@@ -18525,9 +19958,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L33",
+      "source_location": "L38",
       "weight": 1.0,
-      "source": "tests_test_reporting_rationale_33",
+      "source": "tests_test_reporting_rationale_38",
       "target": "tests_test_reporting_make_report",
       "confidence_score": 1.0
     },
@@ -18549,7 +19982,29 @@
       "source_file": "tests/test_reporting.py",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_reporting_test_reports_to_json_is_array",
+      "target": "tests_test_reporting_make_report"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_run_delta_rows",
+      "target": "tests_test_reporting_make_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "tests_test_reporting_test_save_list_load_runs",
       "target": "tests_test_reporting_make_report",
       "confidence_score": 1.0
     },
@@ -18591,9 +20046,9 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L53",
+      "source_location": "L76",
       "weight": 1.0,
-      "source": "tests_test_reporting_test_report_to_json_round_trips",
+      "source": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
       "target": "tests_test_reporting_report",
       "confidence_score": 1.0
     },
@@ -18602,11 +20057,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_reporting_test_report_to_json_round_trips",
+      "target": "tests_test_reporting_report"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_reporting.py",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_reporting_test_reports_to_json_is_array",
-      "target": "tests_test_reporting_report",
-      "confidence_score": 1.0
+      "target": "tests_test_reporting_report"
     },
     {
       "relation": "calls",
@@ -18634,9 +20100,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L213",
+      "source_location": "L254",
       "weight": 1.0,
-      "source": "tests_test_reporting_rationale_213",
+      "source": "tests_test_reporting_rationale_254",
       "target": "tests_test_reporting_test_agent_graph_dot",
       "confidence_score": 1.0
     },
@@ -18644,9 +20110,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L271",
+      "source_location": "L312",
       "weight": 1.0,
-      "source": "tests_test_reporting_rationale_271",
+      "source": "tests_test_reporting_rationale_312",
       "target": "tests_test_reporting_test_batch_score_distribution_row_count",
       "confidence_score": 1.0
     },
@@ -18654,9 +20120,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L278",
+      "source_location": "L319",
       "weight": 1.0,
-      "source": "tests_test_reporting_rationale_278",
+      "source": "tests_test_reporting_rationale_319",
       "target": "tests_test_reporting_test_batch_score_distribution_schema",
       "confidence_score": 1.0
     },
@@ -18664,9 +20130,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L298",
+      "source_location": "L339",
       "weight": 1.0,
-      "source": "tests_test_reporting_rationale_298",
+      "source": "tests_test_reporting_rationale_339",
       "target": "tests_test_reporting_test_log_judge_evaluations_best_effort_no_phoenix",
       "confidence_score": 1.0
     },
@@ -18674,19 +20140,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_reporting.py",
-      "source_location": "L278",
+      "source_location": "L350",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_reporting_rationale_278",
-      "target": "tests_test_reporting_test_log_judge_evaluations_empty"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_reporting.py",
-      "source_location": "L309",
-      "weight": 1.0,
-      "source": "tests_test_reporting_rationale_309",
+      "source": "tests_test_reporting_rationale_350",
       "target": "tests_test_reporting_test_log_judge_evaluations_empty",
       "confidence_score": 1.0
     },
@@ -18754,6 +20210,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_sample_cases.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "tests_test_sample_cases",
+      "target": "tests_test_sample_cases_test_sample_cases_skills_are_real_and_contrasting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_sample_cases.py",
       "source_location": "L34",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18770,6 +20236,16 @@
       "confidence_score": 1.0,
       "source": "tests_test_sample_cases_test_sample_cases_commits_exist",
       "target": "tests_test_sample_cases_commit_exists"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_sample_cases.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "tests_test_sample_cases_rationale_50",
+      "target": "tests_test_sample_cases_test_sample_cases_skills_are_real_and_contrasting",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -19802,6 +21278,16 @@
       "confidence_score": 1.0,
       "source": "readme_skill_eval",
       "target": "readme_layout"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "readme_skill_eval",
+      "target": "readme_measurement_validity",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20935,5 +22421,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "723e2b3bbf8ef5db33ad584a39f24845eb435f9d"
+  "built_at_commit": "61bf29f2804ec291dbe33d9e64996838a4dfffda"
 }

@@ -18,14 +18,62 @@ def _init_repo(path: Path) -> None:
     git_ops.config(str(path), "user.name", "Eval Fixture")
 
 
+# Fallbacks if the flagship skill files are unavailable (e.g. installed package
+# without the repo tree). Deliberately CONTRASTING real skills, not placeholders:
+# a batch that compares two identical empty skills measures nothing.
+_FALLBACK_BASELINE_SKILL = """\
+---
+name: ship-it-fast
+description: Ship working code as fast as possible
+---
+
+# Ship it fast
+
+Implement the most direct fix that makes the tests pass. Do not ask questions —
+make reasonable assumptions and move on. Speed beats polish.
+"""
+
+_FALLBACK_CHALLENGER_SKILL = """\
+---
+name: disciplined
+description: Read, clarify every ambiguity, test-first, implement minimally
+---
+
+# Disciplined engineering
+
+1. Read the existing code and tests before changing anything.
+2. If ANY requirement is ambiguous, ask the stakeholder a clarifying question
+   via the ask_question tool before implementing.
+3. Write or update tests first, then implement the minimal change to pass.
+4. Keep the diff small and idiomatic.
+"""
+
+
+def _flagship_skill_text(name: str, fallback: str) -> str:
+    """Read a real flagship skill's SKILL.md, falling back to an inline skill."""
+    p = Path(__file__).resolve().parents[1] / "flagship" / "skills" / name / "SKILL.md"
+    try:
+        return p.read_text()
+    except OSError:
+        return fallback
+
+
 def _add_skills(repo: Path) -> tuple[str, str]:
-    """Create placeholder skill dirs; return (baseline_path, challenger_path)."""
-    for arm in ("baseline", "challenger"):
+    """Create REAL contrasting skill dirs; return (baseline_path, challenger_path).
+
+    Baseline gets the ship-it-fast skill, challenger the disciplined skill —
+    the same pair as the flagship case, so batch results measure an actual
+    skill difference (placeholder skills here previously made real batch runs
+    a comparison of two identical no-op skills).
+    """
+    contents = {
+        "baseline": _flagship_skill_text("ship-it-fast", _FALLBACK_BASELINE_SKILL),
+        "challenger": _flagship_skill_text("disciplined", _FALLBACK_CHALLENGER_SKILL),
+    }
+    for arm, text in contents.items():
         sk = repo / ".claude/skills" / arm
         sk.mkdir(parents=True, exist_ok=True)
-        (sk / "SKILL.md").write_text(
-            f"---\nname: {arm}\ndescription: {arm} coding skill (placeholder)\n---\n"
-        )
+        (sk / "SKILL.md").write_text(text)
     return (
         str(repo / ".claude/skills/baseline"),
         str(repo / ".claude/skills/challenger"),

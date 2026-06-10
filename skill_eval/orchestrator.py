@@ -200,27 +200,32 @@ def _fan_out_judges(state: _EvalState) -> list[Send]:
     cfg = state["cfg"]
     spaces: dict[Arm, Workspace] = state["spaces"]
     taker_map: dict[Arm, TakerResult] = dict(state["taker_results"])
-    model = cfg.models[0]
+    # Judge model is decoupled from the taker model: a judge that shares the
+    # taker's model family is exposed to self-preference bias.
+    model = cfg.judge_model or cfg.models[0]
+    k = max(1, cfg.judges_per_criterion)
     sends: list[Send] = []
     for arm, ws in spaces.items():
         taker = taker_map[arm]
         for criterion in Criterion:
-            sends.append(
-                Send(
-                    "judge",
-                    {
-                        "arm": arm,
-                        "criterion": criterion,
-                        "cfg": cfg,
-                        "model": model,
-                        "ws": ws,
-                        "taker": taker,
-                        "judge_fn": state["judge_fn"],
-                        "on_event": state.get("on_event"),
-                        "session_id": state.get("session_id", ""),
-                    },
+            for replicate in range(k):
+                sends.append(
+                    Send(
+                        "judge",
+                        {
+                            "arm": arm,
+                            "criterion": criterion,
+                            "replicate": replicate,
+                            "cfg": cfg,
+                            "model": model,
+                            "ws": ws,
+                            "taker": taker,
+                            "judge_fn": state["judge_fn"],
+                            "on_event": state.get("on_event"),
+                            "session_id": state.get("session_id", ""),
+                        },
+                    )
                 )
-            )
     return sends
 
 
@@ -252,6 +257,7 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
         set_session(span, payload.get("session_id", ""))
         span.set_attribute("arm", arm.value)
         span.set_attribute("criterion", criterion.value)
+        span.set_attribute("replicate", payload.get("replicate", 0))
 
         _emit(
             on_event,
@@ -283,15 +289,34 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def _node_assemble(state: _EvalState) -> dict[str, Any]:
+    import statistics
+
     cfg = state["cfg"]
     on_event = state.get("on_event")
 
     taker_map: dict[Arm, TakerResult] = dict(state["taker_results"])
 
-    # Group scores by arm
-    scores_by_arm: dict[Arm, list[JudgeScore]] = {}
+    # Group replicate scores per (arm, criterion) cell, then aggregate with the
+    # median (robust to a single outlier judge). With the default k=1 this is
+    # a pass-through. The replicate spread is preserved in the rationale.
+    by_cell: dict[tuple[Arm, Criterion], list[JudgeScore]] = {}
     for arm, score, _sid in state["scores"]:
-        scores_by_arm.setdefault(arm, []).append(score)
+        by_cell.setdefault((arm, score.criterion), []).append(score)
+
+    scores_by_arm: dict[Arm, list[JudgeScore]] = {}
+    for (arm, criterion), replicates in by_cell.items():
+        if len(replicates) == 1:
+            agg = replicates[0]
+        else:
+            values = sorted(s.score for s in replicates)
+            med = round(statistics.median(values))
+            closest = min(replicates, key=lambda s: abs(s.score - med))
+            agg = JudgeScore(
+                criterion=criterion,
+                score=med,
+                rationale=f"[k={len(replicates)}, scores={values}] {closest.rationale}",
+            )
+        scores_by_arm.setdefault(arm, []).append(agg)
 
     arm_reports: list[ArmReport] = []
     for arm, arm_scores in scores_by_arm.items():
@@ -307,6 +332,7 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
                 questions=tuple(taker.questions),
                 diff=taker.diff,
                 stop_reason=taker.stop_reason.value,
+                qa=taker.qa,
             )
         )
 

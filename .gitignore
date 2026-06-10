@@ -17,3 +17,5 @@ build/
 # graphify local-only artifacts (the graph itself is committed)
 graphify-out/cache/
 graphify-out/cost.json
+# archived eval runs (JSON), browsable in the dashboard History mode
+runs/

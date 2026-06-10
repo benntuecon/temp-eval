@@ -125,6 +125,7 @@ def run_taker(
     # Using a list-as-counter avoids nonlocal friction in nested async funcs.
     question_counter: list[int] = [0]
     asked_questions: list[str] = []
+    qa_pairs: list[tuple[str, str]] = []
 
     # -- Define the in-process MCP tool ------------------------------------
     @tool("ask_question", "Ask the human stakeholder a clarifying question.", {"question": str})
@@ -140,6 +141,7 @@ def run_taker(
             with trace.use_span(span, end_on_exit=False):
                 answer = ask_fn(question)
             set_output(span, answer)
+        qa_pairs.append((question, answer))
         return {"content": [{"type": "text", "text": answer}]}
 
     server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[_ask_question])
@@ -440,4 +442,5 @@ def run_taker(
         questions=tuple(asked_questions),
         stop_reason=stop,
         metrics=metrics,
+        qa=tuple(qa_pairs),
     )

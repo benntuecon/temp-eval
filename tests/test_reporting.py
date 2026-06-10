@@ -18,10 +18,15 @@ from skill_eval.reporting import (
     batch_win_summary,
     criterion_gap_rows,
     criterion_winners,
+    list_saved_runs,
+    load_report,
     log_judge_evaluations,
     quality_cost_rows,
+    report_from_json,
     report_to_json,
     reports_to_json,
+    run_delta_rows,
+    save_report,
     scores_table,
     verdict_line,
 )
@@ -65,6 +70,42 @@ def test_reports_to_json_is_array():
 
     payload = json.loads(reports_to_json([_report(), _make_report(15, 8)]))
     assert isinstance(payload, list) and len(payload) == 2
+
+
+def test_report_json_round_trip_reconstructs_dataclasses():
+    rep = _report()
+    back = report_from_json(report_to_json(rep))
+    assert back == rep  # full dataclass equality incl. enums and tuples
+
+
+def test_save_list_load_runs(tmp_path):
+    runs_dir = str(tmp_path / "runs")
+    rep_a, rep_b = _make_report(8, 12), _make_report(15, 8)
+    p1 = save_report(rep_a, runs_dir, label="single")
+    p2 = save_report(rep_b, runs_dir, label="flagship")
+    assert p1 and p2 and p1 != p2
+
+    runs = list_saved_runs(runs_dir)
+    assert len(runs) == 2
+    assert {r["path"] for r in runs} == {p1, p2}
+
+    assert load_report(p1) == rep_a
+    assert load_report(p2) == rep_b
+
+
+def test_list_saved_runs_missing_dir_is_empty(tmp_path):
+    assert list_saved_runs(str(tmp_path / "nope")) == []
+
+
+def test_run_delta_rows():
+    rep_a, rep_b = _make_report(8, 12), _make_report(10, 11)
+    rows = run_delta_rows(rep_a, rep_b)
+    assert len(rows) == len(Criterion) * 2
+    by_key = {(r["arm"], r["criterion"]): r for r in rows}
+    first = Criterion.CORRECTNESS.value
+    # baseline base 8 -> 10 (delta +2); challenger base 12 -> 11 (delta -1)
+    assert by_key[("baseline", first)]["delta"] == 2
+    assert by_key[("challenger", first)]["delta"] == -1
 
 
 def test_scores_table_shape():

@@ -106,6 +106,42 @@ def test_build_prompt_correctness_anchor_phrase():
     assert "matches ALL gold behavior" in prompt
 
 
+def test_build_prompt_blind_criteria_never_see_gold():
+    """code_quality and approach are judged blind — the gold diff must not leak."""
+    m = RunMetrics(0, 0, 0, 0.0, 0, 0)
+    t = TakerResult(Arm.CHALLENGER, "m", "+ taker change", (), (), StopReason.COMPLETED, m)
+    for criterion in (Criterion.CODE_QUALITY, Criterion.APPROACH):
+        ji = JudgeInput(criterion, "fix add", "+ GOLD_SECRET_MARKER", "/x", t)
+        prompt = _build_prompt(ji)
+        assert "GOLD_SECRET_MARKER" not in prompt, f"gold leaked into {criterion} prompt"
+        assert "withheld" in prompt
+
+
+def test_build_prompt_gold_based_criteria_see_gold():
+    """Criteria defined against the gold must still receive the gold diff."""
+    m = RunMetrics(0, 0, 0, 0.0, 0, 0)
+    t = TakerResult(Arm.CHALLENGER, "m", "+ taker change", (), (), StopReason.COMPLETED, m)
+    for criterion in (
+        Criterion.CORRECTNESS,
+        Criterion.COMPLETENESS,
+        Criterion.DISTANCE_TO_GOLD,
+        Criterion.QUESTION_QUALITY,
+    ):
+        ji = JudgeInput(criterion, "fix add", "+ GOLD_SECRET_MARKER", "/x", t)
+        assert "GOLD_SECRET_MARKER" in _build_prompt(ji)
+
+
+@patch("skill_eval.judge.anthropic.Anthropic")
+def test_run_judge_is_deterministic_temperature_zero(mock_cls):
+    """Judging must request temperature=0 — graded verdicts may not be sampled."""
+    msg = MagicMock()
+    msg.content = [MagicMock(text='{"score": 10, "rationale": "x"}')]
+    create = mock_cls.return_value.messages.create
+    create.return_value = msg
+    run_judge(_ji(), "claude-haiku-4-5")
+    assert create.call_args.kwargs["temperature"] == 0
+
+
 def test_build_prompt_question_quality_brief_vs_gold_instruction():
     """question_quality prompt must instruct the judge to derive ambiguities from brief vs gold."""
     ji = _ji(criterion=Criterion.QUESTION_QUALITY)

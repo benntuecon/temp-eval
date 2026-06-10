@@ -1,16 +1,16 @@
 # Graph Report - skill-eval  (2026-06-10)
 
 ## Corpus Check
-- 51 files · ~40,890 words
+- 51 files · ~43,450 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 596 nodes · 1428 edges · 30 communities (26 shown, 4 thin omitted)
-- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)
+- 632 nodes · 1534 edges · 36 communities (31 shown, 5 thin omitted)
+- Extraction: 84% EXTRACTED · 16% INFERRED · 0% AMBIGUOUS · INFERRED: 247 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `723e2b3b`
+- Built from commit: `61bf29f2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -44,16 +44,22 @@
 - [[_COMMUNITY_Community 27|Community 27]]
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `RunConfig` - 67 edges
-2. `Workspace` - 43 edges
-3. `TakerResult` - 43 edges
-4. `Arm` - 41 edges
-5. `RunMetrics` - 36 edges
-6. `JudgeScore` - 32 edges
-7. `ComparisonReport` - 32 edges
-8. `JudgeInput` - 31 edges
+1. `RunConfig` - 70 edges
+2. `TakerResult` - 45 edges
+3. `Workspace` - 43 edges
+4. `Arm` - 42 edges
+5. `RunMetrics` - 41 edges
+6. `JudgeScore` - 36 edges
+7. `JudgeInput` - 33 edges
+8. `ComparisonReport` - 33 edges
 9. `run_taker()` - 31 edges
 10. `StopReason` - 26 edges
 
@@ -72,27 +78,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (30 total, 4 thin omitted)
+## Communities (36 total, 5 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.46
-Nodes (7): AppTest, _boot(), _click_button(), Headless UI tests via Streamlit's official AppTest framework.  These boot the re, test_app_boots_without_errors(), test_custom_mode_runs_user_skills_through_the_harness(), test_single_case_results_persist_across_reruns()
+Cohesion: 0.36
+Nodes (9): AppTest, _boot(), _click_button(), Headless UI tests via Streamlit's official AppTest framework.  These boot the re, test_app_boots_without_errors(), test_batch_mode_renders_aggregates_and_persists(), test_custom_mode_runs_user_skills_through_the_harness(), test_history_mode_lists_and_renders_archived_runs() (+1 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.23
-Nodes (18): _build_graph(), _emit(), _EvalState, _fan_out_judges(), _fan_out_takers(), _get_tracer(), _node_assemble(), _node_judge() (+10 more)
+Cohesion: 0.12
+Nodes (30): _build_graph(), _emit(), _EvalState, _fan_out_judges(), _fan_out_takers(), _get_tracer(), _node_assemble(), _node_judge() (+22 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.07
-Nodes (96): Arm, ResultMessage, RunMetrics, Send, Arm, ArmReport, Criterion, JudgeInput (+88 more)
+Cohesion: 0.08
+Nodes (87): Arm, ResultMessage, RunMetrics, Send, Arm, ArmReport, Criterion, JudgeInput (+79 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.09
 Nodes (21): 10. Build order & parallelization plan, 11. Out of scope (YAGNI for the hackathon), 12. Risks & open questions, 1. Goal, 2. Inputs & Outputs, 3. Architecture — two layers, 4. Tech stack & rationale, 5. Components (+13 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.06
-Nodes (80): _is_streamlit(), main(), Streamlit dashboard for the skill-eval harness.  Run with:     uv run streamlit, Batch (10 cases) view: run all sample cases and show aggregate viz., Render aggregate visualisations for a completed batch., Single-case control-room view.      Parameters     ----------     build_cfg:, Return True when this file is being executed by Streamlit., Slugify a user-supplied skill name into a safe directory name. (+72 more)
+Cohesion: 0.12
+Nodes (28): _is_streamlit(), main(), Streamlit dashboard for the skill-eval harness.  Run with:     uv run streamlit, History mode: browse archived runs and diff two of them (run-over-run).      The, Single-case control-room view.      Parameters     ----------     build_cfg:, Return True when this file is being executed by Streamlit., Slugify a user-supplied skill name into a safe directory name., Directory where completed runs are archived as JSON.      Defaults to the projec (+20 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.17
@@ -119,28 +125,28 @@ Cohesion: 0.25
 Nodes (7): Done criteria for this plan, File Structure, Skill Eval — Foundation Implementation Plan, Task 1: Project scaffolding with uv (issue #1), Task 2: Shared data contracts (issue #2), Task 3: Spike — isolated skill loading (issue #3), Task 4: Spike — ask_question routing, counting & metrics (issue #4)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.09
-Nodes (49): InMemorySpanExporter, _parse_response(), JudgeScore, C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r, Extract (score, rationale) from the model response.      Tries json.loads on the, Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet, run_judge(), _build_gold_context() (+41 more)
+Cohesion: 0.10
+Nodes (48): InMemorySpanExporter, _parse_response(), C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r, Extract (score, rationale) from the model response.      Tries json.loads on the, Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet, run_judge(), _build_gold_context(), make_simulator() (+40 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.25
-Nodes (7): Dev, How it works, Layout, Quickstart, skill-eval, The headline result, Visualizations
+Cohesion: 0.22
+Nodes (8): Dev, How it works, Layout, Measurement validity, Quickstart, skill-eval, The headline result, Visualizations
 
 ### Community 16 - "Community 16"
-Cohesion: 0.08
-Nodes (36): CalledProcessError, add_all(), commit(), config(), diff(), diff_cached(), diff_workdir(), init() (+28 more)
+Cohesion: 0.06
+Nodes (42): CalledProcessError, build_flagship_case(), RunConfig, add_all(), commit(), config(), diff(), diff_cached() (+34 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.08
-Nodes (43): _compute_diff(), _metrics_from_result(), Extract ``RunMetrics`` from the final ``ResultMessage``., Map SDK fields to a ``StopReason`` enum value., Stage all changes and return the diff against the starting commit.      Diffs ag, _stop_reason(), _fake_query_gen(), _FakeResult (+35 more)
+Cohesion: 0.07
+Nodes (47): _compute_diff(), _metrics_from_result(), Extract ``RunMetrics`` from the final ``ResultMessage``., Map SDK fields to a ``StopReason`` enum value., Stage all changes and return the diff against the starting commit.      Diffs ag, _stop_reason(), _fake_query_gen(), _FakeResult (+39 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.08
-Nodes (39): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Concurrent batch runner for skill-eval.  Runs multiple RunConfigs through run_ev, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar (+31 more)
+Nodes (43): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Concurrent batch runner for skill-eval.  Runs multiple RunConfigs through run_ev, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar (+35 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.16
-Nodes (22): _build_prompt(), JudgeInput, Build the judge prompt for a single criterion evaluation.      This is a pure fu, _ji(), correctness prompt must include concrete anchor descriptors from the spec., question_quality prompt must instruct the judge to derive ambiguities from brief, Prompt must embed the task brief, gold diff, and taker diff., Every criterion prompt must include all five anchor values 0/5/10/15/20. (+14 more)
+Cohesion: 0.13
+Nodes (26): _build_prompt(), JudgeInput, Build the judge prompt for a single criterion evaluation.      This is a pure fu, _ji(), correctness prompt must include concrete anchor descriptors from the spec., code_quality and approach are judged blind — the gold diff must not leak., Judging must request temperature=0 — graded verdicts may not be sampled., question_quality prompt must instruct the judge to derive ambiguities from brief (+18 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.17
@@ -171,28 +177,48 @@ Cohesion: 0.33
 Nodes (5): Backup talking points, Demo script (~2 min), Setup (before you present), The close, The flow
 
 ### Community 29 - "Community 29"
-Cohesion: 0.39
-Nodes (6): build_flagship_case(), RunConfig, _commit_exists(), Return file contents at a given commit, or None if the file doesn't exist., _show_file(), test_build_flagship_case()
+Cohesion: 0.19
+Nodes (19): list_saved_runs(), Persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path., Return saved run files, newest first: ``{"name", "path"}`` per run., report_to_json(), save_report(), _make_report(), Build a fake ComparisonReport with deterministic scores., _report() (+11 more)
+
+### Community 30 - "Community 30"
+Cohesion: 0.16
+Nodes (15): Batch (10 cases) view: run all sample cases and show aggregate viz., Render aggregate visualisations for a completed batch., _render_batch_results(), _run_batch_mode(), arm_color_list(), batch_per_case_totals(), batch_win_summary(), Serialise a ComparisonReport to pretty-printed JSON.      StrEnum members serial (+7 more)
+
+### Community 31 - "Community 31"
+Cohesion: 0.20
+Nodes (14): criterion_gap_rows(), criterion_winners(), load_report(), ComparisonReport, Reporting helpers and Phoenix initialisation for the skill-eval dashboard.  Pure, Return one row per Criterion with the per-criterion winner and margin.      Each, Serialise a batch of ComparisonReports to one JSON array., Reconstruct a ComparisonReport (with real dataclasses/enums) from JSON.      Tol (+6 more)
+
+### Community 32 - "Community 32"
+Cohesion: 0.29
+Nodes (7): batch_criterion_gap_rows(), batch_per_criterion_avg(), Return one row per Criterion with average baseline and challenger scores.      A, Return per-Criterion average baseline, challenger, and gap across a batch., test_batch_criterion_gap_rows(), test_batch_per_criterion_avg_shape(), test_batch_per_criterion_avg_values_are_rounded()
+
+### Community 33 - "Community 33"
+Cohesion: 0.29
+Nodes (7): batch_score_distribution(), Return long-form rows for per-criterion, per-arm score distributions.      Each, len(reports) * 12 rows (2 arms × 6 criteria per report)., Every row has criterion, arm, and score keys., test_batch_score_distribution_empty(), test_batch_score_distribution_row_count(), test_batch_score_distribution_schema()
+
+### Community 34 - "Community 34"
+Cohesion: 0.33
+Nodes (6): log_judge_evaluations(), Log per-judge scores to Phoenix as span evaluations.      Parameters     -------, Should return False (or at minimum not raise) when no Phoenix is running., Empty records: no crash, returns False., test_log_judge_evaluations_best_effort_no_phoenix(), test_log_judge_evaluations_empty()
 
 ## Knowledge Gaps
-- **104 isolated node(s):** `PreToolUse`, `CalledProcessError`, `HookContext`, `InMemorySpanExporter`, `graphify` (+99 more)
+- **105 isolated node(s):** `PreToolUse`, `CalledProcessError`, `HookContext`, `InMemorySpanExporter`, `graphify` (+100 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `RunConfig` connect `Community 2` to `Community 1`, `Community 4`, `Community 11`, `Community 19`, `Community 20`, `Community 29`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+- **Why does `RunConfig` connect `Community 2` to `Community 1`, `Community 11`, `Community 16`, `Community 19`, `Community 20`, `Community 29`, `Community 31`?**
+  _High betweenness centrality (0.084) - this node is a cross-community bridge._
 - **Why does `run_taker()` connect `Community 11` to `Community 1`, `Community 2`, `Community 19`, `Community 4`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
-- **Why does `Arm` connect `Community 2` to `Community 1`, `Community 4`, `Community 19`, `Community 20`, `Community 21`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **Are the 40 inferred relationships involving `RunConfig` (e.g. with `Arm` and `ResultMessage`) actually correct?**
-  _`RunConfig` has 40 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 30 inferred relationships involving `Workspace` (e.g. with `Arm` and `ResultMessage`) actually correct?**
-  _`Workspace` has 30 INFERRED edges - model-reasoned connections that need verification._
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `RunMetrics` connect `Community 2` to `Community 11`, `Community 19`, `Community 21`, `Community 29`, `Community 31`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Are the 41 inferred relationships involving `RunConfig` (e.g. with `Arm` and `ResultMessage`) actually correct?**
+  _`RunConfig` has 41 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 27 inferred relationships involving `TakerResult` (e.g. with `ResultMessage` and `RunMetrics`) actually correct?**
   _`TakerResult` has 27 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 30 inferred relationships involving `Workspace` (e.g. with `Arm` and `ResultMessage`) actually correct?**
+  _`Workspace` has 30 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 24 inferred relationships involving `Arm` (e.g. with `Arm` and `Send`) actually correct?**
   _`Arm` has 24 INFERRED edges - model-reasoned connections that need verification._

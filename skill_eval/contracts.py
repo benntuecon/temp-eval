@@ -57,6 +57,8 @@ class RunConfig:
     max_tokens: int | None = None  # optional hard token cap
     wall_clock_seconds: int | None = None  # real elapsed-time cap
     thinking_budget: int | None = None  # token budget for extended thinking (None = disabled)
+    judge_model: str | None = None  # decouple judge from taker model (None = taker model)
+    judges_per_criterion: int = 1  # k replicate judges per (arm, criterion); median wins
 
 
 # ---------- Sandbox (Component 1) ----------
@@ -105,6 +107,7 @@ class TakerResult:
     questions: tuple[str, ...]  # clarifying questions the taker asked
     stop_reason: StopReason
     metrics: RunMetrics
+    qa: tuple[tuple[str, str], ...] = ()  # (question, simulator answer) pairs
 
 
 # ---------- HITL Simulator (Component 3) ----------
@@ -153,6 +156,7 @@ class ArmReport:
     questions: tuple[str, ...] = ()  # clarifying questions the arm's taker asked
     diff: str = ""  # the patch the taker actually produced
     stop_reason: str = ""  # StopReason value of the taker run
+    qa: tuple[tuple[str, str], ...] = ()  # (question, simulator answer) pairs
 
 
 @dataclass

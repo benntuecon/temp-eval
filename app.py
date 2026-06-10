@@ -41,6 +41,18 @@ def _slug(name: str, fallback: str) -> str:
     return s or fallback
 
 
+def _runs_dir() -> str:
+    """Directory where completed runs are archived as JSON.
+
+    Defaults to the project-local ``runs/``; override with the
+    ``SKILL_EVAL_RUNS_DIR`` env var (tests point it at a tmp dir).
+    """
+    import os
+    from pathlib import Path
+
+    return os.environ.get("SKILL_EVAL_RUNS_DIR") or str(Path(__file__).resolve().parent / "runs")
+
+
 # ---------------------------------------------------------------------------
 # Main dashboard logic
 # ---------------------------------------------------------------------------
@@ -83,7 +95,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     mode = st.radio(
         "Mode",
-        ["Single case", "Batch (10 cases)", "Flagship", "Custom"],
+        ["Single case", "Batch (10 cases)", "Flagship", "Custom", "History"],
         horizontal=True,
     )
 
@@ -96,6 +108,9 @@ def main() -> None:
         elif mode == "Custom":
             st.info("Custom mode: paste your own skills below — settings are in the form.")
             use_real = False  # custom mode has its own toggle in the form
+        elif mode == "History":
+            st.info("Browse and compare saved runs — no API calls.")
+            use_real = False
         elif mode == "Batch (10 cases)":
             use_real = st.checkbox(
                 "Use real Haiku agents (Phase B — Batch of 10 ≈ $1.5–2 with real agents)",
@@ -103,7 +118,7 @@ def main() -> None:
             )
         else:
             use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
-        if mode not in ("Flagship", "Custom"):
+        if mode not in ("Flagship", "Custom", "History"):
             if use_real:
                 st.warning("Real API calls — costs money!")
             else:
@@ -173,6 +188,14 @@ def main() -> None:
             sim_make_simulator=sim_make_simulator,
             sim_run_judge=sim_run_judge,
             sim_run_taker=sim_run_taker,
+        )
+
+    elif mode == "History":
+        _run_history_mode(
+            st=st,
+            pd=pd,
+            verdict_line=verdict_line,
+            agent_graph_dot=agent_graph_dot,
         )
 
     else:
@@ -541,11 +564,17 @@ def _run_single_case(
         spinner_text.success("Eval complete!")
         _refresh()
 
-        # Persist so results survive any widget interaction (rerun).
+        # Persist so results survive any widget interaction (rerun) …
         st.session_state[f"report::{state_key}"] = {
             "report": report,
             "events": list(all_events),
         }
+        # … and archive to disk so the run shows up in History mode.
+        from skill_eval.reporting import save_report
+
+        saved_path = save_report(report, _runs_dir(), label=state_key)
+        if saved_path:
+            st.caption(f"Run archived: `{saved_path}` (browse it in **History** mode)")
 
     # ------------------------------------------------------------------
     # Results — rendered OUTSIDE the button branch from session_state so
@@ -804,29 +833,30 @@ def _render_single_results(
     # ------------------------------------------------------------------
     # Clarifying questions side-by-side
     # ------------------------------------------------------------------
-    st.subheader("Clarifying questions asked")
+    st.subheader("Clarifying questions & stakeholder answers")
     st.caption(
-        "What each skill made the agent ask — the concrete signal of capability."
-        " Full reasoning trajectory in Phoenix."
+        "What each skill made the agent ask — and what the (simulated) stakeholder"
+        " answered. The concrete signal of capability; full trajectory in Phoenix."
     )
 
-    col_q_base, col_q_chal = st.columns(2)
+    def _render_qa(ar) -> None:  # noqa: ANN001
+        if ar is None or not (ar.qa or ar.questions):
+            st.markdown("*(no clarifying questions asked)*")
+            return
+        if ar.qa:
+            for i, (q, a) in enumerate(ar.qa):
+                st.markdown(f"{i + 1}. **{q}**")
+                st.markdown(f"   > {a}")
+        else:  # older reports: questions only
+            st.markdown("\n".join(f"{i + 1}. {q}" for i, q in enumerate(ar.questions)))
 
+    col_q_base, col_q_chal = st.columns(2)
     with col_q_base:
         st.markdown("**Baseline**")
-        if baseline_ar is None or not baseline_ar.questions:
-            st.markdown("*(no clarifying questions asked)*")
-        else:
-            q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(baseline_ar.questions))
-            st.markdown(q_lines)
-
+        _render_qa(baseline_ar)
     with col_q_chal:
         st.markdown("**Challenger**")
-        if challenger_ar is None or not challenger_ar.questions:
-            st.markdown("*(no clarifying questions asked)*")
-        else:
-            q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(challenger_ar.questions))
-            st.markdown(q_lines)
+        _render_qa(challenger_ar)
 
     # ------------------------------------------------------------------
     # Export + post-mortem details
@@ -973,6 +1003,22 @@ def _run_custom_mode(
         thinking_budget = col2.number_input(
             "thinking budget (0 = off)", min_value=0, max_value=32000, value=2048, step=512
         )
+        col_j1, col_j2 = st.columns(2)
+        judge_model = col_j1.selectbox(
+            "Judge model",
+            ["claude-haiku-4-5", "claude-sonnet-4-6"],
+            help=(
+                "Decoupling the judge from the taker model reduces same-family"
+                " self-preference bias. Sonnet judges cost more but grade better."
+            ),
+        )
+        judges_k = col_j2.number_input(
+            "Judges per criterion (k)",
+            min_value=1,
+            max_value=5,
+            value=1,
+            help="k replicate judges per criterion; the median wins and the spread is recorded.",
+        )
         real_agents = col3.toggle(
             "Real Haiku agents (~$0.40)",
             value=True,
@@ -1005,6 +1051,8 @@ def _run_custom_mode(
         _c_slug = f"{_c_slug}-challenger"
     _max_turns = int(max_turns)
     _thinking = int(thinking_budget) or None
+    _judge_model = str(judge_model)
+    _judges_k = int(judges_k)
 
     _base_builder = build_flagship_case if task_choice.startswith("Flagship") else build_sample_repo
 
@@ -1025,6 +1073,8 @@ def _run_custom_mode(
             challenger_skill_path=str(c_dir),
             max_turns=_max_turns,
             thinking_budget=_thinking,
+            judge_model=_judge_model,
+            judges_per_criterion=_judges_k,
         )
 
     _run_single_case(
@@ -1045,6 +1095,109 @@ def _run_custom_mode(
         agent_graph_dot=agent_graph_dot,
         state_key="custom",
         trigger=bool(submitted and not errors),
+    )
+
+
+def _run_history_mode(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    verdict_line,  # type: ignore[type-arg]
+    agent_graph_dot,  # type: ignore[type-arg]
+) -> None:
+    """History mode: browse archived runs and diff two of them (run-over-run).
+
+    The promptfoo "Eval Actions → Compare" / Langfuse baseline-compare pattern:
+    pick a candidate run, optionally pick an earlier baseline run, and read
+    green/red per-criterion deltas — the view that answers "did my skill edit
+    actually help?".
+    """
+    from skill_eval.reporting import list_saved_runs, load_report, run_delta_rows
+
+    st.caption(
+        "Every completed Single/Flagship/Custom run is archived to `runs/` as JSON."
+        " Pick one to re-read it, or compare two to see what a skill edit changed."
+    )
+
+    runs = list_saved_runs(_runs_dir())
+    if not runs:
+        st.info("No saved runs yet — finish a Single, Flagship, or Custom run first.")
+        return
+
+    names = [r["name"] for r in runs]
+    paths = {r["name"]: r["path"] for r in runs}
+
+    sel = st.selectbox("Run to view (B — candidate)", names)
+    try:
+        report_b = load_report(paths[sel])
+    except Exception as exc:  # noqa: BLE001
+        st.error(f"Could not load run: {exc}")
+        return
+
+    # --- Run-over-run compare (optional) ---
+    others = [n for n in names if n != sel]
+    if others:
+        with st.expander("Compare against an earlier run (A — baseline run)"):
+            sel_a = st.selectbox("Baseline run (A)", others)
+            try:
+                report_a = load_report(paths[sel_a])
+            except Exception as exc:  # noqa: BLE001
+                st.error(f"Could not load baseline run: {exc}")
+                report_a = None
+            if report_a is not None:
+                # Headline: total score movement per arm (B − A)
+                totals_a = {ar.arm.value: ar.total_score for ar in report_a.arms}
+                totals_b = {ar.arm.value: ar.total_score for ar in report_b.arms}
+                col_b_, col_c_ = st.columns(2)
+                for arm_name, col in (("baseline", col_b_), ("challenger", col_c_)):
+                    col.metric(
+                        f"{arm_name} total (B)",
+                        f"{totals_b.get(arm_name, 0)}/120",
+                        delta=totals_b.get(arm_name, 0) - totals_a.get(arm_name, 0),
+                    )
+
+                rows = run_delta_rows(report_a, report_b)
+                df_long = pd.DataFrame(rows)
+                wide = df_long.pivot(index="criterion", columns="arm")
+                # columns become (run_a|run_b|delta, arm); flatten for display
+                wide.columns = [f"{arm} {col}" for col, arm in wide.columns]
+                ordered = [
+                    c
+                    for c in (
+                        "baseline run_a",
+                        "baseline run_b",
+                        "baseline delta",
+                        "challenger run_a",
+                        "challenger run_b",
+                        "challenger delta",
+                    )
+                    if c in wide.columns
+                ]
+                wide = wide[ordered].rename(
+                    columns=lambda c: (
+                        c.replace("run_a", "A").replace("run_b", "B").replace("delta", "Δ")
+                    )
+                )
+
+                def _delta_style(v) -> str:  # noqa: ANN001
+                    if v > 0:
+                        return "color: #2e7d32; font-weight: bold"
+                    if v < 0:
+                        return "color: #c62828; font-weight: bold"
+                    return "color: #777777"
+
+                delta_cols = [c for c in wide.columns if c.endswith("Δ")]
+                st.dataframe(wide.style.map(_delta_style, subset=delta_cols), width="stretch")
+
+    # --- Full results funnel for the selected run ---
+    _render_single_results(
+        st=st,
+        pd=pd,
+        report=report_b,
+        events=[],
+        verdict_line=verdict_line,
+        agent_graph_dot=agent_graph_dot,
+        state_key="history",
     )
 
 
@@ -1224,9 +1377,59 @@ def _render_batch_results(
         range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
     )
 
+    # 1b. Head-to-head scatter (promptfoo pattern): one dot per case,
+    #     plotted baseline-total vs challenger-total against the y=x tie line.
+    st.subheader("Head-to-head per case")
+    st.caption(
+        "Each dot is one case. Above the dashed diagonal = challenger won;"
+        " distance from the diagonal = margin."
+    )
+    per_case = batch_per_case_totals(reports)
+    df_h2h = pd.DataFrame(per_case)
+    if not df_h2h.empty:
+        df_h2h["winner"] = df_h2h.apply(
+            lambda r: (
+                "challenger"
+                if r["challenger"] > r["baseline"]
+                else ("baseline" if r["baseline"] > r["challenger"] else "tie")
+            ),
+            axis=1,
+        )
+        diag = (
+            alt.Chart(pd.DataFrame({"t": [0, 120]}))
+            .mark_line(color="#bbbbbb", strokeDash=[4, 4])
+            .encode(x="t:Q", y="t:Q")
+        )
+        h2h_points = (
+            alt.Chart(df_h2h)
+            .mark_circle(size=160, opacity=0.85)
+            .encode(
+                x=alt.X(
+                    "baseline:Q",
+                    title="Baseline total (0–120)",
+                    scale=alt.Scale(domain=[0, 120]),
+                ),
+                y=alt.Y(
+                    "challenger:Q",
+                    title="Challenger total (0–120)",
+                    scale=alt.Scale(domain=[0, 120]),
+                ),
+                color=alt.Color(
+                    "winner:N",
+                    title="Winner",
+                    scale=alt.Scale(
+                        domain=["baseline", "challenger", "tie"],
+                        range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"], "#999999"],
+                    ),
+                ),
+                tooltip=["case:N", "baseline:Q", "challenger:Q", "winner:N"],
+            )
+            .properties(height=350)
+        )
+        st.altair_chart(diag + h2h_points, width="stretch")
+
     # 2. Per-case totals bar chart
     st.subheader("Per-case total scores")
-    per_case = batch_per_case_totals(reports)
     df_cases = pd.DataFrame(per_case).set_index("case")
     st.bar_chart(
         df_cases[["baseline", "challenger"]],

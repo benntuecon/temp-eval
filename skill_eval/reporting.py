@@ -174,6 +174,148 @@ def reports_to_json(reports: list[ComparisonReport]) -> str:
     return json.dumps([asdict(r) for r in reports], indent=2, default=str)
 
 
+def report_from_json(text: str) -> ComparisonReport:
+    """Reconstruct a ComparisonReport (with real dataclasses/enums) from JSON.
+
+    Tolerant of schema drift: unknown keys in the payload are dropped, missing
+    optional fields fall back to their dataclass defaults.
+    """
+    import json
+    from dataclasses import fields
+
+    from skill_eval.contracts import (
+        Arm,
+        ArmReport,
+        ComparisonReport,
+        Criterion,
+        JudgeScore,
+        RunConfig,
+        RunMetrics,
+    )
+
+    def _known(cls: type, d: dict) -> dict:
+        names = {f.name for f in fields(cls)}
+        return {k: v for k, v in d.items() if k in names}
+
+    data = json.loads(text)
+
+    cfg_d = _known(RunConfig, dict(data.get("config", {})))
+    cfg_d["models"] = tuple(cfg_d.get("models", ()))
+    cfg = RunConfig(**cfg_d)
+
+    arms: list[ArmReport] = []
+    for a in data.get("arms", []):
+        metrics = RunMetrics(**_known(RunMetrics, dict(a.get("metrics", {}))))
+        scores = [
+            JudgeScore(
+                criterion=Criterion(s["criterion"]),
+                score=int(s["score"]),
+                rationale=str(s.get("rationale", "")),
+            )
+            for s in a.get("scores", [])
+        ]
+        arms.append(
+            ArmReport(
+                arm=Arm(a["arm"]),
+                model=str(a.get("model", "")),
+                metrics=metrics,
+                scores=scores,
+                total_score=int(a.get("total_score", 0)),
+                questions=tuple(a.get("questions", ())),
+                diff=str(a.get("diff", "")),
+                stop_reason=str(a.get("stop_reason", "")),
+                qa=tuple((str(q), str(ans)) for q, ans in a.get("qa", ())),
+            )
+        )
+
+    return ComparisonReport(
+        config=cfg,
+        arms=arms,
+        pairwise_verdict=str(data.get("pairwise_verdict", "")),
+        gold_diff=str(data.get("gold_diff", "")),
+        session_id=str(data.get("session_id", "")),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Run history on disk (promptfoo `list` / Langfuse experiments-table analog)
+# ---------------------------------------------------------------------------
+
+
+def save_report(report: ComparisonReport, runs_dir: str, label: str = "run") -> str:
+    """Persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path.
+
+    Best-effort archival: any failure returns "" rather than raising, so a
+    full disk or read-only checkout never breaks the dashboard.
+    """
+    try:
+        import uuid
+        from datetime import datetime
+        from pathlib import Path
+
+        d = Path(runs_dir)
+        d.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now().strftime("%Y%m%d-%H%M%S")
+        path = d / f"{ts}_{label}_{uuid.uuid4().hex[:6]}.json"
+        path.write_text(report_to_json(report))
+        return str(path)
+    except Exception:
+        return ""
+
+
+def list_saved_runs(runs_dir: str) -> list[dict]:
+    """Return saved run files, newest first: ``{"name", "path"}`` per run."""
+    from pathlib import Path
+
+    d = Path(runs_dir)
+    if not d.is_dir():
+        return []
+    files = sorted(d.glob("*.json"), key=lambda p: p.name, reverse=True)
+    return [{"name": p.stem, "path": str(p)} for p in files]
+
+
+def load_report(path: str) -> ComparisonReport:
+    """Load one saved run back into a ComparisonReport."""
+    from pathlib import Path
+
+    return report_from_json(Path(path).read_text())
+
+
+def run_delta_rows(report_a: ComparisonReport, report_b: ComparisonReport) -> list[dict]:
+    """Per-(criterion, arm) score deltas between two runs (B − A).
+
+    The Langfuse compare-view pattern: run A is the baseline run, run B the
+    candidate; positive delta means B improved on A. Long-form rows
+    ``{"criterion", "arm", "run_a", "run_b", "delta"}``, Criterion order, arms
+    baseline-then-challenger within each criterion.
+    """
+    from skill_eval.contracts import Arm, Criterion
+
+    def _score_map(report: ComparisonReport) -> dict[tuple[str, str], int]:
+        out: dict[tuple[str, str], int] = {}
+        for ar in report.arms:
+            for s in ar.scores:
+                out[(ar.arm.value, s.criterion.value)] = s.score
+        return out
+
+    a_map, b_map = _score_map(report_a), _score_map(report_b)
+    rows = []
+    for criterion in Criterion:
+        for arm in Arm:
+            key = (arm.value, criterion.value)
+            a, b = a_map.get(key, 0), b_map.get(key, 0)
+            rows.append(
+                {
+                    "criterion": criterion.value,
+                    "arm": arm.value,
+                    "run_a": a,
+                    "run_b": b,
+                    "delta": b - a,
+                }
+            )
+    return rows
+
+
 # ---------------------------------------------------------------------------
 # Batch aggregation helpers
 # ---------------------------------------------------------------------------
