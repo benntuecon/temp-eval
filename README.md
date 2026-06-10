@@ -47,17 +47,24 @@ just app                      # dashboard at localhost:8501 (auto-starts Phoenix
 
 In the dashboard pick a **Mode**:
 - **Single case** — watch one eval run live (simulated = free, or toggle real Haiku).
-- **Batch (10 cases)** — 10 tasks at once: win summary, per-case + per-criterion bars, score-distribution boxplots.
+- **Batch (10 cases)** — 10 tasks at once: win summary, per-case bars, gap dumbbells, raw score distributions.
 - **Flagship** — the disciplined-vs-ship-it-fast comparison above, with real agents.
+- **Custom** — bring your own skills: paste two `SKILL.md` bodies, pick a task fixture, set `max_turns`/thinking budget, and race them.
+
+Results persist across reruns (stored in session state) and every report is downloadable as JSON.
 
 ## Visualizations
-- **Live agent graph** — the eval fan-out as a Graphviz DAG, nodes lighting grey→gold→green.
-- **Control room** — per-arm panels, a 12-tile judges grid, headline delta metrics.
+
+The results page follows the **aggregate → matrix → drill-down funnel** used by the two most credible OSS eval UIs (promptfoo 22k★, Langfuse 28k★):
+
+- **Live agent graph** — the eval fan-out as a left-to-right Graphviz DAG, nodes lighting grey→gold→green; per-arm clusters with junction nodes so the 12-judge fan-in reads as 2 clean edges.
+- **Control room** — per-arm panels (stop reason, questions, turns, wall time), a 12-tile judges grid, headline delta metrics.
 - **Comparison dataviz** (best-practice, one colour per arm everywhere):
-  - **Grouped 0–20 bars** per criterion.
-  - **Dumbbell / gap chart** — connects each arm's score per criterion, sorted by the gap, so the *difference* is the primary visual (the canonical way to compare two series across many dimensions).
+  - **Dumbbell / gap chart** — connects each arm's score per criterion, sorted by the gap, so the *difference* is the primary visual.
+  - **Score matrix + judge rationales** — exact scores with green/red Δ, then an expander per criterion showing *why* each judge scored each arm (rationale as a first-class field, the promptfoo `llm-rubric` pattern).
   - **Quality-vs-cost scatter** — total score against total tokens, answering "is the better skill worth what it costs?".
-  - Batch adds per-criterion gap dumbbells and score-distribution boxplots.
+  - **Evidence panels** — the actual diff each taker produced, the gold reference diff, and the clarifying questions, side by side.
+  - Batch adds per-criterion gap dumbbells and **raw jittered score distributions** with mean ticks (boxplots mislead at n≈10 with discrete rubric scores).
 - **Phoenix** (`localhost:6006`) — deep per-agent traces, all grouped into **one Session** per run:
   - **Taker** (AGENT): tool timeline (Read/Edit/Bash/ask_question), thinking trajectory, an LLM `model` child span carrying real prompt/completion/cache token counts, and metadata (skill, stop_reason, thinking budget).
   - **HITL simulator** (LLM): every stakeholder answer captured as its own span — model, tokens, and the structured system/user/assistant messages it saw.
@@ -67,7 +74,7 @@ In the dashboard pick a **Mode**:
 ## Dev
 
 ```bash
-just check        # ruff format + lint + mypy + pytest  (92 tests, no network)
+just check        # ruff format + lint + mypy + pytest  (97 tests incl. headless AppTest UI tests, no network)
 just test-live    # the one real end-to-end smoke test (needs API + credits)
 just phoenix      # standalone Phoenix (just app auto-starts it otherwise)
 just graph        # refresh the graphify code knowledge graph

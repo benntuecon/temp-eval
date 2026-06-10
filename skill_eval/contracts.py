@@ -151,6 +151,8 @@ class ArmReport:
     scores: list[JudgeScore]
     total_score: int  # sum of criterion scores (or weighted)
     questions: tuple[str, ...] = ()  # clarifying questions the arm's taker asked
+    diff: str = ""  # the patch the taker actually produced
+    stop_reason: str = ""  # StopReason value of the taker run
 
 
 @dataclass
@@ -160,6 +162,8 @@ class ComparisonReport:
     config: RunConfig
     arms: list[ArmReport]  # baseline + challenger, per model
     pairwise_verdict: str  # which is better and why
+    gold_diff: str = ""  # the reference before..after diff (same for both arms)
+    session_id: str = ""  # Phoenix session id grouping every span of this run
 
 
 # ---------- Orchestrator injection points (Phase A walking skeleton) ----------

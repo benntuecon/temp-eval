@@ -20,6 +20,8 @@ from skill_eval.reporting import (
     criterion_winners,
     log_judge_evaluations,
     quality_cost_rows,
+    report_to_json,
+    reports_to_json,
     scores_table,
     verdict_line,
 )
@@ -43,6 +45,26 @@ def _make_report(
 
 def _report():
     return _make_report(8, 12)
+
+
+def test_report_to_json_round_trips():
+    import json
+
+    payload = json.loads(report_to_json(_report()))
+    assert payload["pairwise_verdict"] == "verdict"
+    assert {a["arm"] for a in payload["arms"]} == {"baseline", "challenger"}
+    # nested dataclasses serialise: scores carry criterion/score/rationale
+    first_score = payload["arms"][0]["scores"][0]
+    assert set(first_score) == {"criterion", "score", "rationale"}
+    # new ArmReport fields present with defaults
+    assert "diff" in payload["arms"][0] and "stop_reason" in payload["arms"][0]
+
+
+def test_reports_to_json_is_array():
+    import json
+
+    payload = json.loads(reports_to_json([_report(), _make_report(15, 8)]))
+    assert isinstance(payload, list) and len(payload) == 2
 
 
 def test_scores_table_shape():
@@ -228,7 +250,16 @@ def test_agent_graph_dot():
     assert "17/20" in dot
 
     # Must contain the green fill color for at least one done node
-    assert "#a5d6a7" in dot
+    assert "#81C784" in dot
+
+    # Left-to-right layout: wide, not tall
+    assert "rankdir=LR" in dot
+
+    # Fan-in junctions: judges merge into one point per arm, then -> assemble,
+    # so assemble receives 2 edges instead of 12.
+    assert "j_baseline -> assemble" in dot
+    assert "j_challenger -> assemble" in dot
+    assert dot.count("-> assemble") == 2
 
 
 # ---------------------------------------------------------------------------

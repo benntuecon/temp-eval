@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1780986681.514858,
-    "ast_hash": "a6bd16e9b7cc215e06e616d1b7343873",
+    "mtime": 1781077424.444276,
+    "ast_hash": "f948f0d24120fac35ae16b776cbd6e51",
     "semantic_hash": ""
   },
   "skill_eval/__init__.py": {
@@ -15,18 +15,18 @@
     "semantic_hash": ""
   },
   "skill_eval/contracts.py": {
-    "mtime": 1780980976.6887693,
-    "ast_hash": "b3f20e59ac5660b31328ab2699277ec9",
+    "mtime": 1781076850.0474894,
+    "ast_hash": "a42b2a69de6fd51a9702b1303eb3167c",
     "semantic_hash": ""
   },
   "skill_eval/orchestrator.py": {
-    "mtime": 1780987111.5828056,
-    "ast_hash": "cc5a29cd707ea2e11dce3dcdb0ed2fea",
+    "mtime": 1781076879.0648673,
+    "ast_hash": "d56833ad4e6c25bac09a245f29686932",
     "semantic_hash": ""
   },
   "skill_eval/reporting.py": {
-    "mtime": 1780986759.591658,
-    "ast_hash": "d341bdffe06432447ac10a1d7e7e4d3b",
+    "mtime": 1781076915.1100557,
+    "ast_hash": "5aa6c4ab06e0417aa116ceb31fe650a8",
     "semantic_hash": ""
   },
   "skill_eval/sample_repo.py": {
@@ -60,13 +60,13 @@
     "semantic_hash": ""
   },
   "tests/test_orchestrator.py": {
-    "mtime": 1780980976.6909175,
-    "ast_hash": "8f57a5781c1e3845ac0cc82b9f22e2bc",
+    "mtime": 1781076367.418451,
+    "ast_hash": "7a152a51b8adc78588ec08d9e5662fa4",
     "semantic_hash": ""
   },
   "tests/test_reporting.py": {
-    "mtime": 1780986724.2434697,
-    "ast_hash": "75d9ea4df2435d81cf041e8a16f6d91f",
+    "mtime": 1781076924.1868238,
+    "ast_hash": "8e902eb4fcffe19af4c9fdb468ddebba",
     "semantic_hash": ""
   },
   "tests/test_sample_repo.py": {
@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1780976258.7122016,
-    "ast_hash": "2a1daa7e6b5dd89ee2b3a5dd6d719bb3",
+    "mtime": 1781077574.1739469,
+    "ast_hash": "0a44a6bee09daa46da3463749a055eb6",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-06-foundation.md": {
@@ -160,8 +160,8 @@
     "semantic_hash": ""
   },
   "skill_eval/taker.py": {
-    "mtime": 1780986529.4147584,
-    "ast_hash": "9fc6e8604f53fcd8db2368b3e7841059",
+    "mtime": 1781076841.1854613,
+    "ast_hash": "4ea173caf0fd328040c832b4702d9305",
     "semantic_hash": ""
   },
   "skill_eval/tracing.py": {
@@ -247,6 +247,11 @@
   "flagship/skills/ship-it-fast/SKILL.md": {
     "mtime": 1780975281.948587,
     "ast_hash": "0e369bc497cccbd9d7712b949dcbc01e",
+    "semantic_hash": ""
+  },
+  "tests/test_app.py": {
+    "mtime": 1781077471.9243116,
+    "ast_hash": "e3973e74eb07c6d5bceac43a64a4413f",
     "semantic_hash": ""
   }
 }

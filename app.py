@@ -1,4 +1,4 @@
-"""Streamlit dashboard for the skill-eval Phase A walking skeleton.
+"""Streamlit dashboard for the skill-eval harness.
 
 Run with:
     uv run streamlit run app.py
@@ -7,6 +7,13 @@ The module can be imported without side-effects (no Streamlit calls,
 no Phoenix launch, no eval run happen at import time).  All live logic
 lives inside ``main()``, which Streamlit calls automatically when it
 executes the script.
+
+Layout principles (after a promptfoo / Langfuse comparison-UI review):
+- **Funnel**: aggregate delta metrics → per-criterion score matrix with
+  green/red Δ → drill-down (judge rationales, taker diffs, Phoenix traces).
+- **Persistence**: finished reports live in ``st.session_state`` and render
+  OUTSIDE the run-button branch, so results survive widget interactions.
+- **Encoding**: one colour per arm everywhere; grouped, never stacked.
 """
 
 from __future__ import annotations
@@ -24,6 +31,14 @@ def _is_streamlit() -> bool:
         return get_script_run_ctx() is not None
     except Exception:
         return False
+
+
+def _slug(name: str, fallback: str) -> str:
+    """Slugify a user-supplied skill name into a safe directory name."""
+    import re
+
+    s = re.sub(r"[^a-z0-9-]+", "-", name.lower()).strip("-")
+    return s or fallback
 
 
 # ---------------------------------------------------------------------------
@@ -44,11 +59,9 @@ def main() -> None:
     from skill_eval.reporting import (
         agent_graph_dot,
         batch_per_case_totals,
-        batch_per_criterion_avg,
         batch_score_distribution,
         batch_win_summary,
         init_phoenix,
-        scores_table,
         verdict_line,
     )
     from skill_eval.sample_repo import build_sample_repo
@@ -58,17 +71,21 @@ def main() -> None:
     # Page config
     # ------------------------------------------------------------------
     st.set_page_config(
-        page_title="Skill Eval — Phase A",
+        page_title="Skill Eval",
         page_icon="⚖️",
         layout="wide",
     )
 
-    st.title("Skill Eval — Phase A Live Race")
+    st.title("Skill Eval — Live Race")
 
     # ------------------------------------------------------------------
     # Mode selector
     # ------------------------------------------------------------------
-    mode = st.radio("Mode", ["Single case", "Batch (10 cases)", "Flagship"], horizontal=True)
+    mode = st.radio(
+        "Mode",
+        ["Single case", "Batch (10 cases)", "Flagship", "Custom"],
+        horizontal=True,
+    )
 
     # Sidebar
     with st.sidebar:
@@ -76,6 +93,9 @@ def main() -> None:
         if mode == "Flagship":
             st.info("Flagship always uses real Haiku agents.")
             use_real = False  # sidebar toggle unused in Flagship mode
+        elif mode == "Custom":
+            st.info("Custom mode: paste your own skills below — settings are in the form.")
+            use_real = False  # custom mode has its own toggle in the form
         elif mode == "Batch (10 cases)":
             use_real = st.checkbox(
                 "Use real Haiku agents (Phase B — Batch of 10 ≈ $1.5–2 with real agents)",
@@ -83,7 +103,7 @@ def main() -> None:
             )
         else:
             use_real = st.checkbox("Use real Haiku agents (Phase B — ~$0.10-0.20/run)", value=False)
-        if mode != "Flagship":
+        if mode not in ("Flagship", "Custom"):
             if use_real:
                 st.warning("Real API calls — costs money!")
             else:
@@ -92,7 +112,8 @@ def main() -> None:
 
         # Phoenix link (cached in session so we don't relaunch on every rerun)
         if "phoenix_url" not in st.session_state:
-            st.session_state["phoenix_url"] = init_phoenix()
+            with st.spinner("Connecting to Phoenix…"):
+                st.session_state["phoenix_url"] = init_phoenix()
         phoenix_url = st.session_state["phoenix_url"]
         if phoenix_url:
             st.markdown(f"[Open Phoenix traces]({phoenix_url})")
@@ -100,7 +121,7 @@ def main() -> None:
             st.caption("Phoenix not running — start it with `just phoenix`, then rerun.")
 
     # ------------------------------------------------------------------
-    # Single case mode
+    # Mode dispatch
     # ------------------------------------------------------------------
     if mode == "Single case":
         _run_single_case(
@@ -112,7 +133,6 @@ def main() -> None:
             threading=threading,
             use_real=use_real,
             run_eval=run_eval,
-            scores_table=scores_table,
             verdict_line=verdict_line,
             build_cfg=build_sample_repo,
             force_real=False,
@@ -120,11 +140,9 @@ def main() -> None:
             sim_run_judge=sim_run_judge,
             sim_run_taker=sim_run_taker,
             agent_graph_dot=agent_graph_dot,
+            state_key="single",
         )
 
-    # ------------------------------------------------------------------
-    # Flagship mode
-    # ------------------------------------------------------------------
     elif mode == "Flagship":
         _run_flagship_mode(
             st=st,
@@ -134,7 +152,6 @@ def main() -> None:
             tempfile=tempfile,
             threading=threading,
             run_eval=run_eval,
-            scores_table=scores_table,
             verdict_line=verdict_line,
             agent_graph_dot=agent_graph_dot,
             sim_make_simulator=sim_make_simulator,
@@ -142,20 +159,33 @@ def main() -> None:
             sim_run_taker=sim_run_taker,
         )
 
-    # ------------------------------------------------------------------
-    # Batch (10 cases) mode
-    # ------------------------------------------------------------------
+    elif mode == "Custom":
+        _run_custom_mode(
+            st=st,
+            pd=pd,
+            queue=queue,
+            shutil=shutil,
+            tempfile=tempfile,
+            threading=threading,
+            run_eval=run_eval,
+            verdict_line=verdict_line,
+            agent_graph_dot=agent_graph_dot,
+            sim_make_simulator=sim_make_simulator,
+            sim_run_judge=sim_run_judge,
+            sim_run_taker=sim_run_taker,
+        )
+
     else:
         _run_batch_mode(
             st=st,
             pd=pd,
             queue=queue,
+            shutil=shutil,
             tempfile=tempfile,
             threading=threading,
             use_real=use_real,
             batch_win_summary=batch_win_summary,
             batch_per_case_totals=batch_per_case_totals,
-            batch_per_criterion_avg=batch_per_criterion_avg,
             batch_score_distribution=batch_score_distribution,
             sim_make_simulator=sim_make_simulator,
             sim_run_judge=sim_run_judge,
@@ -173,7 +203,6 @@ def _run_single_case(
     threading,  # type: ignore[type-arg]
     use_real: bool,
     run_eval,  # type: ignore[type-arg]
-    scores_table,  # type: ignore[type-arg]
     verdict_line,  # type: ignore[type-arg]
     build_cfg=None,  # type: ignore[type-arg]  callable(base_dir) -> RunConfig
     force_real: bool = False,
@@ -182,6 +211,8 @@ def _run_single_case(
     sim_run_taker,  # type: ignore[type-arg]
     agent_graph_dot,  # type: ignore[type-arg]
     button_label: str = "Run eval",
+    state_key: str = "single",
+    trigger: bool | None = None,
 ) -> None:
     """Single-case control-room view.
 
@@ -193,10 +224,18 @@ def _run_single_case(
     force_real:
         When *True*, always use the real taker/simulator/judge regardless of
         the ``use_real`` sidebar toggle (used by Flagship mode).
-    button_label:
-        Label for the primary action button.
+    state_key:
+        ``st.session_state`` key suffix under which the finished report is
+        stored — results render from there so they survive reruns.
+    trigger:
+        When not *None*, used instead of an internal ``st.button`` (used by
+        Custom mode, whose run is triggered by a form submit).
     """
-    if st.button(button_label, type="primary"):
+    import time
+
+    clicked = st.button(button_label, type="primary") if trigger is None else trigger
+
+    if clicked:
         st.divider()
         st.subheader("Live progress")
 
@@ -232,7 +271,7 @@ def _run_single_case(
             "report": "pending",
         }
 
-        # arm -> {"status": str, "stop_reason": str, "num_questions": int}
+        # arm -> {"status": str, "stop_reason": str, "num_questions": int, ...}
         taker_state: dict[str, dict] = {
             "baseline": {},
             "challenger": {},
@@ -279,7 +318,12 @@ def _run_single_case(
                 else:
                     stop = state.get("stop_reason", "—")
                     nq = state.get("num_questions", "—")
-                    panel.markdown(f"✅ done  \nstop: `{stop}`  \nquestions: **{nq}**")
+                    turns = state.get("num_turns", "—")
+                    wall = state.get("wall_seconds", "—")
+                    panel.markdown(
+                        f"✅ done — stop: `{stop}`  \n"
+                        f"questions: **{nq}** · turns: **{turns}** · {wall}s"
+                    )
 
             # --- Judges grid ---
             rows = []
@@ -288,7 +332,7 @@ def _run_single_case(
                 chal_cell = judge_cells.get(("challenger", crit), "⬜")
                 rows.append({"criterion": crit, "baseline": base_cell, "challenger": chal_cell})
             judges_df = pd.DataFrame(rows).set_index("criterion")
-            judges_placeholder.dataframe(judges_df, use_container_width=True)
+            judges_placeholder.dataframe(judges_df, width="stretch")
 
             # --- Agent graph ---
             # Build judge_status from judge_cells
@@ -309,7 +353,7 @@ def _run_single_case(
                         js_map[(arm_key, crit)] = {"status": "done", "score": score}
             graph_placeholder.graphviz_chart(
                 agent_graph_dot(pipeline, taker_state, js_map),
-                use_container_width=True,
+                width="stretch",
             )
 
             # --- Event log ---
@@ -376,14 +420,21 @@ def _run_single_case(
         # Main loop: drain queue while thread is alive or queue non-empty
         # ------------------------------------------------------------------
         report = None
+        failed = False
         spinner_text = st.empty()
         spinner_text.info("Running…")
+        last_paint = 0.0
 
         while t.is_alive() or not q.empty():
             try:
                 kind, payload = q.get(timeout=0.05)
             except queue.Empty:
-                _refresh()
+                # Throttle idle repaints — the graphviz re-render is the
+                # expensive part, no need to redraw 20×/sec with no new data.
+                now = time.monotonic()
+                if now - last_paint > 0.25:
+                    _refresh()
+                    last_paint = now
                 continue
 
             if kind == "done":
@@ -392,6 +443,7 @@ def _run_single_case(
 
             if kind == "error":
                 st.error(f"Eval failed: {payload}")
+                failed = True
                 break
 
             # kind == "event"
@@ -424,10 +476,13 @@ def _run_single_case(
                             "status": "done",
                             "stop_reason": ev.get("stop_reason", "—"),
                             "num_questions": ev.get("num_questions", "—"),
+                            "num_turns": ev.get("num_turns", "—"),
+                            "wall_seconds": ev.get("wall_seconds", "—"),
                         }
                         all_events.append(
                             f"[taker:{arm}] done — stop={ev.get('stop_reason')} "
-                            f"questions={ev.get('num_questions')}"
+                            f"questions={ev.get('num_questions')} "
+                            f"turns={ev.get('num_turns')}"
                         )
 
             elif stage == "takers_done":
@@ -458,6 +513,7 @@ def _run_single_case(
                 all_events.append(f"[{stage}] {ev}")
 
             _refresh()
+            last_paint = time.monotonic()
 
         # Drain remaining events after thread finishes
         while not q.empty():
@@ -471,201 +527,336 @@ def _run_single_case(
             except queue.Empty:
                 break
 
-        spinner_text.success("Eval complete!")
-        _refresh()
         t.join(timeout=5)
 
-        # ------------------------------------------------------------------
-        # Results
-        # ------------------------------------------------------------------
+        if failed:
+            spinner_text.error("Eval failed — see error above.")
+            return
+
         if report is None:
+            spinner_text.empty()
             st.error("Eval did not return a report — check logs.")
             return
 
-        import altair as alt
+        spinner_text.success("Eval complete!")
+        _refresh()
 
-        from skill_eval.reporting import (
-            ARM_COLORS,
-            arm_color_list,
-            criterion_gap_rows,
-            quality_cost_rows,
+        # Persist so results survive any widget interaction (rerun).
+        st.session_state[f"report::{state_key}"] = {
+            "report": report,
+            "events": list(all_events),
+        }
+
+    # ------------------------------------------------------------------
+    # Results — rendered OUTSIDE the button branch from session_state so
+    # they survive any widget interaction that reruns the script.
+    # ------------------------------------------------------------------
+    stored = st.session_state.get(f"report::{state_key}")
+    if not stored:
+        return
+    _render_single_results(
+        st=st,
+        pd=pd,
+        report=stored["report"],
+        events=stored["events"],
+        verdict_line=verdict_line,
+        agent_graph_dot=agent_graph_dot,
+        state_key=state_key,
+    )
+
+
+def _render_single_results(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    report,  # type: ignore[type-arg]
+    events,  # type: ignore[type-arg]
+    verdict_line,  # type: ignore[type-arg]
+    agent_graph_dot,  # type: ignore[type-arg]
+    state_key: str,
+) -> None:
+    """Render the full results funnel for a completed single-case report.
+
+    Funnel (promptfoo / Langfuse pattern): headline delta metrics →
+    per-criterion matrix with Δ → drill-down (rationales, diffs, traces).
+    """
+    from pathlib import Path
+
+    import altair as alt
+
+    from skill_eval.reporting import (
+        ARM_COLORS,
+        criterion_gap_rows,
+        quality_cost_rows,
+        report_to_json,
+    )
+
+    st.divider()
+    st.subheader("Results: Baseline vs Challenger")
+
+    # --- Run-config context: what exactly was compared ---
+    cfg = report.config
+    base_skill = Path(cfg.baseline_skill_path).name
+    chal_skill = Path(cfg.challenger_skill_path).name
+    bits = [
+        f"skills: `{base_skill}` vs `{chal_skill}`",
+        f"model: `{cfg.models[0]}`",
+        f"max_turns: {cfg.max_turns}",
+    ]
+    if cfg.thinking_budget:
+        bits.append(f"thinking: {cfg.thinking_budget}")
+    if report.session_id:
+        bits.append(f"Phoenix session: `{report.session_id[:12]}…`")
+    st.caption(" · ".join(bits))
+    with st.expander("Task brief & gold reference"):
+        st.markdown(f"**Task brief**\n\n> {cfg.task_brief}")
+        if report.gold_diff:
+            st.markdown("**Gold reference diff** (what the judges compare against)")
+            st.code(report.gold_diff, language="diff")
+
+    # Resolve the two arms once (order not assumed).
+    baseline_ar = next((ar for ar in report.arms if ar.arm.value == "baseline"), None)
+    challenger_ar = next((ar for ar in report.arms if ar.arm.value == "challenger"), None)
+
+    # --- Headline delta metrics (challenger framed against baseline) ---
+    if baseline_ar is not None and challenger_ar is not None:
+        b_m, c_m = baseline_ar.metrics, challenger_ar.metrics
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric(
+            "Challenger total",
+            f"{challenger_ar.total_score}/120",
+            delta=challenger_ar.total_score - baseline_ar.total_score,
+        )
+        k2.metric("Baseline total", f"{baseline_ar.total_score}/120")
+        k3.metric(
+            "Questions asked",
+            c_m.num_questions,
+            delta=c_m.num_questions - b_m.num_questions,
+        )
+        k4.metric(
+            "Tokens",
+            f"{c_m.total_tokens:,}",
+            delta=c_m.total_tokens - b_m.total_tokens,
+            delta_color="inverse",  # more tokens = more cost = "worse"
         )
 
-        st.divider()
-        st.subheader("Results: Baseline vs Challenger")
-
-        # Resolve the two arms once (order not assumed).
-        baseline_ar = next((ar for ar in report.arms if ar.arm.value == "baseline"), None)
-        challenger_ar = next((ar for ar in report.arms if ar.arm.value == "challenger"), None)
-
-        # --- Headline delta metrics (challenger framed against baseline) ---
-        if baseline_ar is not None and challenger_ar is not None:
-            b_m, c_m = baseline_ar.metrics, challenger_ar.metrics
-            k1, k2, k3, k4 = st.columns(4)
-            k1.metric(
-                "Challenger total",
-                f"{challenger_ar.total_score}/120",
-                delta=challenger_ar.total_score - baseline_ar.total_score,
+    # --- Dumbbell / gap chart: the difference per criterion, biggest first ---
+    st.subheader("Where the skills differ (per-criterion gap)")
+    st.caption(
+        "Each line connects the two scores; the longer the line, the bigger the gap."
+        " Sorted by challenger − baseline."
+    )
+    gap_rows = criterion_gap_rows(report)
+    if gap_rows:
+        order = [r["criterion"] for r in gap_rows]
+        df_gap = pd.DataFrame(gap_rows)
+        long = df_gap.melt(
+            id_vars=["criterion", "gap"],
+            value_vars=["baseline", "challenger"],
+            var_name="arm",
+            value_name="score",
+        )
+        y_enc = alt.Y("criterion:N", sort=order, title=None)
+        color_enc = alt.Color(
+            "arm:N",
+            scale=alt.Scale(
+                domain=["baseline", "challenger"],
+                range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
+            ),
+            title="Arm",
+        )
+        connector = (
+            alt.Chart(df_gap)
+            .mark_rule(color="#bbbbbb", strokeWidth=2)
+            .encode(
+                y=y_enc,
+                x=alt.X("baseline:Q", title="Score (0–20)", scale=alt.Scale(domain=[0, 20])),
+                x2="challenger:Q",
             )
-            k2.metric("Baseline total", f"{baseline_ar.total_score}/120")
-            k3.metric(
-                "Questions asked",
-                c_m.num_questions,
-                delta=c_m.num_questions - b_m.num_questions,
+        )
+        dots = (
+            alt.Chart(long)
+            .mark_circle(size=170, opacity=1.0)
+            .encode(
+                y=y_enc,
+                x=alt.X("score:Q", scale=alt.Scale(domain=[0, 20])),
+                color=color_enc,
+                tooltip=["criterion:N", "arm:N", "score:Q", "gap:Q"],
             )
-            k4.metric(
-                "Tokens",
-                f"{c_m.total_tokens:,}",
-                delta=c_m.total_tokens - b_m.total_tokens,
-                delta_color="inverse",  # more tokens = more cost = "worse"
-            )
+        )
+        st.altair_chart((connector + dots).properties(height=280), width="stretch")
 
-        # --- Grouped 0–20 bars per criterion (consistent arm colours) ---
-        rows = scores_table(report)
-        df = pd.DataFrame(rows).set_index("criterion")
-        ordered_cols = [c for c in ("baseline", "challenger") if c in df.columns]
-        st.bar_chart(
-            df[ordered_cols],
-            use_container_width=True,
-            stack=False,
-            color=arm_color_list(ordered_cols),
+    # --- Score matrix + judge rationales (the drill-down layer) ---
+    st.subheader("Judge scores & rationales")
+    st.caption("Exact scores with Δ, then expand any criterion to read *why* the judges scored it.")
+    if gap_rows:
+        df_matrix = pd.DataFrame(gap_rows).rename(columns={"gap": "Δ"})
+
+        def _delta_style(v) -> str:  # noqa: ANN001
+            if v > 0:
+                return "color: #2e7d32; font-weight: bold"
+            if v < 0:
+                return "color: #c62828; font-weight: bold"
+            return "color: #777777"
+
+        st.dataframe(
+            df_matrix.set_index("criterion").style.map(_delta_style, subset=["Δ"]),
+            width="stretch",
         )
 
-        # --- Dumbbell / gap chart: the difference per criterion, biggest first ---
-        st.subheader("Where the skills differ (per-criterion gap)")
-        st.caption(
-            "Each line connects the two scores; the longer the line, the bigger the gap."
-            " Sorted by challenger − baseline."
-        )
-        gap_rows = criterion_gap_rows(report)
-        if gap_rows:
-            order = [r["criterion"] for r in gap_rows]
-            df_gap = pd.DataFrame(gap_rows)
-            long = df_gap.melt(
-                id_vars=["criterion", "gap"],
-                value_vars=["baseline", "challenger"],
-                var_name="arm",
-                value_name="score",
+        # rationale lookup: (arm, criterion) -> (score, rationale)
+        rationale_map: dict[tuple[str, str], tuple[int, str]] = {}
+        for ar in report.arms:
+            for s in ar.scores:
+                rationale_map[(ar.arm.value, s.criterion.value)] = (s.score, s.rationale)
+
+        for r in gap_rows:
+            crit = r["criterion"]
+            label = (
+                f"{crit} — baseline {r['baseline']}/20 vs challenger {r['challenger']}/20"
+                f" (Δ {r['gap']:+d})"
             )
-            y_enc = alt.Y("criterion:N", sort=order, title=None)
-            color_enc = alt.Color(
-                "arm:N",
-                scale=alt.Scale(
-                    domain=["baseline", "challenger"],
-                    range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
-                ),
-                title="Arm",
-            )
-            connector = (
-                alt.Chart(df_gap)
-                .mark_rule(color="#bbbbbb", strokeWidth=2)
+            with st.expander(label):
+                col_b, col_c = st.columns(2)
+                b_score, b_rat = rationale_map.get(("baseline", crit), (0, "—"))
+                c_score, c_rat = rationale_map.get(("challenger", crit), (0, "—"))
+                with col_b:
+                    st.markdown(f"**Baseline — {b_score}/20**")
+                    st.markdown(b_rat or "_no rationale_")
+                with col_c:
+                    st.markdown(f"**Challenger — {c_score}/20**")
+                    st.markdown(c_rat or "_no rationale_")
+
+    # --- Objective metrics + quality-vs-cost scatter ---
+    st.subheader("Quality vs cost")
+    st.caption("Up-and-to-the-left is better: higher score for fewer tokens.")
+    qc_rows = quality_cost_rows(report)
+    col_scatter, col_table = st.columns([3, 2])
+    with col_scatter:
+        if qc_rows:
+            df_qc = pd.DataFrame(qc_rows)
+            scatter = (
+                alt.Chart(df_qc)
+                .mark_circle(size=400, opacity=0.85)
                 .encode(
-                    y=y_enc,
-                    x=alt.X("baseline:Q", title="Score (0–20)", scale=alt.Scale(domain=[0, 20])),
-                    x2="challenger:Q",
-                )
-            )
-            dots = (
-                alt.Chart(long)
-                .mark_circle(size=170, opacity=1.0)
-                .encode(
-                    y=y_enc,
-                    x=alt.X("score:Q", scale=alt.Scale(domain=[0, 20])),
-                    color=color_enc,
-                    tooltip=["criterion:N", "arm:N", "score:Q", "gap:Q"],
-                )
-            )
-            st.altair_chart((connector + dots).properties(height=280), use_container_width=True)
-
-        # --- Objective metrics + quality-vs-cost scatter ---
-        st.subheader("Quality vs cost")
-        st.caption("Up-and-to-the-left is better: higher score for fewer tokens.")
-        qc_rows = quality_cost_rows(report)
-        col_scatter, col_table = st.columns([3, 2])
-        with col_scatter:
-            if qc_rows:
-                df_qc = pd.DataFrame(qc_rows)
-                scatter = (
-                    alt.Chart(df_qc)
-                    .mark_circle(size=400, opacity=0.85)
-                    .encode(
-                        x=alt.X("total_tokens:Q", title="Cost — total tokens"),
-                        y=alt.Y(
-                            "total_score:Q",
-                            title="Quality — total score",
-                            scale=alt.Scale(domain=[0, 120]),
+                    x=alt.X("total_tokens:Q", title="Cost — total tokens"),
+                    y=alt.Y(
+                        "total_score:Q",
+                        title="Quality — total score",
+                        scale=alt.Scale(domain=[0, 120]),
+                    ),
+                    color=alt.Color(
+                        "arm:N",
+                        scale=alt.Scale(
+                            domain=["baseline", "challenger"],
+                            range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
                         ),
-                        color=alt.Color(
-                            "arm:N",
-                            scale=alt.Scale(
-                                domain=["baseline", "challenger"],
-                                range=[ARM_COLORS["baseline"], ARM_COLORS["challenger"]],
-                            ),
-                            title="Arm",
-                        ),
-                        tooltip=[
-                            "arm:N",
-                            "total_score:Q",
-                            "total_tokens:Q",
-                            "wall_seconds:Q",
-                            "num_turns:Q",
-                            "num_questions:Q",
-                        ],
-                    )
-                    .properties(height=300)
+                        title="Arm",
+                    ),
+                    tooltip=[
+                        "arm:N",
+                        "total_score:Q",
+                        "total_tokens:Q",
+                        "wall_seconds:Q",
+                        "num_turns:Q",
+                        "num_questions:Q",
+                    ],
                 )
-                labels = scatter.mark_text(align="left", dx=10, fontWeight="bold").encode(
-                    text="arm:N"
-                )
-                st.altair_chart(scatter + labels, use_container_width=True)
-        with col_table:
-            metrics_rows = []
-            for ar in report.arms:
-                m = ar.metrics
-                metrics_rows.append(
-                    {
-                        "arm": ar.arm.value,
-                        "total_tokens": m.total_tokens,
-                        "wall_seconds": round(m.wall_seconds, 2),
-                        "num_turns": m.num_turns,
-                        "num_questions": m.num_questions,
-                    }
-                )
-            st.dataframe(pd.DataFrame(metrics_rows).set_index("arm"), use_container_width=True)
+                .properties(height=300)
+            )
+            labels = scatter.mark_text(align="left", dx=10, fontWeight="bold").encode(text="arm:N")
+            st.altair_chart(scatter + labels, width="stretch")
+    with col_table:
+        metrics_rows = []
+        for ar in report.arms:
+            m = ar.metrics
+            metrics_rows.append(
+                {
+                    "arm": ar.arm.value,
+                    "stop": ar.stop_reason or "—",
+                    "tokens in/out": f"{m.input_tokens:,} / {m.output_tokens:,}",
+                    "wall_seconds": round(m.wall_seconds, 2),
+                    "num_turns": m.num_turns,
+                    "num_questions": m.num_questions,
+                }
+            )
+        st.dataframe(pd.DataFrame(metrics_rows).set_index("arm"), width="stretch")
 
-        # Verdict
-        st.success(f"Verdict: {verdict_line(report)}")
+    # Verdict
+    st.success(f"Verdict: {verdict_line(report)}")
 
-        # ------------------------------------------------------------------
-        # Clarifying questions side-by-side
-        # ------------------------------------------------------------------
-        st.subheader("Clarifying questions asked")
-        st.caption(
-            "What each skill made the agent ask — the concrete signal of capability."
-            " Full reasoning trajectory in Phoenix."
-        )
-
-        # Pull the two ArmReports by arm value (order not assumed)
-        baseline_ar = next((ar for ar in report.arms if ar.arm.value == "baseline"), None)
-        challenger_ar = next((ar for ar in report.arms if ar.arm.value == "challenger"), None)
-
-        col_q_base, col_q_chal = st.columns(2)
-
-        with col_q_base:
-            st.markdown("**Baseline**")
-            if baseline_ar is None or not baseline_ar.questions:
-                st.markdown("*(no clarifying questions asked)*")
+    # ------------------------------------------------------------------
+    # What each arm actually changed (the evidence behind the scores)
+    # ------------------------------------------------------------------
+    st.subheader("What each arm changed")
+    st.caption("The actual patch each taker produced — judge scores are about *this* code.")
+    col_d_base, col_d_chal = st.columns(2)
+    for ar, col in ((baseline_ar, col_d_base), (challenger_ar, col_d_chal)):
+        with col:
+            name = ar.arm.value if ar is not None else "—"
+            st.markdown(f"**{name.capitalize()}**")
+            if ar is None or not ar.diff:
+                st.markdown("*(no diff captured)*")
             else:
-                q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(baseline_ar.questions))
-                st.markdown(q_lines)
+                with st.expander(f"diff ({len(ar.diff):,} chars)", expanded=False):
+                    st.code(ar.diff, language="diff")
 
-        with col_q_chal:
-            st.markdown("**Challenger**")
-            if challenger_ar is None or not challenger_ar.questions:
-                st.markdown("*(no clarifying questions asked)*")
-            else:
-                q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(challenger_ar.questions))
-                st.markdown(q_lines)
+    # ------------------------------------------------------------------
+    # Clarifying questions side-by-side
+    # ------------------------------------------------------------------
+    st.subheader("Clarifying questions asked")
+    st.caption(
+        "What each skill made the agent ask — the concrete signal of capability."
+        " Full reasoning trajectory in Phoenix."
+    )
+
+    col_q_base, col_q_chal = st.columns(2)
+
+    with col_q_base:
+        st.markdown("**Baseline**")
+        if baseline_ar is None or not baseline_ar.questions:
+            st.markdown("*(no clarifying questions asked)*")
+        else:
+            q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(baseline_ar.questions))
+            st.markdown(q_lines)
+
+    with col_q_chal:
+        st.markdown("**Challenger**")
+        if challenger_ar is None or not challenger_ar.questions:
+            st.markdown("*(no clarifying questions asked)*")
+        else:
+            q_lines = "\n".join(f"{i + 1}. {q}" for i, q in enumerate(challenger_ar.questions))
+            st.markdown(q_lines)
+
+    # ------------------------------------------------------------------
+    # Export + post-mortem details
+    # ------------------------------------------------------------------
+    st.download_button(
+        "Download report (JSON)",
+        data=report_to_json(report),
+        file_name=f"skill_eval_report_{state_key}.json",
+        mime="application/json",
+        on_click="ignore",
+        key=f"dl::{state_key}",
+    )
+
+    with st.expander("Final agent graph"):
+        criteria = [s.criterion.value for s in report.arms[0].scores] if report.arms else []
+        pipeline = {"sandbox": "done", "takers": "done", "judges": "done", "report": "done"}
+        taker_state = {
+            ar.arm.value: {"status": "done", "stop_reason": ar.stop_reason or "—"}
+            for ar in report.arms
+        }
+        js_map = {
+            (ar.arm.value, s.criterion.value): {"status": "done", "score": s.score}
+            for ar in report.arms
+            for s in ar.scores
+        }
+        if criteria:
+            st.graphviz_chart(agent_graph_dot(pipeline, taker_state, js_map), width="stretch")
+
+    with st.expander(f"Event log ({len(events)} events)"):
+        st.markdown("\n\n".join(events) if events else "_no events_")
 
 
 def _run_flagship_mode(
@@ -677,7 +868,6 @@ def _run_flagship_mode(
     tempfile,  # type: ignore[type-arg]
     threading,  # type: ignore[type-arg]
     run_eval,  # type: ignore[type-arg]
-    scores_table,  # type: ignore[type-arg]
     verdict_line,  # type: ignore[type-arg]
     agent_graph_dot,  # type: ignore[type-arg]
     sim_make_simulator,  # type: ignore[type-arg]
@@ -701,7 +891,6 @@ def _run_flagship_mode(
         threading=threading,
         use_real=False,  # overridden by force_real
         run_eval=run_eval,
-        scores_table=scores_table,
         verdict_line=verdict_line,
         build_cfg=build_flagship_case,
         force_real=True,
@@ -710,6 +899,152 @@ def _run_flagship_mode(
         sim_run_taker=sim_run_taker,
         agent_graph_dot=agent_graph_dot,
         button_label="Run flagship",
+        state_key="flagship",
+    )
+
+
+def _run_custom_mode(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    queue,  # type: ignore[type-arg]
+    shutil,  # type: ignore[type-arg]
+    tempfile,  # type: ignore[type-arg]
+    threading,  # type: ignore[type-arg]
+    run_eval,  # type: ignore[type-arg]
+    verdict_line,  # type: ignore[type-arg]
+    agent_graph_dot,  # type: ignore[type-arg]
+    sim_make_simulator,  # type: ignore[type-arg]
+    sim_run_judge,  # type: ignore[type-arg]
+    sim_run_taker,  # type: ignore[type-arg]
+) -> None:
+    """Custom mode: bring-your-own skills (and budgets) on a chosen task fixture."""
+    from pathlib import Path
+
+    from skill_eval.flagship_case import TASK_BRIEF as FLAGSHIP_BRIEF
+    from skill_eval.flagship_case import build_flagship_case
+    from skill_eval.sample_repo import TASK_BRIEF as SAMPLE_BRIEF
+    from skill_eval.sample_repo import build_sample_repo
+
+    st.caption(
+        "Paste two skills and race them. The form is batched — nothing runs until you submit."
+    )
+
+    root = Path(__file__).resolve().parent
+
+    def _skill_text(name: str) -> str:
+        p = root / "flagship" / "skills" / name / "SKILL.md"
+        try:
+            return p.read_text()
+        except Exception:
+            return f"---\nname: {name}\ndescription: describe the skill here\n---\n\n# {name}\n"
+
+    FIXTURES = {
+        "Flagship: prorate_refund (under-specified — rewards asking)": FLAGSHIP_BRIEF,
+        "Sample: calculator add bug (trivial)": SAMPLE_BRIEF,
+    }
+
+    with st.form("custom_run"):
+        task_choice = st.selectbox(
+            "Task fixture",
+            list(FIXTURES),
+            help=(
+                "The before/after repo the agents work on. Gold-based criteria"
+                " (correctness, distance_to_gold) stay meaningful only if your"
+                " brief still targets the fixture's stub."
+            ),
+        )
+        task_brief = st.text_area("Task brief", value=FLAGSHIP_BRIEF, height=140)
+
+        col_b, col_c = st.columns(2)
+        with col_b:
+            base_name = st.text_input("Baseline skill name", "ship-it-fast")
+            base_md = st.text_area(
+                "Baseline SKILL.md", value=_skill_text("ship-it-fast"), height=300
+            )
+        with col_c:
+            chal_name = st.text_input("Challenger skill name", "disciplined")
+            chal_md = st.text_area(
+                "Challenger SKILL.md", value=_skill_text("disciplined"), height=300
+            )
+
+        col1, col2, col3 = st.columns(3)
+        max_turns = col1.number_input("max_turns", min_value=1, max_value=100, value=30)
+        thinking_budget = col2.number_input(
+            "thinking budget (0 = off)", min_value=0, max_value=32000, value=2048, step=512
+        )
+        real_agents = col3.toggle(
+            "Real Haiku agents (~$0.40)",
+            value=True,
+            key="custom_real_agents",
+            help=(
+                "Off = free simulated components. NOTE: the simulated taker ignores"
+                " skill text entirely — only useful to demo the flow."
+            ),
+        )
+
+        submitted = st.form_submit_button("Run custom eval", type="primary")
+
+    errors: list[str] = []
+    if submitted:
+        if not task_brief.strip():
+            errors.append("Task brief is empty.")
+        if not base_md.strip():
+            errors.append("Baseline skill markdown is empty.")
+        if not chal_md.strip():
+            errors.append("Challenger skill markdown is empty.")
+        for e in errors:
+            st.error(e)
+
+    # Capture plain values for the background thread (no st.* in there).
+    _brief = task_brief
+    _base_md, _chal_md = base_md, chal_md
+    _b_slug = _slug(base_name, "baseline-skill")
+    _c_slug = _slug(chal_name, "challenger-skill")
+    if _b_slug == _c_slug:
+        _c_slug = f"{_c_slug}-challenger"
+    _max_turns = int(max_turns)
+    _thinking = int(thinking_budget) or None
+
+    _base_builder = build_flagship_case if task_choice.startswith("Flagship") else build_sample_repo
+
+    def build_custom_case(base_dir: str):  # -> RunConfig
+        import dataclasses
+
+        cfg = _base_builder(base_dir)
+        skills_root = Path(base_dir) / "custom_skills"
+        b_dir = skills_root / _b_slug
+        c_dir = skills_root / _c_slug
+        for d, md in ((b_dir, _base_md), (c_dir, _chal_md)):
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "SKILL.md").write_text(md)
+        return dataclasses.replace(
+            cfg,
+            task_brief=_brief,
+            baseline_skill_path=str(b_dir),
+            challenger_skill_path=str(c_dir),
+            max_turns=_max_turns,
+            thinking_budget=_thinking,
+        )
+
+    _run_single_case(
+        st=st,
+        pd=pd,
+        queue=queue,
+        shutil=shutil,
+        tempfile=tempfile,
+        threading=threading,
+        use_real=real_agents,
+        run_eval=run_eval,
+        verdict_line=verdict_line,
+        build_cfg=build_custom_case,
+        force_real=False,
+        sim_make_simulator=sim_make_simulator,
+        sim_run_judge=sim_run_judge,
+        sim_run_taker=sim_run_taker,
+        agent_graph_dot=agent_graph_dot,
+        state_key="custom",
+        trigger=bool(submitted and not errors),
     )
 
 
@@ -718,12 +1053,12 @@ def _run_batch_mode(
     st,  # type: ignore[type-arg]
     pd,  # type: ignore[type-arg]
     queue,  # type: ignore[type-arg]
+    shutil,  # type: ignore[type-arg]
     tempfile,  # type: ignore[type-arg]
     threading,  # type: ignore[type-arg]
     use_real: bool,
     batch_win_summary,  # type: ignore[type-arg]
     batch_per_case_totals,  # type: ignore[type-arg]
-    batch_per_criterion_avg,  # type: ignore[type-arg]
     batch_score_distribution,  # type: ignore[type-arg]
     sim_make_simulator,  # type: ignore[type-arg]
     sim_run_judge,  # type: ignore[type-arg]
@@ -733,112 +1068,147 @@ def _run_batch_mode(
     from skill_eval.batch import run_batch
     from skill_eval.sample_cases import build_sample_cases
 
-    if not st.button("Run batch", type="primary"):
+    clicked = st.button("Run batch", type="primary")
+
+    if clicked:
+        st.divider()
+        st.subheader("Batch progress")
+
+        # ------------------------------------------------------------------
+        # Placeholders for live progress
+        # ------------------------------------------------------------------
+        progress_bar = st.progress(0.0)
+        status_placeholder = st.empty()
+        status_placeholder.info("Starting batch…")
+        case_log_placeholder = st.empty()
+
+        # ------------------------------------------------------------------
+        # Background thread: run_batch pushes events into a queue
+        # ------------------------------------------------------------------
+        q: queue.Queue = queue.Queue()
+        _use_real = use_real
+
+        def _background() -> None:
+            tmp = tempfile.mkdtemp()
+            try:
+                cfgs = build_sample_cases(tmp)
+                total = len(cfgs)
+
+                def on_event(ev: dict) -> None:
+                    q.put(("event", ev, total))
+
+                if _use_real:
+                    from skill_eval.judge import run_judge
+                    from skill_eval.simulator import make_simulator
+                    from skill_eval.taker import run_taker
+
+                    reports = run_batch(
+                        cfgs,
+                        taker_fn=run_taker,
+                        simulator_factory=make_simulator,
+                        judge_fn=run_judge,
+                        max_cases=4,
+                        on_event=on_event,
+                    )
+                else:
+                    reports = run_batch(
+                        cfgs,
+                        taker_fn=sim_run_taker,
+                        simulator_factory=sim_make_simulator,
+                        judge_fn=sim_run_judge,
+                        max_cases=4,
+                        on_event=on_event,
+                    )
+                q.put(("done", reports, total))
+            except Exception as exc:
+                q.put(("error", exc, 0))
+            finally:
+                shutil.rmtree(tmp, ignore_errors=True)
+
+        t = threading.Thread(target=_background, daemon=True)
+        t.start()
+
+        # ------------------------------------------------------------------
+        # Drain queue: track per-case completion via "report" stage events
+        # ------------------------------------------------------------------
+        reports = None
+        cases_done: set[int] = set()
+        case_lines: list[str] = []
+        total_cases = 0  # learned from the first event
+
+        while t.is_alive() or not q.empty():
+            try:
+                item = q.get(timeout=0.05)
+            except queue.Empty:
+                continue
+
+            kind = item[0]
+            if kind == "done":
+                reports = item[1]
+                break
+            if kind == "error":
+                st.error(f"Batch failed: {item[1]}")
+                return
+
+            # kind == "event"
+            ev: dict = item[1]
+            total_cases = item[2] or total_cases
+            case_idx: int = ev.get("case", -1)
+            stage = ev.get("stage", "")
+
+            if stage == "report" and case_idx not in cases_done and total_cases:
+                cases_done.add(case_idx)
+                case_lines.append(f"case {case_idx + 1} done")
+                frac = len(cases_done) / total_cases
+                progress_bar.progress(frac)
+                status_placeholder.info(f"{len(cases_done)} / {total_cases} cases done…")
+                case_log_placeholder.markdown("\n\n".join(case_lines[-total_cases:]))
+
+        t.join(timeout=10)
+
+        if reports is None:
+            st.error("Batch did not return reports — check logs.")
+            return
+
+        progress_bar.progress(1.0)
+        status_placeholder.success(f"All {len(reports)} cases complete!")
+        st.session_state["report::batch"] = reports
+    elif "report::batch" not in st.session_state:
         st.info("Click **Run batch** to evaluate all 10 sample cases.")
         return
 
-    st.divider()
-    st.subheader("Batch progress")
-
-    # ------------------------------------------------------------------
-    # Placeholders for live progress
-    # ------------------------------------------------------------------
-    progress_bar = st.progress(0.0)
-    status_placeholder = st.empty()
-    status_placeholder.info("Starting batch…")
-    case_log_placeholder = st.empty()
-
-    # ------------------------------------------------------------------
-    # Background thread: run_batch pushes events into a queue
-    # ------------------------------------------------------------------
-    q: queue.Queue = queue.Queue()
-    _use_real = use_real
-
-    def _background() -> None:
-        tmp = tempfile.mkdtemp()
-        try:
-            cfgs = build_sample_cases(tmp)
-            total = len(cfgs)
-
-            def on_event(ev: dict) -> None:
-                q.put(("event", ev, total))
-
-            if _use_real:
-                from skill_eval.judge import run_judge
-                from skill_eval.simulator import make_simulator
-                from skill_eval.taker import run_taker
-
-                reports = run_batch(
-                    cfgs,
-                    taker_fn=run_taker,
-                    simulator_factory=make_simulator,
-                    judge_fn=run_judge,
-                    max_cases=4,
-                    on_event=on_event,
-                )
-            else:
-                reports = run_batch(
-                    cfgs,
-                    taker_fn=sim_run_taker,
-                    simulator_factory=sim_make_simulator,
-                    judge_fn=sim_run_judge,
-                    max_cases=4,
-                    on_event=on_event,
-                )
-            q.put(("done", reports, total))
-        except Exception as exc:
-            q.put(("error", exc, 0))
-
-    t = threading.Thread(target=_background, daemon=True)
-    t.start()
-
-    # ------------------------------------------------------------------
-    # Drain queue: track per-case completion via "report" stage events
-    # ------------------------------------------------------------------
-    reports = None
-    cases_done: set[int] = set()
-    case_lines: list[str] = []
-    total_cases = 10  # we know it's 10
-
-    while t.is_alive() or not q.empty():
-        try:
-            item = q.get(timeout=0.05)
-        except queue.Empty:
-            continue
-
-        kind = item[0]
-        if kind == "done":
-            reports = item[1]
-            break
-        if kind == "error":
-            st.error(f"Batch failed: {item[1]}")
-            return
-
-        # kind == "event"
-        ev: dict = item[1]
-        case_idx: int = ev.get("case", -1)
-        stage = ev.get("stage", "")
-
-        if stage == "report" and case_idx not in cases_done:
-            cases_done.add(case_idx)
-            case_lines.append(f"case {case_idx + 1} done")
-            frac = len(cases_done) / total_cases
-            progress_bar.progress(frac)
-            status_placeholder.info(f"{len(cases_done)} / {total_cases} cases done…")
-            case_log_placeholder.markdown("\n\n".join(case_lines[-total_cases:]))
-
-    t.join(timeout=10)
-
-    if reports is None:
-        st.error("Batch did not return reports — check logs.")
+    reports = st.session_state.get("report::batch")
+    if not reports:
         return
+    _render_batch_results(
+        st=st,
+        pd=pd,
+        reports=reports,
+        batch_win_summary=batch_win_summary,
+        batch_per_case_totals=batch_per_case_totals,
+        batch_score_distribution=batch_score_distribution,
+    )
 
-    progress_bar.progress(1.0)
-    status_placeholder.success(f"All {total_cases} cases complete!")
 
-    # ------------------------------------------------------------------
-    # Aggregate visualisations
-    # ------------------------------------------------------------------
+def _render_batch_results(
+    *,
+    st,  # type: ignore[type-arg]
+    pd,  # type: ignore[type-arg]
+    reports,  # type: ignore[type-arg]
+    batch_win_summary,  # type: ignore[type-arg]
+    batch_per_case_totals,  # type: ignore[type-arg]
+    batch_score_distribution,  # type: ignore[type-arg]
+) -> None:
+    """Render aggregate visualisations for a completed batch."""
+    import altair as alt
+
+    from skill_eval.reporting import (
+        ARM_COLORS,
+        arm_color_list,
+        batch_criterion_gap_rows,
+        reports_to_json,
+    )
+
     st.divider()
     st.subheader("Aggregate: Baseline vs Challenger")
 
@@ -848,10 +1218,6 @@ def _run_batch_mode(
     col_c.metric("Challenger wins", win_summary["challenger"])
     col_b.metric("Baseline wins", win_summary["baseline"])
     col_t.metric("Ties", win_summary["tie"])
-
-    import altair as alt
-
-    from skill_eval.reporting import ARM_COLORS, arm_color_list, batch_criterion_gap_rows
 
     _arm_scale = alt.Scale(
         domain=["baseline", "challenger"],
@@ -864,23 +1230,11 @@ def _run_batch_mode(
     df_cases = pd.DataFrame(per_case).set_index("case")
     st.bar_chart(
         df_cases[["baseline", "challenger"]],
-        use_container_width=True,
         stack=False,
         color=arm_color_list(["baseline", "challenger"]),
     )
 
-    # 3. Per-criterion averages bar chart
-    st.subheader("Per-criterion averages")
-    per_crit = batch_per_criterion_avg(reports)
-    df_crit = pd.DataFrame(per_crit).set_index("criterion")
-    st.bar_chart(
-        df_crit[["baseline", "challenger"]],
-        use_container_width=True,
-        stack=False,
-        color=arm_color_list(["baseline", "challenger"]),
-    )
-
-    # 3b. Per-criterion gap (dumbbell) — biggest average difference first
+    # 3. Per-criterion gap (dumbbell) — biggest average difference first
     st.subheader("Where the skills differ (avg per-criterion gap)")
     gap_rows = batch_criterion_gap_rows(reports)
     if gap_rows:
@@ -912,27 +1266,49 @@ def _run_batch_mode(
                 tooltip=["criterion:N", "arm:N", "score:Q", "gap:Q"],
             )
         )
-        st.altair_chart((connector + dots).properties(height=280), use_container_width=True)
+        st.altair_chart((connector + dots).properties(height=280), width="stretch")
 
-    # 4. Score distributions (grouped boxplot per criterion, baseline vs challenger)
+    # 4. Score distributions — raw jittered points + mean tick per arm.
+    #    (Boxplots mislead at n≈10 with discrete rubric scores: quartile
+    #    artifacts, hidden n, identical-looking boxes. Show the data instead.)
     st.subheader("Score distributions")
+    st.caption(
+        "Every judge score (jittered), one facet per criterion; the black tick is the mean."
+        " Darker stacks = repeated scores at a rubric anchor."
+    )
     dist_rows = batch_score_distribution(reports)
     if dist_rows:
         df_dist = pd.DataFrame(dist_rows)
-        chart = (
+        points = (
             alt.Chart(df_dist)
-            .mark_boxplot()
+            .transform_calculate(jitter="sqrt(-2*log(random()))*cos(2*PI*random())")
+            .mark_circle(size=70, opacity=0.5)
             .encode(
-                x=alt.X("criterion:N", title="Criterion"),
-                y=alt.Y("score:Q", title="Score", scale=alt.Scale(domain=[0, 20])),
+                x=alt.X("arm:N", title=None, axis=alt.Axis(labelAngle=0)),
+                xOffset=alt.XOffset("jitter:Q"),
+                y=alt.Y(
+                    "score:Q",
+                    title="Judge score",
+                    scale=alt.Scale(domain=[0, 20]),
+                    axis=alt.Axis(values=[0, 5, 10, 15, 20]),
+                ),
                 color=alt.Color("arm:N", title="Arm", scale=_arm_scale),
-                xOffset=alt.XOffset("arm:N"),
+                tooltip=["criterion:N", "arm:N", "score:Q"],
             )
-            .properties(height=350)
         )
-        st.altair_chart(chart, use_container_width=True)
+        means = (
+            alt.Chart(df_dist)
+            .mark_tick(color="black", thickness=2, size=28, opacity=0.9)
+            .encode(x="arm:N", y=alt.Y("mean(score):Q"))
+        )
+        chart = (
+            (points + means)
+            .properties(width=95, height=320)
+            .facet(column=alt.Column("criterion:N", title=None))
+        )
+        st.altair_chart(chart)
 
-    # 5. Detailed per-case table (was 4)
+    # 5. Detailed per-case table
     st.subheader("Per-case detail")
     table_rows = []
     for row in per_case:
@@ -952,7 +1328,16 @@ def _run_batch_mode(
                 "winner": winner,
             }
         )
-    st.dataframe(pd.DataFrame(table_rows).set_index("case"), use_container_width=True)
+    st.dataframe(pd.DataFrame(table_rows).set_index("case"), width="stretch")
+
+    st.download_button(
+        "Download batch reports (JSON)",
+        data=reports_to_json(reports),
+        file_name="skill_eval_batch_reports.json",
+        mime="application/json",
+        on_click="ignore",
+        key="dl::batch",
+    )
 
 
 # ---------------------------------------------------------------------------

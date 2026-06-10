@@ -60,7 +60,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>skill-eval — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 574 nodes, 1372 edges, 29 communities. Commit: 6877c1e</p>
+<p class="subtitle">Generated from graphify knowledge graph: 596 nodes, 1428 edges, 30 communities. Commit: 723e2b3</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
@@ -84,9 +84,9 @@ flowchart LR
     class BUILD_GRAPH_321CBB04 module;
     ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>37 nodes</small>")
     class ANALYSIS_CLUSTERING_C79796DA module;
-    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>237 nodes</small>")
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>316 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
-    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>271 nodes</small>")
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>214 nodes</small>")
     class TESTS_FIXTURES_B84B1DCC module;
     COMMUNITY_5_2966028D("Community 5<br/><small>12 nodes</small>")
     class COMMUNITY_5_2966028D module;
@@ -94,8 +94,8 @@ flowchart LR
     class COMMUNITY_12_82F13F05 module;
     COMMUNITY_28_3AE3708D("Community 28<br/><small>6 nodes</small>")
     class COMMUNITY_28_3AE3708D module;
-    CLI_SKILLS_9964CBB8 -->|imports x57| TESTS_FIXTURES_B84B1DCC
-    TESTS_FIXTURES_B84B1DCC -->|imports x50| CLI_SKILLS_9964CBB8
+    CLI_SKILLS_9964CBB8 -->|imports x74| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|imports x38| CLI_SKILLS_9964CBB8
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -112,7 +112,7 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Graph Build</td><td>3</td><td><code>13</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>37</td><td><code>6, 7, 25, 10</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>237</td><td><code>11, 16, 1, 3, 22, 23, 24, 8, 9, 26, 27, 14, 17</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>271</td><td><code>2, 4, 19, 20, 21, 0, 15, 18</code></td></tr><tr><td>Community 5</td><td>12</td><td><code>5</code></td></tr><tr><td>Community 12</td><td>8</td><td><code>12</code></td></tr><tr><td>Community 28</td><td>6</td><td><code>28</code></td></tr>
+      <tr><td>Graph Build</td><td>3</td><td><code>13</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>37</td><td><code>6, 7, 25, 10</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>316</td><td><code>2, 11, 16, 3, 1, 22, 23, 24, 8, 9, 26, 27, 14, 17</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>214</td><td><code>4, 19, 20, 21, 0, 29, 15, 18</code></td></tr><tr><td>Community 5</td><td>12</td><td><code>5</code></td></tr><tr><td>Community 12</td><td>8</td><td><code>12</code></td></tr><tr><td>Community 28</td><td>6</td><td><code>28</code></td></tr>
     </table>
   </div>
   <div class="card">
@@ -124,8 +124,8 @@ flowchart LR
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>574 nodes · 1372 edges · 29 communities (25 shown, 4 thin omitted)</li>
-      <li>Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)</li>
+      <li>596 nodes · 1428 edges · 30 communities (26 shown, 4 thin omitted)</li>
+      <li>Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)</li>
       <li>Token cost: 0 input · 0 output</li>
       <li>1. `RunConfig` - 67 edges</li>
       <li>2. `Workspace` - 43 edges</li>
@@ -546,430 +546,72 @@ flowchart LR
 
 <!-- ====== 4. CLI & Skill Installers ====== -->
 <h2 id="cli-skills">4. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around skill, eval, 2026, docs, mostly in skill_eval/git_ops.py, skill_eval/tracing.py, skill_eval/orchestrator.py. This section covers 237 nodes and 408 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>CLI &amp; Skill Installers groups implementation around skill, eval, test, 2026, mostly in skill_eval/contracts.py, skill_eval/git_ops.py, skill_eval/tracing.py. This section covers 316 nodes and 810 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (237 nodes, 408 edges)
-    subgraph cli_skills_skill_eval_git_ops_py_c6ad4dd8["skill_eval/git_ops.py"]
-        skill_eval_git_ops_run_930b10d9("_run()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_is_lock_error_8eee1224("_is_lock_error()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_retry_git_4c172b5d("_retry_git()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_worktree_add_bc709288("worktree_add()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_worktree_remove_9004cd30("worktree_remove()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_add_all_ba7fa5c4("add_all()<br/><small>skill_eval/git_ops.py</small>")
-        skill_eval_git_ops_commit_2484a4f8("commit()<br/><small>skill_eval/git_ops.py</small>")
+    %% Section: CLI &amp; Skill Installers (316 nodes, 810 edges)
+    subgraph cli_skills_tests_test_contracts_py_084b8046["tests/test_contracts.py"]
+        tests_test_contracts_test_full_report_compositio_1795edc8("full report composition()<br/><small>tests/test_contracts.py</small>")
+        tests_test_contracts_test_runconfig_defaults_and_2bef17b4("defaults and frozen()<br/><small>tests/test_contracts.py</small>")
+        tests_test_contracts_test_runconfig_thinking_bud_40082687("runconfig thinking budget()<br/><small>tests/test_contracts.py</small>")
+        tests_test_contracts_test_workspace_frozen_198a8510("test_workspace_frozen()<br/><small>tests/test_contracts.py</small>")
+        tests_test_contracts_test_judge_input_constructs_fd64cd27("judge input constructs()<br/><small>tests/test_contracts.py</small>")
     end
     subgraph cli_skills_skill_eval_contracts_py_3ad8ff59["skill_eval/contracts.py"]
-        skill_eval_contracts_judgeinput_4652226e("JudgeInput<br/><small>skill_eval/contracts.py</small>")
-        skill_eval_contracts_armreport_10b79f43("ArmReport<br/><small>skill_eval/contracts.py</small>")
-    end
-    subgraph cli_skills_skill_eval_orchestrator_py_deb11e09["skill_eval/orchestrator.py"]
-        skill_eval_orchestrator_node_judge_68ae4846("_node_judge()<br/><small>skill_eval/orchestrator.py</small>")
-        skill_eval_orchestrator_node_assemble_51c0309c("_node_assemble()<br/><small>skill_eval/orchestrator.py</small>")
-    end
-    subgraph cli_skills_skill_eval_simulator_py_82beed3b["skill_eval/simulator.py"]
-        skill_eval_simulator_fac7312d("simulator.py")
-        skill_eval_simulator_make_simulator_bd9d8a86("make_simulator()<br/><small>skill_eval/simulator.py</small>")
-    end
-    subgraph cli_skills_skill_eval_taker_py_213cab5f["skill_eval/taker.py"]
-        skill_eval_taker_16e997d0("taker.py")
-        skill_eval_taker_run_taker_4a97b5cf("run_taker()<br/><small>skill_eval/taker.py</small>")
-    end
-    skill_eval_flagship_case_build_flagship_case_4c20dfc6("build_flagship_case()<br/><small>skill_eval/flagship_case.py</small>")
-    skill_eval_judge_62e3a1fd("judge.py")
-    tests_test_flagship_case_test_build_flagship_cas_35567845("test_build_flagship_case()<br/><small>tests/test_flagship_case.py</small>")
-    skill_eval_contracts_judgeinput_4652226e -->|calls| skill_eval_orchestrator_node_judge_68ae4846
-    skill_eval_contracts_armreport_10b79f43 -->|calls| skill_eval_orchestrator_node_assemble_51c0309c
-    skill_eval_flagship_case_build_flagship_case_4c20dfc6 -->|calls| tests_test_flagship_case_test_build_flagship_cas_35567845
-    skill_eval_git_ops_is_lock_error_8eee1224 -->|calls| skill_eval_git_ops_retry_git_4c172b5d
-    skill_eval_git_ops_retry_git_4c172b5d -->|calls| skill_eval_git_ops_worktree_add_bc709288
-    skill_eval_git_ops_retry_git_4c172b5d -->|calls| skill_eval_git_ops_worktree_remove_9004cd30
-    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_add_all_ba7fa5c4
-    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_commit_2484a4f8
-    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_worktree_add_bc709288
-    skill_eval_git_ops_run_930b10d9 -->|calls| skill_eval_git_ops_worktree_remove_9004cd30
-    skill_eval_contracts_judgeinput_4652226e -->|imports| skill_eval_judge_62e3a1fd
-    %% Omitted for readability: 219 nodes, 0 edges
-    class skill_eval_git_ops_run_930b10d9 function;
-    class skill_eval_git_ops_is_lock_error_8eee1224 function;
-    class skill_eval_git_ops_retry_git_4c172b5d function;
-    class skill_eval_git_ops_worktree_add_bc709288 function;
-    class skill_eval_git_ops_worktree_remove_9004cd30 function;
-    class skill_eval_git_ops_add_all_ba7fa5c4 function;
-    class skill_eval_git_ops_commit_2484a4f8 function;
-    class skill_eval_contracts_judgeinput_4652226e klass;
-    class skill_eval_contracts_armreport_10b79f43 klass;
-    class skill_eval_orchestrator_node_judge_68ae4846 function;
-    class skill_eval_orchestrator_node_assemble_51c0309c async;
-    class skill_eval_simulator_fac7312d module;
-    class skill_eval_simulator_make_simulator_bd9d8a86 function;
-    class skill_eval_taker_16e997d0 module;
-    class skill_eval_taker_run_taker_4a97b5cf function;
-    class skill_eval_flagship_case_build_flagship_case_4c20dfc6 function;
-    class skill_eval_judge_62e3a1fd module;
-    class tests_test_flagship_case_test_build_flagship_cas_35567845 test;
-    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
-    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
-    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
-    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
-    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
-    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
-    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
-    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
-    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
-</div>
-
-<h3>Call Details</h3>
-<table class="call-table">
-<tr>
-  <th style="width:5%">#</th>
-  <th style="width:28%">Node</th>
-  <th style="width:10%">Type</th>
-  <th style="width:17%">Caller</th>
-  <th style="width:20%">Callees</th>
-  <th style="width:20%">Description</th>
-</tr>
-<tr>
-  <td>1</td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_invocation_parameters()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+7 more</td>
-  <td>Module file in skill_eval/judge.py.</td>
-</tr>
-<tr>
-  <td>2</td>
-  <td><code>_parse_response()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td>_parse_response() node in skill_eval/judge.py.</td>
-</tr>
-<tr>
-  <td>3</td>
-  <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>_parse_response()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+7 more</td>
-  <td>run_judge() node in skill_eval/judge.py.</td>
-</tr>
-<tr>
-  <td>4</td>
-  <td><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td>No direct outbound edge</td>
-  <td>JudgeScore node in skill_eval/judge.py.</td>
-</tr>
-<tr>
-  <td>5</td>
-  <td><code>C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r.</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>Extract (score, rationale) from the model response.      Tries json.loads on the</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Extract (score, rationale) from the model response.      Tries json.loads on the.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet</code><br><small style="color:var(--muted)">skill_eval/judge.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+10 more</td>
-  <td>Module file in skill_eval/simulator.py.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>_build_gold_context()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td>_build_gold_context() node in skill_eval/simulator.py.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>_build_gold_context()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small></td>
-  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+8 more</td>
-  <td>make_simulator() node in skill_eval/simulator.py.</td>
-</tr>
-<tr>
-  <td>11</td>
-  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td>No direct outbound edge</td>
-  <td>AskFn node in skill_eval/simulator.py.</td>
-</tr>
-<tr>
-  <td>12</td>
-  <td><code>C3: Real reactive HITL simulator backed by claude-haiku-4-5.  The simulator is a</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for C3: Real reactive HITL simulator backed by claude-haiku-4-5.  The simulator is a.</td>
-</tr>
-<tr>
-  <td>13</td>
-  <td><code>Return a bounded string describing the gold tree + task brief.</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Return a bounded string describing the gold tree + task brief..</td>
-</tr>
-<tr>
-  <td>14</td>
-  <td><code>Return an AskFn that answers taker questions using the gold context.      Parame</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Return an AskFn that answers taker questions using the gold context.      Parame.</td>
-</tr>
-<tr>
-  <td>15</td>
-  <td><code>taker.py</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>git_ops.py</code><br><small style="color:var(--muted)">skill_eval/git_ops.py</small></td>
-  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+9 more</td>
-  <td>Module file in skill_eval/taker.py.</td>
-</tr>
-<tr>
-  <td>16</td>
-  <td><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small></td>
-  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small><br>+8 more</td>
-  <td>run_taker() node in skill_eval/taker.py.</td>
-</tr>
-<tr>
-  <td>17</td>
-  <td><code>C2: Real taker backed by the Claude Agent SDK (claude-haiku-4-5).  The taker is</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for C2: Real taker backed by the Claude Agent SDK (claude-haiku-4-5).  The taker is.</td>
-</tr>
-<tr>
-  <td>18</td>
-  <td><code>Run a Claude Agent SDK session under budget and return the result.      Paramete</code><br><small style="color:var(--muted)">skill_eval/taker.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Run a Claude Agent SDK session under budget and return the result.      Paramete.</td>
-</tr>
-<tr>
-  <td>19</td>
-  <td><code>tracing.py</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br>+1 more</td>
-  <td>No direct outbound edge</td>
-  <td>Module file in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>20</td>
-  <td><code>get_tracer()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>simulator.py</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br>+1 more</td>
-  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
-  <td>get_tracer() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>21</td>
-  <td><code>Tracer</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Tracer node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>22</td>
-  <td><code>set_kind()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td><code>tool_span()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td>set_kind() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>23</td>
-  <td><code>Span</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Span node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>24</td>
-  <td><code>set_input()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td>No direct outbound edge</td>
-  <td>set_input() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>25</td>
-  <td><code>set_output()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td>No direct outbound edge</td>
-  <td>set_output() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>26</td>
-  <td><code>set_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td>No direct outbound edge</td>
-  <td>set_tokens() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>27</td>
-  <td><code>set_cache_tokens()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
-  <td>Caches analysis results or computes cache keys.</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>set_model_name()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
-  <td>set_model_name() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>set_invocation_parameters()</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br>+3 more</td>
-  <td><code>span enrichment helpers()</code><br><small style="color:var(--muted)">tests/test_tracing.py</small><br><code>test_tracing.py</code><br><small style="color:var(--muted)">tests/test_tracing.py</small></td>
-  <td>set_invocation_parameters() node in skill_eval/tracing.py.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>Any</code><br><small style="color:var(--muted)">skill_eval/tracing.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Any node in skill_eval/tracing.py.</td>
-</tr>
-</table>
-
-<div class="grid">
-  <div class="card">
-    <h4>Key Files</h4>
-    <table style="width:100%;font-size:0.85rem;">
-      <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>skill_eval/git_ops.py</code></td><td>30 nodes</td></tr>
-<tr><td><code>skill_eval/tracing.py</code></td><td>29 nodes</td></tr>
-<tr><td><code>skill_eval/orchestrator.py</code></td><td>26 nodes</td></tr>
-<tr><td><code>superpowers/specs/2026-06-06-skill-eval-system-design.md</code></td><td>22 nodes</td></tr>
-<tr><td><code>superpowers/plans/2026-06-08-phase-b-real-components.md</code></td><td>12 nodes</td></tr>
-<tr><td><code>skills/disciplined/SKILL.md</code></td><td>11 nodes</td></tr>
-<tr><td><code>superpowers/spikes/2026-06-06-skill-loading.md</code></td><td>10 nodes</td></tr>
-<tr><td><code>skills/ship-it-fast/SKILL.md</code></td><td>10 nodes</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x133, calls x81, explains x58, imports x50. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
-  </div>
-</div>
-<hr>
-
-<!-- ====== 5. Tests & Fixtures ====== -->
-<h2 id="tests-fixtures">5. Tests &amp; Fixtures</h2>
-<p>Tests &amp; Fixtures groups implementation around test, tests, skill, eval, mostly in tests/test_taker.py, skill_eval/contracts.py, skill_eval/reporting.py. This section covers 271 nodes and 724 internal edges; the diagram shows only representative relationships to stay readable.</p>
-
-<div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
-flowchart LR
-    %% Section: Tests &amp; Fixtures (271 nodes, 724 edges)
-    subgraph tests_fixtures_skill_eval_reporting_py_27b01eb6["skill_eval/reporting.py"]
-        skill_eval_reporting_init_phoenix_28e58143("init_phoenix()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_scores_table_f7ab4b26("scores_table()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_verdict_line_1be1811f("verdict_line()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_agent_graph_dot_e4da4de3("agent_graph_dot()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_arm_color_list_799f6465("arm_color_list()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_criterion_gap_rows_dff3a775("criterion_gap_rows()<br/><small>skill_eval/reporting.py</small>")
-        skill_eval_reporting_quality_cost_rows_31f309c1("quality_cost_rows()<br/><small>skill_eval/reporting.py</small>")
-    end
-    subgraph tests_fixtures_app_py_4137de16["app.py"]
-        app_7d104347("app.py")
-        app_main_f38e028d("main()<br/><small>app.py</small>")
-        app_run_batch_mode_cdd8fc85("_run_batch_mode()<br/><small>app.py</small>")
-        app_run_flagship_mode_8a738566("_run_flagship_mode()<br/><small>app.py</small>")
-        app_run_single_case_fc427721("_run_single_case()<br/><small>app.py</small>")
-    end
-    subgraph tests_fixtures_skill_eval_contracts_py_dde55b73["skill_eval/contracts.py"]
+        skill_eval_contracts_bdd252d3("contracts.py")
         skill_eval_contracts_runconfig_a490fa9a("RunConfig<br/><small>skill_eval/contracts.py</small>")
         skill_eval_contracts_runmetrics_34103d70("RunMetrics<br/><small>skill_eval/contracts.py</small>")
-        skill_eval_contracts_bdd252d3("contracts.py")
-        skill_eval_contracts_arm_97e32965("Arm<br/><small>skill_eval/contracts.py</small>")
+        skill_eval_contracts_workspace_632b9f4a("Workspace<br/><small>skill_eval/contracts.py</small>")
     end
-    skill_eval_sample_cases_build_sample_cases_94a753da("build_sample_cases()<br/><small>skill_eval/sample_cases.py</small>")
+    subgraph cli_skills_tests_test_taker_py_32cb26d6["tests/test_taker.py"]
+        tests_test_taker_test_run_taker_thinking_budget_29472358("budget sets option()<br/><small>tests/test_taker.py</small>")
+        tests_test_taker_make_workspace_6e41f244("_make_workspace()<br/><small>tests/test_taker.py</small>")
+    end
+    skill_eval_git_ops_run_930b10d9("_run()<br/><small>skill_eval/git_ops.py</small>")
     skill_eval_sample_repo_build_sample_repo_f2f08aec("build_sample_repo()<br/><small>skill_eval/sample_repo.py</small>")
-    app_main_f38e028d -->|calls| app_run_batch_mode_cdd8fc85
-    app_main_f38e028d -->|calls| app_run_flagship_mode_8a738566
-    app_main_f38e028d -->|calls| app_run_single_case_fc427721
-    app_main_f38e028d -->|calls| skill_eval_reporting_init_phoenix_28e58143
-    app_main_f38e028d -->|calls| skill_eval_reporting_scores_table_f7ab4b26
-    app_main_f38e028d -->|calls| skill_eval_reporting_verdict_line_1be1811f
-    app_main_f38e028d -->|calls| skill_eval_sample_repo_build_sample_repo_f2f08aec
-    app_run_single_case_fc427721 -->|calls| app_run_flagship_mode_8a738566
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_agent_graph_dot_e4da4de3
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_arm_color_list_799f6465
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_criterion_gap_rows_dff3a775
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_quality_cost_rows_31f309c1
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_scores_table_f7ab4b26
-    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_verdict_line_1be1811f
-    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_reporting_arm_color_list_799f6465
-    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_sample_cases_build_sample_cases_94a753da
+    skill_eval_sandbox_prepare_workspaces_b206f0c8("prepare_workspaces()<br/><small>skill_eval/sandbox.py</small>")
+    skill_eval_simulated_sim_run_taker_bfae3483("sim_run_taker()<br/><small>skill_eval/simulated.py</small>")
+    skill_eval_simulator_fac7312d("simulator.py")
+    skill_eval_taker_run_taker_4a97b5cf("run_taker()<br/><small>skill_eval/taker.py</small>")
+    tests_test_reporting_test_criterion_gap_rows_sor_10528883("by gap desc()<br/><small>tests/test_reporting.py</small>")
     skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_sample_repo_build_sample_repo_f2f08aec
-    app_7d104347 -->|imports| skill_eval_reporting_agent_graph_dot_e4da4de3
-    app_7d104347 -->|imports| skill_eval_reporting_arm_color_list_799f6465
-    app_7d104347 -->|imports| skill_eval_reporting_criterion_gap_rows_dff3a775
-    app_7d104347 -->|imports| skill_eval_reporting_init_phoenix_28e58143
-    app_7d104347 -->|imports| skill_eval_reporting_quality_cost_rows_31f309c1
-    app_7d104347 -->|imports| skill_eval_reporting_scores_table_f7ab4b26
-    app_7d104347 -->|imports| skill_eval_reporting_verdict_line_1be1811f
-    %% Omitted for readability: 253 nodes, 2 edges
-    class skill_eval_reporting_init_phoenix_28e58143 function;
-    class skill_eval_reporting_scores_table_f7ab4b26 function;
-    class skill_eval_reporting_verdict_line_1be1811f function;
-    class skill_eval_reporting_agent_graph_dot_e4da4de3 function;
-    class skill_eval_reporting_arm_color_list_799f6465 function;
-    class skill_eval_reporting_criterion_gap_rows_dff3a775 function;
-    class skill_eval_reporting_quality_cost_rows_31f309c1 function;
-    class app_7d104347 module;
-    class app_main_f38e028d function;
-    class app_run_batch_mode_cdd8fc85 function;
-    class app_run_flagship_mode_8a738566 function;
-    class app_run_single_case_fc427721 function;
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_contracts_test_full_report_compositio_1795edc8
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_contracts_test_runconfig_defaults_and_2bef17b4
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_contracts_test_runconfig_thinking_bud_40082687
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_reporting_test_criterion_gap_rows_sor_10528883
+    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_taker_test_run_taker_thinking_budget_29472358
+    skill_eval_contracts_workspace_632b9f4a -->|calls| skill_eval_sandbox_prepare_workspaces_b206f0c8
+    skill_eval_contracts_workspace_632b9f4a -->|calls| tests_test_contracts_test_workspace_frozen_198a8510
+    skill_eval_contracts_workspace_632b9f4a -->|calls| tests_test_taker_make_workspace_6e41f244
+    skill_eval_contracts_runmetrics_34103d70 -->|calls| skill_eval_simulated_sim_run_taker_bfae3483
+    skill_eval_contracts_runmetrics_34103d70 -->|calls| skill_eval_taker_run_taker_4a97b5cf
+    skill_eval_contracts_runmetrics_34103d70 -->|calls| tests_test_contracts_test_full_report_compositio_1795edc8
+    skill_eval_contracts_runmetrics_34103d70 -->|calls| tests_test_contracts_test_judge_input_constructs_fd64cd27
+    skill_eval_contracts_runmetrics_34103d70 -->|calls| tests_test_reporting_test_criterion_gap_rows_sor_10528883
+    skill_eval_taker_run_taker_4a97b5cf -->|calls| tests_test_taker_test_run_taker_thinking_budget_29472358
+    tests_test_taker_make_workspace_6e41f244 -->|calls| tests_test_taker_test_run_taker_thinking_budget_29472358
+    skill_eval_contracts_bdd252d3 -->|imports| skill_eval_simulator_fac7312d
+    %% Omitted for readability: 298 nodes, 0 edges
+    class tests_test_contracts_test_full_report_compositio_1795edc8 test;
+    class tests_test_contracts_test_runconfig_defaults_and_2bef17b4 test;
+    class tests_test_contracts_test_runconfig_thinking_bud_40082687 test;
+    class tests_test_contracts_test_workspace_frozen_198a8510 test;
+    class tests_test_contracts_test_judge_input_constructs_fd64cd27 test;
+    class skill_eval_contracts_bdd252d3 module;
     class skill_eval_contracts_runconfig_a490fa9a klass;
     class skill_eval_contracts_runmetrics_34103d70 klass;
-    class skill_eval_contracts_bdd252d3 module;
-    class skill_eval_contracts_arm_97e32965 klass;
-    class skill_eval_sample_cases_build_sample_cases_94a753da function;
+    class skill_eval_contracts_workspace_632b9f4a klass;
+    class tests_test_taker_test_run_taker_thinking_budget_29472358 test;
+    class tests_test_taker_make_workspace_6e41f244 test;
+    class skill_eval_git_ops_run_930b10d9 function;
     class skill_eval_sample_repo_build_sample_repo_f2f08aec function;
+    class skill_eval_sandbox_prepare_workspaces_b206f0c8 function;
+    class skill_eval_simulated_sim_run_taker_bfae3483 function;
+    class skill_eval_simulator_fac7312d module;
+    class skill_eval_taker_run_taker_4a97b5cf function;
+    class tests_test_reporting_test_criterion_gap_rows_sor_10528883 test;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -995,8 +637,8 @@ flowchart LR
   <td>1</td>
   <td><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
-  <td><code>batch.py</code><br><small style="color:var(--muted)">skill_eval/batch.py</small></td>
-  <td><code>reporting.py</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>sample_cases.py</code><br><small style="color:var(--muted)">skill_eval/sample_cases.py</small><br><code>sample_repo.py</code><br><small style="color:var(--muted)">skill_eval/sample_repo.py</small><br>+11 more</td>
+  <td>External entry / no inbound edge</td>
+  <td><code>judge.py</code><br><small style="color:var(--muted)">skill_eval/judge.py</small><br><code>orchestrator.py</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>sample_repo.py</code><br><small style="color:var(--muted)">skill_eval/sample_repo.py</small><br>+9 more</td>
   <td>Module file in skill_eval/contracts.py.</td>
 </tr>
 <tr>
@@ -1004,7 +646,7 @@ flowchart LR
   <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Arm</code><br><small style="color:var(--muted)">skill_eval/sandbox.py</small><br>+23 more</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+27 more</td>
   <td>Arm node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
@@ -1020,51 +662,75 @@ flowchart LR
   <td><code>StopReason</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br>+19 more</td>
+  <td><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+17 more</td>
   <td>StopReason node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
   <td>5</td>
-  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>Criterion</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>batch.py</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br><code>EventFn</code><br><small style="color:var(--muted)">skill_eval/batch.py</small><br>+4 more</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_make_case()</code><br><small style="color:var(--muted)">skill_eval/sample_cases.py</small><br><code>_make_cfg()</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+37 more</td>
-  <td>Reads, resolves, or persists project configuration.</td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+12 more</td>
+  <td>Criterion node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
   <td>6</td>
-  <td><code>Workspace</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_make_workspace()</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+24 more</td>
-  <td>Workspace node in skill_eval/contracts.py.</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+39 more</td>
+  <td>Reads, resolves, or persists project configuration.</td>
 </tr>
 <tr>
   <td>7</td>
-  <td><code>RunMetrics</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>Workspace</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_ji()</code><br><small style="color:var(--muted)">tests/test_judge.py</small><br><code>_make_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br>+29 more</td>
-  <td>RunMetrics node in skill_eval/contracts.py.</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>_make_workspace()</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+34 more</td>
+  <td>Workspace node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
   <td>8</td>
-  <td><code>TakerResult</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>RunMetrics</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_FakeResult</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>_ji()</code><br><small style="color:var(--muted)">tests/test_judge.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br>+24 more</td>
-  <td>TakerResult node in skill_eval/contracts.py.</td>
+  <td><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+23 more</td>
+  <td>RunMetrics node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
   <td>9</td>
-  <td><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>TakerResult</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>_make_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>_report()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+12 more</td>
-  <td>JudgeScore node in skill_eval/contracts.py.</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">tests/test_taker.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+33 more</td>
+  <td>TakerResult node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
   <td>10</td>
+  <td><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>_node_judge()</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+22 more</td>
+  <td>JudgeInput node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+22 more</td>
+  <td>JudgeScore node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>ArmReport</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_EvalState</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>_node_assemble()</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br><code>Any</code><br><small style="color:var(--muted)">skill_eval/orchestrator.py</small><br>+12 more</td>
+  <td>ArmReport node in skill_eval/contracts.py.</td>
+</tr>
+<tr>
+  <td>13</td>
   <td><code>prepare_workspaces()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -1072,7 +738,7 @@ flowchart LR
   <td>prepare_workspaces() node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>14</td>
   <td><code>run_taker()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -1080,15 +746,15 @@ flowchart LR
   <td>run_taker() node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
-  <td>12</td>
+  <td>15</td>
   <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br><code>JudgeInput</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+10 more</td>
+  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulator.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/taker.py</small><br><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br>+11 more</td>
   <td>AskFn node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>16</td>
   <td><code>make_simulator()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -1096,7 +762,7 @@ flowchart LR
   <td>make_simulator() node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
-  <td>14</td>
+  <td>17</td>
   <td><code>run_judge()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -1104,15 +770,7 @@ flowchart LR
   <td>run_judge() node in skill_eval/contracts.py.</td>
 </tr>
 <tr>
-  <td>15</td>
-  <td><code>run_eval()</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>run_eval() node in skill_eval/contracts.py.</td>
-</tr>
-<tr>
-  <td>16</td>
+  <td>18</td>
   <td><code>Shared data contracts for the skill-eval harness.  This is the single integratio</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1120,7 +778,7 @@ flowchart LR
   <td>Design note for Shared data contracts for the skill-eval harness.  This is the single integratio.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>19</td>
   <td><code>Which skill a test-taker is running.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1128,7 +786,7 @@ flowchart LR
   <td>Design note for Which skill a test-taker is running..</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>20</td>
   <td><code>Why a test-taker run ended.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1136,7 +794,15 @@ flowchart LR
   <td>Design note for Why a test-taker run ended..</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>21</td>
+  <td><code>One judged dimension. Each becomes its own concurrent judge.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for One judged dimension. Each becomes its own concurrent judge..</td>
+</tr>
+<tr>
+  <td>22</td>
   <td><code>The eval&#x27;s input: commits, task, skills, and the test budget.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1144,7 +810,7 @@ flowchart LR
   <td>Design note for The eval&#x27;s input: commits, task, skills, and the test budget..</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>23</td>
   <td><code>Isolated dirs for one arm plus the shared gold tree.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1152,7 +818,7 @@ flowchart LR
   <td>Design note for Isolated dirs for one arm plus the shared gold tree..</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>24</td>
   <td><code>Objective, non-LLM measurements of a single taker run.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1160,7 +826,7 @@ flowchart LR
   <td>Design note for Objective, non-LLM measurements of a single taker run..</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>25</td>
   <td><code>Everything one taker produced, ready for judging.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1168,7 +834,15 @@ flowchart LR
   <td>Design note for Everything one taker produced, ready for judging..</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>26</td>
+  <td><code>Everything one judge needs to score one criterion for one taker.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Everything one judge needs to score one criterion for one taker..</td>
+</tr>
+<tr>
+  <td>27</td>
   <td><code>A single judge&#x27;s 0-20 score plus rationale.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1176,7 +850,15 @@ flowchart LR
   <td>Design note for A single judge&#x27;s 0-20 score plus rationale..</td>
 </tr>
 <tr>
-  <td>24</td>
+  <td>28</td>
+  <td><code>Aggregated result for one arm (one model).</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Aggregated result for one arm (one model)..</td>
+</tr>
+<tr>
+  <td>29</td>
   <td><code>Component 1: create git worktrees and compute the gold diff.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -1184,52 +866,12 @@ flowchart LR
   <td>Design note for Component 1: create git worktrees and compute the gold diff..</td>
 </tr>
 <tr>
-  <td>25</td>
+  <td>30</td>
   <td><code>Component 2: run a Claude Agent SDK session under budget; return result.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>Design note for Component 2: run a Claude Agent SDK session under budget; return result..</td>
-</tr>
-<tr>
-  <td>26</td>
-  <td><code>Component 3: build the AskFn the simulator uses to answer questions.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Component 3: build the AskFn the simulator uses to answer questions..</td>
-</tr>
-<tr>
-  <td>27</td>
-  <td><code>Component 5: score one criterion for one taker (0-20).</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Component 5: score one criterion for one taker (0-20)..</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>Component 6: orchestrate the whole eval and return the comparison.</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Component 6: orchestrate the whole eval and return the comparison..</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/sandbox.py</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>Workspace</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td>No direct outbound edge</td>
-  <td>Reads, resolves, or persists project configuration.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>simulated.py</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br>+5 more</td>
-  <td><code>AskFn</code><br><small style="color:var(--muted)">skill_eval/simulated.py</small><br><code>test_batch.py</code><br><small style="color:var(--muted)">tests/test_batch.py</small><br><code>test_orchestrator.py</code><br><small style="color:var(--muted)">tests/test_orchestrator.py</small><br>+1 more</td>
-  <td>Module file in skill_eval/simulated.py.</td>
 </tr>
 </table>
 
@@ -1238,19 +880,377 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>tests/test_taker.py</code></td><td>46 nodes</td></tr>
-<tr><td><code>skill_eval/contracts.py</code></td><td>29 nodes</td></tr>
-<tr><td><code>skill_eval/reporting.py</code></td><td>29 nodes</td></tr>
-<tr><td><code>tests/test_reporting.py</code></td><td>24 nodes</td></tr>
-<tr><td><code>tests/test_judge.py</code></td><td>20 nodes</td></tr>
+      <tr><td><code>skill_eval/contracts.py</code></td><td>31 nodes</td></tr>
+<tr><td><code>skill_eval/git_ops.py</code></td><td>30 nodes</td></tr>
+<tr><td><code>skill_eval/tracing.py</code></td><td>29 nodes</td></tr>
+<tr><td><code>skill_eval/orchestrator.py</code></td><td>26 nodes</td></tr>
+<tr><td><code>superpowers/specs/2026-06-06-skill-eval-system-design.md</code></td><td>22 nodes</td></tr>
 <tr><td><code>skill_eval/simulated.py</code></td><td>16 nodes</td></tr>
-<tr><td><code>skill_eval/taker.py</code></td><td>13 nodes</td></tr>
-<tr><td><code>skill_eval/sample_cases.py</code></td><td>12 nodes</td></tr>
+<tr><td><code>superpowers/plans/2026-06-08-phase-b-real-components.md</code></td><td>12 nodes</td></tr>
+<tr><td><code>skills/disciplined/SKILL.md</code></td><td>11 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: calls x180, contains x129, imports x107, explains x83. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x168, calls x130, imports x119, explains x76. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">5. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around test, tests, skill, eval, mostly in tests/test_taker.py, skill_eval/reporting.py, tests/test_reporting.py. This section covers 214 nodes and 415 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Tests &amp; Fixtures (214 nodes, 415 edges)
+    subgraph tests_fixtures_app_py_4137de16["app.py"]
+        app_7d104347("app.py")
+        app_run_batch_mode_cdd8fc85("_run_batch_mode()<br/><small>app.py</small>")
+        app_slug_8993112c("_slug()<br/><small>app.py</small>")
+        app_run_custom_mode_dd8560d1("_run_custom_mode()<br/><small>app.py</small>")
+        app_main_f38e028d("main()<br/><small>app.py</small>")
+        app_run_flagship_mode_8a738566("_run_flagship_mode()<br/><small>app.py</small>")
+        app_run_single_case_fc427721("_run_single_case()<br/><small>app.py</small>")
+        app_render_single_results_443dcca5("_render_single_results()<br/><small>app.py</small>")
+    end
+    subgraph tests_fixtures_skill_eval_reporting_py_27b01eb6["skill_eval/reporting.py"]
+        skill_eval_reporting_init_phoenix_28e58143("init_phoenix()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_scores_table_f7ab4b26("scores_table()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_verdict_line_1be1811f("verdict_line()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_agent_graph_dot_e4da4de3("agent_graph_dot()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_arm_color_list_799f6465("arm_color_list()<br/><small>skill_eval/reporting.py</small>")
+        skill_eval_reporting_criterion_gap_rows_dff3a775("criterion_gap_rows()<br/><small>skill_eval/reporting.py</small>")
+    end
+    skill_eval_judge_build_prompt_9f085834("_build_prompt()<br/><small>skill_eval/judge.py</small>")
+    skill_eval_sample_cases_build_sample_cases_94a753da("build_sample_cases()<br/><small>skill_eval/sample_cases.py</small>")
+    tests_test_judge_ji_bbfe46a6("_ji()<br/><small>tests/test_judge.py</small>")
+    tests_test_taker_fakeresult_cc599706("_FakeResult<br/><small>tests/test_taker.py</small>")
+    app_slug_8993112c -->|calls| app_run_custom_mode_dd8560d1
+    app_main_f38e028d -->|calls| app_run_batch_mode_cdd8fc85
+    app_main_f38e028d -->|calls| app_run_custom_mode_dd8560d1
+    app_main_f38e028d -->|calls| app_run_flagship_mode_8a738566
+    app_main_f38e028d -->|calls| app_run_single_case_fc427721
+    app_main_f38e028d -->|calls| skill_eval_reporting_init_phoenix_28e58143
+    app_main_f38e028d -->|calls| skill_eval_reporting_scores_table_f7ab4b26
+    app_main_f38e028d -->|calls| skill_eval_reporting_verdict_line_1be1811f
+    app_run_single_case_fc427721 -->|calls| app_run_custom_mode_dd8560d1
+    app_run_single_case_fc427721 -->|calls| app_run_flagship_mode_8a738566
+    app_run_single_case_fc427721 -->|calls| app_render_single_results_443dcca5
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_agent_graph_dot_e4da4de3
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_arm_color_list_799f6465
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_criterion_gap_rows_dff3a775
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_scores_table_f7ab4b26
+    app_run_single_case_fc427721 -->|calls| skill_eval_reporting_verdict_line_1be1811f
+    app_render_single_results_443dcca5 -->|calls| skill_eval_reporting_agent_graph_dot_e4da4de3
+    app_render_single_results_443dcca5 -->|calls| skill_eval_reporting_criterion_gap_rows_dff3a775
+    app_render_single_results_443dcca5 -->|calls| skill_eval_reporting_verdict_line_1be1811f
+    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_reporting_arm_color_list_799f6465
+    app_run_batch_mode_cdd8fc85 -->|calls| skill_eval_sample_cases_build_sample_cases_94a753da
+    app_7d104347 -->|imports| skill_eval_reporting_agent_graph_dot_e4da4de3
+    app_7d104347 -->|imports| skill_eval_reporting_arm_color_list_799f6465
+    app_7d104347 -->|imports| skill_eval_reporting_criterion_gap_rows_dff3a775
+    %% Omitted for readability: 196 nodes, 4 edges
+    class app_7d104347 module;
+    class app_run_batch_mode_cdd8fc85 function;
+    class app_slug_8993112c function;
+    class app_run_custom_mode_dd8560d1 function;
+    class app_main_f38e028d function;
+    class app_run_flagship_mode_8a738566 function;
+    class app_run_single_case_fc427721 function;
+    class app_render_single_results_443dcca5 function;
+    class skill_eval_reporting_init_phoenix_28e58143 function;
+    class skill_eval_reporting_scores_table_f7ab4b26 function;
+    class skill_eval_reporting_verdict_line_1be1811f function;
+    class skill_eval_reporting_agent_graph_dot_e4da4de3 function;
+    class skill_eval_reporting_arm_color_list_799f6465 function;
+    class skill_eval_reporting_criterion_gap_rows_dff3a775 function;
+    class skill_eval_judge_build_prompt_9f085834 function;
+    class skill_eval_sample_cases_build_sample_cases_94a753da function;
+    class tests_test_judge_ji_bbfe46a6 test;
+    class tests_test_taker_fakeresult_cc599706 test;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>agent_graph_dot()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>arm_color_list()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>batch_criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br>+14 more</td>
+  <td>Module file in app.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>_is_streamlit()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>_is_streamlit() node in app.py.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>_slug()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_run_custom_mode()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td>_slug() node in app.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>_run_batch_mode()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_custom_mode()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_flagship_mode()</code><br><small style="color:var(--muted)">app.py</small><br>+4 more</td>
+  <td>main() node in app.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_custom_mode()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_flagship_mode()</code><br><small style="color:var(--muted)">app.py</small><br>+6 more</td>
+  <td>_run_single_case() node in app.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>agent_graph_dot()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>quality_cost_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br>+2 more</td>
+  <td>_render_single_results() node in app.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>_run_flagship_mode()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>_run_flagship_mode() node in app.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>_run_custom_mode()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>_slug()</code><br><small style="color:var(--muted)">app.py</small><br><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>_run_custom_mode() node in app.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>_run_batch_mode()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>_render_batch_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>arm_color_list()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>batch_criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br>+6 more</td>
+  <td>_run_batch_mode() node in app.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>_render_batch_results()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_run_batch_mode()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>arm_color_list()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>batch_criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>batch_per_case_totals()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br>+3 more</td>
+  <td>_render_batch_results() node in app.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>Streamlit dashboard for the skill-eval harness.  Run with:     uv run streamlit</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Streamlit dashboard for the skill-eval harness.  Run with:     uv run streamlit.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Return True when this file is being executed by Streamlit.</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Return True when this file is being executed by Streamlit..</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>Slugify a user-supplied skill name into a safe directory name.</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Slugify a user-supplied skill name into a safe directory name..</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Single-case control-room view.      Parameters     ----------     build_cfg:</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Single-case control-room view.      Parameters     ----------     build_cfg:.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>Render the full results funnel for a completed single-case report.      Funnel (</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Render the full results funnel for a completed single-case report.      Funnel (.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>Flagship mode: disciplined vs ship-it-fast on prorate_refund with real Haiku age</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Flagship mode: disciplined vs ship-it-fast on prorate_refund with real Haiku age.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Custom mode: bring-your-own skills (and budgets) on a chosen task fixture.</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Custom mode: bring-your-own skills (and budgets) on a chosen task fixture..</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Batch (10 cases) view: run all sample cases and show aggregate viz.</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Batch (10 cases) view: run all sample cases and show aggregate viz..</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>Render aggregate visualisations for a completed batch.</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Render aggregate visualisations for a completed batch..</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>reporting.py</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>Module file in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>arm_color_list()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_batch_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_batch_mode()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br>+1 more</td>
+  <td><code>test_arm_color_palette()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>arm_color_list() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>scores_table()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small><br><code>main()</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_scores_table_shape()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>scores_table() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>ComparisonReport node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>verdict_line()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small><br>+1 more</td>
+  <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_verdict_line()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>verdict_line() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>criterion_winners()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>shape and gap()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>criterion_gap_rows() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>criterion_winners()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><code>test_criterion_winners()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>criterion_winners() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>quality_cost_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_single_case()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>test_quality_cost_rows()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>quality_cost_rows() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>report_to_json()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_single_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>json round trips()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>report_to_json() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>reports_to_json()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_batch_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>json is array()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>reports_to_json() node in skill_eval/reporting.py.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>batch_win_summary()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>_render_batch_results()</code><br><small style="color:var(--muted)">app.py</small><br><code>_run_batch_mode()</code><br><small style="color:var(--muted)">app.py</small><br><code>app.py</code><br><small style="color:var(--muted)">app.py</small></td>
+  <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>win summary counts()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
+  <td>batch_win_summary() node in skill_eval/reporting.py.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>tests/test_taker.py</code></td><td>39 nodes</td></tr>
+<tr><td><code>skill_eval/reporting.py</code></td><td>35 nodes</td></tr>
+<tr><td><code>tests/test_reporting.py</code></td><td>29 nodes</td></tr>
+<tr><td><code>tests/test_judge.py</code></td><td>20 nodes</td></tr>
+<tr><td><code>app.py</code></td><td>19 nodes</td></tr>
+<tr><td><code>skill_eval/sample_cases.py</code></td><td>12 nodes</td></tr>
+<tr><td><code>skill_eval/batch.py</code></td><td>10 nodes</td></tr>
+<tr><td><code>tests/test_batch.py</code></td><td>9 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x149, contains x109, explains x74, imports x44. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -1682,17 +1682,17 @@ flowchart LR
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>574</td></tr>
-      <tr><td>Edges</td><td>1372</td></tr>
+      <tr><td>Nodes</td><td>596</td></tr>
+      <tr><td>Edges</td><td>1428</td></tr>
       <tr><td>Hyperedges</td><td>0</td></tr>
-      <tr><td>Communities</td><td>29</td></tr>
+      <tr><td>Communities</td><td>30</td></tr>
       <tr><td>Documented Sections</td><td>7</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>1129</td></tr>
+      <tr><td>EXTRACTED</td><td>1185</td></tr>
       <tr><td>INFERRED</td><td>243</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
@@ -1701,7 +1701,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>skill-eval — Architecture Documentation</p>
-  <p>Generated: 2026-06-09 06:39 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-06-10 07:46 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->

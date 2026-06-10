@@ -150,6 +150,31 @@ def quality_cost_rows(report: ComparisonReport) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Report serialisation (for st.download_button / archival)
+# ---------------------------------------------------------------------------
+
+
+def report_to_json(report: ComparisonReport) -> str:
+    """Serialise a ComparisonReport to pretty-printed JSON.
+
+    StrEnum members serialise as their string values; anything else
+    non-JSON-native falls back to ``str``.
+    """
+    import json
+    from dataclasses import asdict
+
+    return json.dumps(asdict(report), indent=2, default=str)
+
+
+def reports_to_json(reports: list[ComparisonReport]) -> str:
+    """Serialise a batch of ComparisonReports to one JSON array."""
+    import json
+    from dataclasses import asdict
+
+    return json.dumps([asdict(r) for r in reports], indent=2, default=str)
+
+
+# ---------------------------------------------------------------------------
 # Batch aggregation helpers
 # ---------------------------------------------------------------------------
 
@@ -259,9 +284,10 @@ def batch_criterion_gap_rows(reports: list[ComparisonReport]) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 _STATUS_COLOR = {
-    "pending": "#e6e6e6",
-    "running": "#ffd54a",
-    "done": "#a5d6a7",
+    "pending": "#E0E0E0",
+    "running": "#FFD54F",
+    "done": "#81C784",
+    "error": "#E57373",
 }
 
 _CRITERIA_ORDER = [
@@ -297,41 +323,58 @@ def agent_graph_dot(
     str
         A valid ``digraph { ... }`` DOT string suitable for
         ``st.graphviz_chart()``.
+
+    Layout notes (deliberate, after a readability review):
+    - ``rankdir=LR`` — 16 nodes read wide, not tall, so the graph fits a
+      dashboard row without scrolling.
+    - One invisible *junction* point per arm collapses the 6 judge→assemble
+      edges into a single edge, so ``assemble`` receives 2 arrowheads, not 12.
+    - Edges are de-emphasised (translucent, thin); node *status colour* is the
+      primary signal. d3-graphviz layout is deterministic, so nodes do not
+      jump between 1 Hz repaints.
     """
 
     def _color(status: str) -> str:
         return _STATUS_COLOR.get(status, _STATUS_COLOR["pending"])
 
-    def _node(node_id: str, label: str, status: str) -> str:
+    def _node(node_id: str, label: str, status: str, indent: str = "    ") -> str:
         color = _color(status)
         safe_label = label.replace('"', '\\"')
-        return f'    {node_id} [label="{safe_label}" style=filled fillcolor="{color}"]'
+        outline = ' penwidth=2 color="#B8860B"' if status == "running" else ""
+        return f'{indent}{node_id} [label="{safe_label}" fillcolor="{color}"{outline}]'
 
-    lines: list[str] = ["digraph {", "    rankdir=TB", "    node [shape=box]", ""]
+    lines: list[str] = [
+        "digraph {",
+        "    rankdir=LR",
+        "    ranksep=0.45",
+        "    nodesep=0.18",
+        "    splines=spline",
+        "    bgcolor=transparent",
+        '    fontname="Helvetica"',
+        '    node [shape=box style="rounded,filled" fontname="Helvetica"'
+        ' fontsize=12 margin="0.15,0.08" color="#bbbbbb"]',
+        '    edge [color="#00000033" penwidth=0.8 arrowsize=0.6]',
+        "",
+    ]
 
     # --- sandbox node ---
     sandbox_status = pipeline.get("sandbox", "pending")
     lines.append(_node("sandbox", "sandbox", sandbox_status))
     lines.append("")
 
-    # --- taker + judge nodes, one cluster per arm ---
+    # --- one cluster per arm: taker + 6 judges + invisible fan-in junction ---
     arms = ["baseline", "challenger"]
     for arm in arms:
-        arm_id = arm  # safe as-is
         ts = taker_state.get(arm, {})
         taker_status = ts.get("status", "pending")
-        taker_label = f"{arm}\\n({taker_status})"
 
-        lines.append(f"    subgraph cluster_{arm_id} {{")
+        lines.append(f"    subgraph cluster_{arm} {{")
         lines.append(f'        label="{arm}"')
-        lines.append('        style="rounded,filled" fillcolor="white"')
+        lines.append('        style="rounded,filled" fillcolor="#FAFAFA" color="#DDDDDD"')
+        lines.append("")
+        lines.append(_node(f"taker_{arm}", f"taker\\n({taker_status})", taker_status, "        "))
         lines.append("")
 
-        # taker node inside cluster
-        lines.append("    " + _node(f"taker_{arm_id}", taker_label, taker_status).lstrip())
-        lines.append("")
-
-        # judge nodes inside cluster
         for criterion in _CRITERIA_ORDER:
             js = judge_status.get((arm, criterion), {"status": "pending", "score": None})
             j_status = js.get("status", "pending")
@@ -340,9 +383,10 @@ def agent_graph_dot(
                 j_label = f"{criterion}\\n{score}/20"
             else:
                 j_label = criterion
-            judge_id = f"judge_{arm_id}_{criterion}"
-            lines.append("    " + _node(judge_id, j_label, j_status).lstrip())
+            lines.append(_node(f"judge_{arm}_{criterion}", j_label, j_status, "        "))
 
+        # Invisible junction: 6 judge edges merge here, ONE edge continues on.
+        lines.append(f'        j_{arm} [shape=point width=0.06 label="" color="#999999"]')
         lines.append("    }")
         lines.append("")
 
@@ -352,23 +396,22 @@ def agent_graph_dot(
     lines.append("")
 
     # --- edges ---
-    # sandbox -> takers
     for arm in arms:
         lines.append(f"    sandbox -> taker_{arm}")
 
     lines.append("")
 
-    # takers -> judges
     for arm in arms:
         for criterion in _CRITERIA_ORDER:
             lines.append(f"    taker_{arm} -> judge_{arm}_{criterion}")
 
     lines.append("")
 
-    # judges -> assemble
+    # judges -> junction (no arrowheads) -> assemble (one visible edge per arm)
     for arm in arms:
         for criterion in _CRITERIA_ORDER:
-            lines.append(f"    judge_{arm}_{criterion} -> assemble")
+            lines.append(f"    judge_{arm}_{criterion} -> j_{arm} [arrowhead=none]")
+        lines.append(f'    j_{arm} -> assemble [penwidth=1.2 color="#666666" arrowsize=0.8]')
 
     lines.append("}")
     return "\n".join(lines)

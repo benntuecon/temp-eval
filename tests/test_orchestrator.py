@@ -25,6 +25,10 @@ def test_run_eval_simulated_end_to_end(tmp_path):
         assert isinstance(arm_report.questions, tuple)
     # simulated taker always asks >= 1 question per arm, so at least one arm non-empty
     assert any(len(ar.questions) > 0 for ar in report.arms)
+    # the taker's diff and stop_reason survive into the report
+    for arm_report in report.arms:
+        assert arm_report.diff  # simulated taker writes a marker change
+        assert arm_report.stop_reason == "completed"
     assert report.pairwise_verdict
     # events captured the workflow stages
     stages = {e.get("stage") for e in events}

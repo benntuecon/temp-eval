@@ -171,6 +171,9 @@ async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
                 "status": "done",
                 "stop_reason": result.stop_reason.value,
                 "num_questions": result.metrics.num_questions,
+                "num_turns": result.metrics.num_turns,
+                "wall_seconds": round(result.metrics.wall_seconds, 1),
+                "total_tokens": result.metrics.total_tokens,
             },
         )
 
@@ -302,6 +305,8 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
                 scores=arm_scores,
                 total_score=total,
                 questions=tuple(taker.questions),
+                diff=taker.diff,
+                stop_reason=taker.stop_reason.value,
             )
         )
 
@@ -318,10 +323,15 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
     else:
         verdict = f"tie — both arms scored {baseline_score}"
 
+    spaces = state.get("spaces") or {}
+    gold_diff = next(iter(spaces.values())).gold_diff if spaces else ""
+
     report = ComparisonReport(
         config=cfg,
         arms=arm_reports,
         pairwise_verdict=verdict,
+        gold_diff=gold_diff,
+        session_id=state.get("session_id", ""),
     )
 
     _emit(on_event, {"stage": "report", "verdict": verdict})

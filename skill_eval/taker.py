@@ -146,7 +146,7 @@ def run_taker(
 
     # Build options dict; only include thinking when budget is set and > 0.
     options_kwargs: dict[str, Any] = dict(
-        model="claude-haiku-4-5",
+        model=model,
         cwd=ws.taker_dir,
         system_prompt=(
             f"{skill_md}\n\n"
@@ -402,7 +402,7 @@ def run_taker(
         # aren't otherwise traced).
         final_text = (getattr(last_result[0], "result", "") or "") if last_result[0] else ""
         usage = (getattr(last_result[0], "usage", None) or {}) if last_result[0] else {}
-        invocation = {"model": "claude-haiku-4-5", "max_turns": cfg.max_turns}
+        invocation = {"model": model, "max_turns": cfg.max_turns}
         if cfg.thinking_budget:
             invocation["thinking_budget_tokens"] = cfg.thinking_budget
         model_span = get_tracer().start_span("model")

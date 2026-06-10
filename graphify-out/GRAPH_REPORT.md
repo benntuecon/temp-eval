@@ -1,16 +1,16 @@
-# Graph Report - skill-eval  (2026-06-08)
+# Graph Report - skill-eval  (2026-06-10)
 
 ## Corpus Check
-- 50 files · ~38,660 words
+- 51 files · ~40,890 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 574 nodes · 1372 edges · 29 communities (25 shown, 4 thin omitted)
-- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)
+- 596 nodes · 1428 edges · 30 communities (26 shown, 4 thin omitted)
+- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 243 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6877c1e0`
+- Built from commit: `723e2b3b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,6 +43,7 @@
 - [[_COMMUNITY_Community 26|Community 26]]
 - [[_COMMUNITY_Community 27|Community 27]]
 - [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `RunConfig` - 67 edges
@@ -71,27 +72,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (29 total, 4 thin omitted)
+## Communities (30 total, 4 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.19
-Nodes (16): Arm, build_sample_repo(), RunConfig, cleanup_workspaces(), prepare_workspaces(), Workspace, Live end-to-end smoke test.  Marked ``@pytest.mark.live`` and skipped unless ``A, test_real_end_to_end() (+8 more)
+Cohesion: 0.46
+Nodes (7): AppTest, _boot(), _click_button(), Headless UI tests via Streamlit's official AppTest framework.  These boot the re, test_app_boots_without_errors(), test_custom_mode_runs_user_skills_through_the_harness(), test_single_case_results_persist_across_reruns()
 
 ### Community 1 - "Community 1"
-Cohesion: 0.12
-Nodes (40): Send, ArmReport, Criterion, JudgeInput, Everything one judge needs to score one criterion for one taker., Aggregated result for one arm (one model)., One judged dimension. Each becomes its own concurrent judge., _build_graph() (+32 more)
+Cohesion: 0.23
+Nodes (18): _build_graph(), _emit(), _EvalState, _fan_out_judges(), _fan_out_takers(), _get_tracer(), _node_assemble(), _node_judge() (+10 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.08
-Nodes (68): ResultMessage, RunMetrics, Arm, JudgeScore, make_simulator(), prepare_workspaces(), AskFn, Shared data contracts for the skill-eval harness.  This is the single integratio (+60 more)
+Cohesion: 0.07
+Nodes (96): Arm, ResultMessage, RunMetrics, Send, Arm, ArmReport, Criterion, JudgeInput (+88 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.09
 Nodes (21): 10. Build order & parallelization plan, 11. Out of scope (YAGNI for the hackathon), 12. Risks & open questions, 1. Goal, 2. Inputs & Outputs, 3. Architecture — two layers, 4. Tech stack & rationale, 5. Components (+13 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.07
-Nodes (58): _is_streamlit(), main(), Streamlit dashboard for the skill-eval Phase A walking skeleton.  Run with:, Single-case control-room view.      Parameters     ----------     build_cfg:, Return True when this file is being executed by Streamlit., Flagship mode: disciplined vs ship-it-fast on prorate_refund with real Haiku age, Batch (10 cases) view: run all sample cases and show aggregate viz., _run_batch_mode() (+50 more)
+Cohesion: 0.06
+Nodes (80): _is_streamlit(), main(), Streamlit dashboard for the skill-eval harness.  Run with:     uv run streamlit, Batch (10 cases) view: run all sample cases and show aggregate viz., Render aggregate visualisations for a completed batch., Single-case control-room view.      Parameters     ----------     build_cfg:, Return True when this file is being executed by Streamlit., Slugify a user-supplied skill name into a safe directory name. (+72 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.17
@@ -126,16 +127,16 @@ Cohesion: 0.25
 Nodes (7): Dev, How it works, Layout, Quickstart, skill-eval, The headline result, Visualizations
 
 ### Community 16 - "Community 16"
-Cohesion: 0.06
-Nodes (42): CalledProcessError, build_flagship_case(), RunConfig, add_all(), commit(), config(), diff(), diff_cached() (+34 more)
+Cohesion: 0.08
+Nodes (36): CalledProcessError, add_all(), commit(), config(), diff(), diff_cached(), diff_workdir(), init() (+28 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.08
 Nodes (43): _compute_diff(), _metrics_from_result(), Extract ``RunMetrics`` from the final ``ResultMessage``., Map SDK fields to a ``StopReason`` enum value., Stage all changes and return the diff against the starting commit.      Diffs ag, _stop_reason(), _fake_query_gen(), _FakeResult (+35 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.09
-Nodes (37): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Concurrent batch runner for skill-eval.  Runs multiple RunConfigs through run_ev, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar (+29 more)
+Cohesion: 0.08
+Nodes (39): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Concurrent batch runner for skill-eval.  Runs multiple RunConfigs through run_ev, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar (+31 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.16
@@ -169,6 +170,10 @@ Nodes (7): Baseline = BAD: `flagship/skills/ship-it-fast/SKILL.md`, Build plan, 
 Cohesion: 0.33
 Nodes (5): Backup talking points, Demo script (~2 min), Setup (before you present), The close, The flow
 
+### Community 29 - "Community 29"
+Cohesion: 0.39
+Nodes (6): build_flagship_case(), RunConfig, _commit_exists(), Return file contents at a given commit, or None if the file doesn't exist., _show_file(), test_build_flagship_case()
+
 ## Knowledge Gaps
 - **104 isolated node(s):** `PreToolUse`, `CalledProcessError`, `HookContext`, `InMemorySpanExporter`, `graphify` (+99 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -177,12 +182,12 @@ Nodes (5): Backup talking points, Demo script (~2 min), Setup (before you presen
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `RunConfig` connect `Community 2` to `Community 0`, `Community 1`, `Community 4`, `Community 11`, `Community 16`, `Community 19`, `Community 20`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+- **Why does `RunConfig` connect `Community 2` to `Community 1`, `Community 4`, `Community 11`, `Community 19`, `Community 20`, `Community 29`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **Why does `run_taker()` connect `Community 11` to `Community 1`, `Community 2`, `Community 19`, `Community 4`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
-- **Why does `Arm` connect `Community 2` to `Community 0`, `Community 1`, `Community 4`, `Community 19`, `Community 20`, `Community 21`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `Arm` connect `Community 2` to `Community 1`, `Community 4`, `Community 19`, `Community 20`, `Community 21`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Are the 40 inferred relationships involving `RunConfig` (e.g. with `Arm` and `ResultMessage`) actually correct?**
   _`RunConfig` has 40 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `Workspace` (e.g. with `Arm` and `ResultMessage`) actually correct?**
