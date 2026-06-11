@@ -12,6 +12,9 @@ dependencies = [
     "openinference-instrumentation-langchain",
     "openinference-instrumentation-anthropic",
     "streamlit",
+    "fastapi>=0.136.3",
+    "uvicorn[standard]>=0.49.0",
+    "pydantic>=2.13.4",
 ]
 
 [build-system]
@@ -25,6 +28,8 @@ dev = [
     "ruff",
     "pytest-playwright>=0.8.0",
     "playwright>=1.60.0",
+    "httpx>=0.28.1",
+    "schemathesis>=4.21.4",
 ]
 
 [tool.hatch.build.targets.wheel]

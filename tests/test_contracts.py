@@ -1,6 +1,5 @@
-import dataclasses
-
 import pytest
+from pydantic import ValidationError
 
 from skill_eval.contracts import (
     Arm,
@@ -52,7 +51,7 @@ def test_runconfig_defaults_and_frozen():
     assert cfg.max_tokens is None
     assert cfg.wall_clock_seconds is None
     assert cfg.thinking_budget is None
-    with pytest.raises(dataclasses.FrozenInstanceError):
+    with pytest.raises(ValidationError):
         cfg.max_turns = 5  # type: ignore[misc]
 
 
@@ -84,7 +83,7 @@ def test_runconfig_thinking_budget():
 
 def test_workspace_frozen():
     ws = Workspace(arm=Arm.BASELINE, taker_dir="/t", after_dir="/a", gold_diff="diff")
-    with pytest.raises(dataclasses.FrozenInstanceError):
+    with pytest.raises(ValidationError):
         ws.taker_dir = "/x"  # type: ignore[misc]
 
 
@@ -146,7 +145,14 @@ def test_full_report_composition():
 
 
 def test_judge_input_constructs():
-    metrics = RunMetrics(0, 0, 0, 0.0, 0, 0)
+    metrics = RunMetrics(
+        total_tokens=0,
+        input_tokens=0,
+        output_tokens=0,
+        wall_seconds=0.0,
+        num_turns=0,
+        num_questions=0,
+    )
     taker = TakerResult(
         arm=Arm.BASELINE,
         model="m",

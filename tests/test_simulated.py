@@ -34,7 +34,14 @@ def test_sim_taker_asks_and_returns(tmp_path):
 
 
 def test_sim_judge_scores_in_range():
-    metrics = RunMetrics(0, 0, 0, 0.0, 0, 0)
+    metrics = RunMetrics(
+        total_tokens=0,
+        input_tokens=0,
+        output_tokens=0,
+        wall_seconds=0.0,
+        num_turns=0,
+        num_questions=0,
+    )
     taker = TakerResult(
         arm=Arm.BASELINE,
         model="m",

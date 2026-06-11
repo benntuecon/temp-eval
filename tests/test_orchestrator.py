@@ -42,9 +42,7 @@ def test_k_judges_median_aggregation(tmp_path):
     """judges_per_criterion=3 fans out 3 replicates per cell but the report
     still carries ONE aggregated (median) score per criterion, with the
     replicate spread recorded in the rationale."""
-    import dataclasses
-
-    cfg = dataclasses.replace(build_sample_repo(str(tmp_path / "repo")), judges_per_criterion=3)
+    cfg = build_sample_repo(str(tmp_path / "repo")).model_copy(update={"judges_per_criterion": 3})
     report = run_eval(
         cfg,
         taker_fn=sim_run_taker,
@@ -61,16 +59,14 @@ def test_k_judges_median_aggregation(tmp_path):
 
 def test_judge_model_decoupling_reaches_judges(tmp_path):
     """cfg.judge_model (not the taker model) must be handed to judge_fn."""
-    import dataclasses
-
     seen_models: list[str] = []
 
     def spy_judge(ji, model):
         seen_models.append(model)
         return sim_run_judge(ji, model)
 
-    cfg = dataclasses.replace(
-        build_sample_repo(str(tmp_path / "repo")), judge_model="claude-sonnet-4-6"
+    cfg = build_sample_repo(str(tmp_path / "repo")).model_copy(
+        update={"judge_model": "claude-sonnet-4-6"}
     )
     run_eval(
         cfg,

@@ -1,12 +1,14 @@
 """Shared data contracts for the skill-eval harness.
 
-This is the single integration point every component builds against. It contains
-only types and function signatures — no business logic. See the design spec §6.
+This is the single integration point every component builds against — and,
+as Pydantic v2 models, also the API contract: validation, JSON serialisation,
+and the OpenAPI schema all derive from these types. No business logic.
 """
 
 from collections.abc import Callable
-from dataclasses import dataclass
 from enum import StrEnum
+
+from pydantic import BaseModel, ConfigDict
 
 # ---------- Enums ----------
 
@@ -42,9 +44,10 @@ class Criterion(StrEnum):
 # ---------- Inputs ----------
 
 
-@dataclass(frozen=True)
-class RunConfig:
+class RunConfig(BaseModel):
     """The eval's input: commits, task, skills, and the test budget."""
+
+    model_config = ConfigDict(frozen=True)
 
     before_hash: str
     after_hash: str
@@ -54,7 +57,7 @@ class RunConfig:
     challenger_skill_path: str  # path to challenger skill dir
     models: tuple[str, ...]  # one full eval per model
     max_turns: int = 30
-    max_tokens: int | None = None  # optional hard token cap
+    max_tokens: int | None = None  # optional hard token cap (best-effort post-check)
     wall_clock_seconds: int | None = None  # real elapsed-time cap
     thinking_budget: int | None = None  # token budget for extended thinking (None = disabled)
     judge_model: str | None = None  # decouple judge from taker model (None = taker model)
@@ -64,9 +67,10 @@ class RunConfig:
 # ---------- Sandbox (Component 1) ----------
 
 
-@dataclass(frozen=True)
-class Workspace:
+class Workspace(BaseModel):
     """Isolated dirs for one arm plus the shared gold tree."""
+
+    model_config = ConfigDict(frozen=True)
 
     arm: Arm
     taker_dir: str  # worktree @before_hash the taker edits
@@ -77,9 +81,10 @@ class Workspace:
 # ---------- Metrics (Component 4) ----------
 
 
-@dataclass(frozen=True)
-class RunMetrics:
+class RunMetrics(BaseModel):
     """Objective, non-LLM measurements of a single taker run."""
+
+    model_config = ConfigDict(frozen=True)
 
     total_tokens: int
     input_tokens: int
@@ -96,9 +101,10 @@ class RunMetrics:
 AskFn = Callable[[str], str]
 
 
-@dataclass(frozen=True)
-class TakerResult:
+class TakerResult(BaseModel):
     """Everything one taker produced, ready for judging."""
+
+    model_config = ConfigDict(frozen=True)
 
     arm: Arm
     model: str
@@ -121,9 +127,10 @@ MakeSimulator = Callable[[str, str, str], AskFn]
 # ---------- Judges (Component 5) ----------
 
 
-@dataclass(frozen=True)
-class JudgeInput:
+class JudgeInput(BaseModel):
     """Everything one judge needs to score one criterion for one taker."""
+
+    model_config = ConfigDict(frozen=True)
 
     criterion: Criterion
     task_brief: str
@@ -132,8 +139,7 @@ class JudgeInput:
     taker: TakerResult
 
 
-@dataclass
-class JudgeScore:
+class JudgeScore(BaseModel):
     """A single judge's 0-20 score plus rationale."""
 
     criterion: Criterion
@@ -144,8 +150,7 @@ class JudgeScore:
 # ---------- Final report (Component 7) ----------
 
 
-@dataclass
-class ArmReport:
+class ArmReport(BaseModel):
     """Aggregated result for one arm (one model)."""
 
     arm: Arm
@@ -159,8 +164,7 @@ class ArmReport:
     qa: tuple[tuple[str, str], ...] = ()  # (question, simulator answer) pairs
 
 
-@dataclass
-class ComparisonReport:
+class ComparisonReport(BaseModel):
     """The system's output: baseline vs challenger, per model."""
 
     config: RunConfig

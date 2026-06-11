@@ -36,15 +36,40 @@ def _make_report(
     baseline_base: int, challenger_base: int, task_brief: str = "Fix the add function in calculator"
 ):
     """Build a fake ComparisonReport with deterministic scores."""
-    m = RunMetrics(100, 60, 40, 1.2, 3, 1)
+    m = RunMetrics(
+        total_tokens=100,
+        input_tokens=60,
+        output_tokens=40,
+        wall_seconds=1.2,
+        num_turns=3,
+        num_questions=1,
+    )
 
     def arm(a, base):
-        scores = [JudgeScore(c, base + i, "ok") for i, c in enumerate(Criterion)]
-        return ArmReport(a, "claude-haiku-4-5", m, scores, sum(s.score for s in scores))
+        scores = [
+            JudgeScore(criterion=c, score=base + i, rationale="ok") for i, c in enumerate(Criterion)
+        ]
+        return ArmReport(
+            arm=a,
+            model="claude-haiku-4-5",
+            metrics=m,
+            scores=scores,
+            total_score=sum(s.score for s in scores),
+        )
 
-    cfg = RunConfig("a", "b", "/r", task_brief, "/b", "/c", ("claude-haiku-4-5",))
+    cfg = RunConfig(
+        before_hash="a",
+        after_hash="b",
+        repo_path="/r",
+        task_brief=task_brief,
+        baseline_skill_path="/b",
+        challenger_skill_path="/c",
+        models=("claude-haiku-4-5",),
+    )
     return ComparisonReport(
-        cfg, [arm(Arm.BASELINE, baseline_base), arm(Arm.CHALLENGER, challenger_base)], "verdict"
+        config=cfg,
+        arms=[arm(Arm.BASELINE, baseline_base), arm(Arm.CHALLENGER, challenger_base)],
+        pairwise_verdict="verdict",
     )
 
 
@@ -135,17 +160,46 @@ def test_criterion_gap_rows_shape_and_gap():
 
 def test_criterion_gap_rows_sorted_by_gap_desc():
     # Build a report where gaps differ per criterion so ordering is observable.
-    m = RunMetrics(100, 60, 40, 1.2, 3, 1)
-    base_scores = [JudgeScore(c, 5, "x") for c in Criterion]
-    chal_scores = [JudgeScore(c, 5 + i, "x") for i, c in enumerate(Criterion)]  # gap grows
-    cfg = RunConfig("a", "b", "/r", "brief", "/b", "/c", ("claude-haiku-4-5",))
+    m = RunMetrics(
+        total_tokens=100,
+        input_tokens=60,
+        output_tokens=40,
+        wall_seconds=1.2,
+        num_turns=3,
+        num_questions=1,
+    )
+    base_scores = [JudgeScore(criterion=c, score=5, rationale="x") for c in Criterion]
+    chal_scores = [
+        JudgeScore(criterion=c, score=5 + i, rationale="x") for i, c in enumerate(Criterion)
+    ]  # gap grows
+    cfg = RunConfig(
+        before_hash="a",
+        after_hash="b",
+        repo_path="/r",
+        task_brief="brief",
+        baseline_skill_path="/b",
+        challenger_skill_path="/c",
+        models=("claude-haiku-4-5",),
+    )
     report = ComparisonReport(
-        cfg,
-        [
-            ArmReport(Arm.BASELINE, "m", m, base_scores, sum(s.score for s in base_scores)),
-            ArmReport(Arm.CHALLENGER, "m", m, chal_scores, sum(s.score for s in chal_scores)),
+        config=cfg,
+        arms=[
+            ArmReport(
+                arm=Arm.BASELINE,
+                model="m",
+                metrics=m,
+                scores=base_scores,
+                total_score=sum(s.score for s in base_scores),
+            ),
+            ArmReport(
+                arm=Arm.CHALLENGER,
+                model="m",
+                metrics=m,
+                scores=chal_scores,
+                total_score=sum(s.score for s in chal_scores),
+            ),
         ],
-        "v",
+        pairwise_verdict="v",
     )
     rows = criterion_gap_rows(report)
     gaps = [r["gap"] for r in rows]

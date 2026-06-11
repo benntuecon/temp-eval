@@ -983,8 +983,6 @@ def _run_custom_mode(
         )
 
     def build_custom_case(base_dir: str):  # -> RunConfig
-        import dataclasses
-
         cfg = _base_builder(base_dir)
         skills_root = Path(base_dir) / "custom_skills"
         b_dir = skills_root / _b_slug
@@ -992,15 +990,16 @@ def _run_custom_mode(
         for d, md in ((b_dir, _base_md), (c_dir, _chal_md)):
             d.mkdir(parents=True, exist_ok=True)
             (d / "SKILL.md").write_text(md)
-        return dataclasses.replace(
-            cfg,
-            task_brief=_brief,
-            baseline_skill_path=str(b_dir),
-            challenger_skill_path=str(c_dir),
-            max_turns=_max_turns,
-            thinking_budget=_thinking,
-            judge_model=_judge_model,
-            judges_per_criterion=_judges_k,
+        return cfg.model_copy(
+            update=dict(
+                task_brief=_brief,
+                baseline_skill_path=str(b_dir),
+                challenger_skill_path=str(c_dir),
+                max_turns=_max_turns,
+                thinking_budget=_thinking,
+                judge_model=_judge_model,
+                judges_per_criterion=_judges_k,
+            )
         )
 
     _run_single_case(

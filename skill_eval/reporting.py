@@ -155,86 +155,26 @@ def quality_cost_rows(report: ComparisonReport) -> list[dict]:
 
 
 def report_to_json(report: ComparisonReport) -> str:
-    """Serialise a ComparisonReport to pretty-printed JSON.
-
-    StrEnum members serialise as their string values; anything else
-    non-JSON-native falls back to ``str``.
-    """
-    import json
-    from dataclasses import asdict
-
-    return json.dumps(asdict(report), indent=2, default=str)
+    """Serialise a ComparisonReport to pretty-printed JSON (Pydantic)."""
+    return report.model_dump_json(indent=2)
 
 
 def reports_to_json(reports: list[ComparisonReport]) -> str:
     """Serialise a batch of ComparisonReports to one JSON array."""
     import json
-    from dataclasses import asdict
 
-    return json.dumps([asdict(r) for r in reports], indent=2, default=str)
+    return json.dumps([r.model_dump(mode="json") for r in reports], indent=2)
 
 
 def report_from_json(text: str) -> ComparisonReport:
-    """Reconstruct a ComparisonReport (with real dataclasses/enums) from JSON.
+    """Reconstruct a ComparisonReport (real models/enums) from JSON.
 
-    Tolerant of schema drift: unknown keys in the payload are dropped, missing
-    optional fields fall back to their dataclass defaults.
+    Pydantic handles schema drift: unknown keys are ignored, missing optional
+    fields fall back to their model defaults.
     """
-    import json
-    from dataclasses import fields
+    from skill_eval.contracts import ComparisonReport
 
-    from skill_eval.contracts import (
-        Arm,
-        ArmReport,
-        ComparisonReport,
-        Criterion,
-        JudgeScore,
-        RunConfig,
-        RunMetrics,
-    )
-
-    def _known(cls: type, d: dict) -> dict:
-        names = {f.name for f in fields(cls)}
-        return {k: v for k, v in d.items() if k in names}
-
-    data = json.loads(text)
-
-    cfg_d = _known(RunConfig, dict(data.get("config", {})))
-    cfg_d["models"] = tuple(cfg_d.get("models", ()))
-    cfg = RunConfig(**cfg_d)
-
-    arms: list[ArmReport] = []
-    for a in data.get("arms", []):
-        metrics = RunMetrics(**_known(RunMetrics, dict(a.get("metrics", {}))))
-        scores = [
-            JudgeScore(
-                criterion=Criterion(s["criterion"]),
-                score=int(s["score"]),
-                rationale=str(s.get("rationale", "")),
-            )
-            for s in a.get("scores", [])
-        ]
-        arms.append(
-            ArmReport(
-                arm=Arm(a["arm"]),
-                model=str(a.get("model", "")),
-                metrics=metrics,
-                scores=scores,
-                total_score=int(a.get("total_score", 0)),
-                questions=tuple(a.get("questions", ())),
-                diff=str(a.get("diff", "")),
-                stop_reason=str(a.get("stop_reason", "")),
-                qa=tuple((str(q), str(ans)) for q, ans in a.get("qa", ())),
-            )
-        )
-
-    return ComparisonReport(
-        config=cfg,
-        arms=arms,
-        pairwise_verdict=str(data.get("pairwise_verdict", "")),
-        gold_diff=str(data.get("gold_diff", "")),
-        session_id=str(data.get("session_id", "")),
-    )
+    return ComparisonReport.model_validate_json(text)
 
 
 # ---------------------------------------------------------------------------

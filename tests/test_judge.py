@@ -6,12 +6,37 @@ from skill_eval.contracts import Arm, Criterion, JudgeInput, RunMetrics, StopRea
 from skill_eval.judge import _build_prompt, run_judge
 
 
-def _ji(criterion=Criterion.CORRECTNESS, questions=()):
-    m = RunMetrics(0, 0, 0, 0.0, 0, 0)
-    t = TakerResult(
-        Arm.CHALLENGER, "m", "+    return a + b", (), questions, StopReason.COMPLETED, m
+def _metrics():
+    return RunMetrics(
+        total_tokens=0,
+        input_tokens=0,
+        output_tokens=0,
+        wall_seconds=0.0,
+        num_turns=0,
+        num_questions=0,
     )
-    return JudgeInput(criterion, "fix add", "+    return a + b", "/x", t)
+
+
+def _taker(diff="+    return a + b", questions=()):
+    return TakerResult(
+        arm=Arm.CHALLENGER,
+        model="m",
+        diff=diff,
+        transcript=(),
+        questions=questions,
+        stop_reason=StopReason.COMPLETED,
+        metrics=_metrics(),
+    )
+
+
+def _ji(criterion=Criterion.CORRECTNESS, questions=()):
+    return JudgeInput(
+        criterion=criterion,
+        task_brief="fix add",
+        gold_diff="+    return a + b",
+        after_dir="/x",
+        taker=_taker(questions=questions),
+    )
 
 
 @patch("skill_eval.judge.anthropic.Anthropic")
@@ -108,10 +133,15 @@ def test_build_prompt_correctness_anchor_phrase():
 
 def test_build_prompt_blind_criteria_never_see_gold():
     """code_quality and approach are judged blind — the gold diff must not leak."""
-    m = RunMetrics(0, 0, 0, 0.0, 0, 0)
-    t = TakerResult(Arm.CHALLENGER, "m", "+ taker change", (), (), StopReason.COMPLETED, m)
+    t = _taker(diff="+ taker change")
     for criterion in (Criterion.CODE_QUALITY, Criterion.APPROACH):
-        ji = JudgeInput(criterion, "fix add", "+ GOLD_SECRET_MARKER", "/x", t)
+        ji = JudgeInput(
+            criterion=criterion,
+            task_brief="fix add",
+            gold_diff="+ GOLD_SECRET_MARKER",
+            after_dir="/x",
+            taker=t,
+        )
         prompt = _build_prompt(ji)
         assert "GOLD_SECRET_MARKER" not in prompt, f"gold leaked into {criterion} prompt"
         assert "withheld" in prompt
@@ -119,15 +149,20 @@ def test_build_prompt_blind_criteria_never_see_gold():
 
 def test_build_prompt_gold_based_criteria_see_gold():
     """Criteria defined against the gold must still receive the gold diff."""
-    m = RunMetrics(0, 0, 0, 0.0, 0, 0)
-    t = TakerResult(Arm.CHALLENGER, "m", "+ taker change", (), (), StopReason.COMPLETED, m)
+    t = _taker(diff="+ taker change")
     for criterion in (
         Criterion.CORRECTNESS,
         Criterion.COMPLETENESS,
         Criterion.DISTANCE_TO_GOLD,
         Criterion.QUESTION_QUALITY,
     ):
-        ji = JudgeInput(criterion, "fix add", "+ GOLD_SECRET_MARKER", "/x", t)
+        ji = JudgeInput(
+            criterion=criterion,
+            task_brief="fix add",
+            gold_diff="+ GOLD_SECRET_MARKER",
+            after_dir="/x",
+            taker=t,
+        )
         assert "GOLD_SECRET_MARKER" in _build_prompt(ji)
 
 
