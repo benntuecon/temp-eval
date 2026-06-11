@@ -302,6 +302,36 @@ def test_agent_graph_dot():
     assert "j_challenger -> assemble" in dot
     assert dot.count("-> assemble") == 2
 
+    # Whole-architecture nodes: skills -> (mock) test generator -> test cases
+    # -> sandbox; HITL simulator; assemble -> report.
+    for node in ("skill_baseline", "skill_challenger", "test_generator", "test_cases"):
+        assert node in dot
+    assert "simulator" in dot
+    assert "assemble -> report" in dot
+
+    # Every architecture node carries a hover tooltip ("thinking process").
+    assert dot.count("tooltip=") >= 18  # 5 pipeline + 1 sim + 2 takers + 12 judges...
+
+
+def test_agent_graph_dot_meta_tooltips():
+    """meta enriches hover tooltips: skill names, rationales, verdict."""
+    pipeline = {"sandbox": "done", "takers": "done", "judges": "done", "report": "done"}
+    taker_state = {"baseline": {"status": "done"}, "challenger": {"status": "done"}}
+    judge_status = {("baseline", "correctness"): {"status": "done", "score": 17}}
+    meta = {
+        "baseline_skill": "ship-it-fast",
+        "challenger_skill": "disciplined",
+        "verdict": "challenger wins by 80",
+        "rationales": {("baseline", "correctness"): 'judge said "close but no edge cases"'},
+    }
+    dot = agent_graph_dot(pipeline, taker_state, judge_status, meta)
+    assert "ship-it-fast" in dot
+    assert "disciplined" in dot
+    assert "challenger wins by 80" in dot
+    # rationale lands in the judge tooltip, with quotes DOT-escaped
+    assert "close but no edge cases" in dot
+    assert '\\"close but no edge cases\\"' in dot
+
 
 # ---------------------------------------------------------------------------
 # batch_score_distribution

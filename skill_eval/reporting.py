@@ -442,53 +442,92 @@ _CRITERIA_ORDER = [
 ]
 
 
+# Short per-criterion "what this judge thinks about" blurbs for hover tooltips.
+_CRITERION_BLURB: dict[str, str] = {
+    "correctness": "Does the work match the gold's behaviour, edge cases included?",
+    "completeness": "How much of the required change actually got done?",
+    "distance_to_gold": "Is the diff semantically equivalent to the gold diff?",
+    "code_quality": "Readable, idiomatic, maintainable? (judged BLIND — no gold shown)",
+    "question_quality": "Did the taker surface the brief's critical ambiguities?",
+    "approach": "Sensible path: read, clarify, test-first, minimal? (judged BLIND)",
+}
+
+
+def _esc(text: str) -> str:
+    """Escape a string for use inside a double-quoted DOT attribute."""
+    return text.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
+
+
 def agent_graph_dot(
     pipeline: dict[str, str],
     taker_state: dict[str, dict],
     judge_status: dict[tuple[str, str], dict],
+    meta: dict | None = None,
 ) -> str:
-    """Return a Graphviz DOT digraph string representing the eval fan-out.
+    """Return a Graphviz DOT digraph of the WHOLE eval architecture, live.
+
+    Flow: two skills → test generator (mock service) → test cases
+    (before/after project) → sandbox → takers (↔ HITL simulator) → judges →
+    assemble → report.
+
+    Every node carries a ``tooltip`` (rendered by st.graphviz_chart as a
+    native hover tooltip via SVG ``<a xlink:title>``) describing what the
+    node is *thinking*/doing, plus its live state — judge tooltips include
+    the rationale once scored.
 
     Parameters
     ----------
     pipeline:
         stage -> ``"pending" | "running" | "done"`` for ``sandbox``, ``takers``,
-        ``judges``, ``report``.
+        ``judges``, ``report`` (optional ``generator``; derived from sandbox
+        when absent).
     taker_state:
-        arm (``"baseline"`` / ``"challenger"``) -> dict with at least a
-        ``"status"`` key (``"pending" | "running" | "done"``).
+        arm -> dict with ``status`` and optionally ``stop_reason``,
+        ``num_questions``, ``num_turns``, ``wall_seconds``.
     judge_status:
         ``(arm, criterion)`` -> ``{"status": str, "score": int | None}``.
-
-    Returns
-    -------
-    str
-        A valid ``digraph { ... }`` DOT string suitable for
-        ``st.graphviz_chart()``.
+    meta:
+        Optional hover context: ``baseline_skill`` / ``challenger_skill``
+        (names), ``fixture``, ``task_brief``, ``verdict``,
+        ``rationales`` (``(arm, criterion) -> str``).
 
     Layout notes (deliberate, after a readability review):
-    - ``rankdir=LR`` — 16 nodes read wide, not tall, so the graph fits a
-      dashboard row without scrolling.
+    - ``rankdir=LR`` — reads wide, not tall.
     - One invisible *junction* point per arm collapses the 6 judge→assemble
       edges into a single edge, so ``assemble`` receives 2 arrowheads, not 12.
-    - Edges are de-emphasised (translucent, thin); node *status colour* is the
-      primary signal. d3-graphviz layout is deterministic, so nodes do not
-      jump between 1 Hz repaints.
+    - Edges are de-emphasised; node *status colour* is the primary signal.
+      d3-graphviz layout is deterministic, so nodes do not jump between
+      repaints.
     """
+    m = meta or {}
+    skill_names = {
+        "baseline": m.get("baseline_skill", "baseline"),
+        "challenger": m.get("challenger_skill", "challenger"),
+    }
+    rationales: dict[tuple[str, str], str] = m.get("rationales", {})
 
     def _color(status: str) -> str:
         return _STATUS_COLOR.get(status, _STATUS_COLOR["pending"])
 
-    def _node(node_id: str, label: str, status: str, indent: str = "    ") -> str:
+    def _node(
+        node_id: str, label: str, status: str, tooltip: str = "", indent: str = "    "
+    ) -> str:
         color = _color(status)
-        safe_label = label.replace('"', '\\"')
         outline = ' penwidth=2 color="#B8860B"' if status == "running" else ""
-        return f'{indent}{node_id} [label="{safe_label}" fillcolor="{color}"{outline}]'
+        tip = f' tooltip="{_esc(tooltip)}"' if tooltip else ""
+        return f'{indent}{node_id} [label="{_esc(label)}" fillcolor="{color}"{outline}{tip}]'
+
+    sandbox_status = pipeline.get("sandbox", "pending")
+    # The (mock) test generator runs before the sandbox: derive its status
+    # unless the app supplies one explicitly.
+    gen_status = pipeline.get(
+        "generator", "done" if sandbox_status in ("running", "done") else "pending"
+    )
 
     lines: list[str] = [
         "digraph {",
         "    rankdir=LR",
-        "    ranksep=0.45",
+        "    ranksep=0.4",
         "    nodesep=0.18",
         "    splines=spline",
         "    bgcolor=transparent",
@@ -499,9 +538,82 @@ def agent_graph_dot(
         "",
     ]
 
-    # --- sandbox node ---
-    sandbox_status = pipeline.get("sandbox", "pending")
-    lines.append(_node("sandbox", "sandbox", sandbox_status))
+    # --- inputs: the two skills under test ---
+    lines.append("    subgraph cluster_inputs {")
+    lines.append('        label="skills under test"')
+    lines.append('        style="rounded,filled" fillcolor="#FAFAFA" color="#DDDDDD"')
+    for arm in ("baseline", "challenger"):
+        lines.append(
+            _node(
+                f"skill_{arm}",
+                f"{arm} skill\n{skill_names[arm]}",
+                "done",
+                f"Input #{1 if arm == 'baseline' else 2}: the {arm} skill "
+                f"('{skill_names[arm]}').\nInjected verbatim into its taker's system prompt "
+                "(Approach B) — the only thing that differs between the two arms.",
+                "        ",
+            )
+        )
+    lines.append("    }")
+    lines.append("")
+
+    # --- (mock) test generator -> test cases ---
+    fixture = m.get("fixture", "task fixture")
+    brief = m.get("task_brief", "")
+    brief_snip = (brief[:160] + "…") if len(brief) > 160 else brief
+    lines.append(
+        _node(
+            "test_generator",
+            "test generator\n(mock service)",
+            gen_status,
+            "MOCK service call — thinking: 'design a test case that can tell these two "
+            "skills apart: a before-project the takers must fix, and a gold after-project "
+            "(reference solution + tests) the judges grade against.'\n"
+            f"Input: the two skills + task brief.\nOutput: test cases — before/after "
+            f"project states.\nStatus: {gen_status}.",
+        )
+    )
+    lines.append(
+        _node(
+            "test_cases",
+            "test cases\n(before/after project)",
+            gen_status,
+            f"The generated eval payload ({fixture}): a 'before' commit (stub/buggy "
+            "project) each taker starts from, and a gold 'after' commit the judges "
+            "compare against." + (f"\nBrief: {brief_snip}" if brief_snip else ""),
+        )
+    )
+    lines.append(
+        _node(
+            "sandbox",
+            "sandbox",
+            sandbox_status,
+            "Thinking: 'give each arm an identical, isolated playground.'\n"
+            "Creates one git worktree per arm @before + a shared read-only gold tree "
+            f"@after; computes the gold diff.\nStatus: {sandbox_status}.",
+        )
+    )
+    lines.append("")
+
+    # --- HITL simulator (answers both takers' questions) ---
+    takers_started = any(
+        taker_state.get(a, {}).get("status") in ("running", "done")
+        for a in ("baseline", "challenger")
+    )
+    sim_status = (
+        "done" if pipeline.get("takers") == "done" else ("running" if takers_started else "pending")
+    )
+    lines.append(
+        _node(
+            "simulator",
+            "HITL simulator",
+            sim_status,
+            "Thinking: 'I am the stakeholder; I know the gold solution but answer only "
+            "what is asked, at requirement level — never dictate the code.'\n"
+            "Answers each taker's ask_question calls from the gold tree "
+            "(temperature=0 so both arms get identical answers).",
+        )
+    )
     lines.append("")
 
     # --- one cluster per arm: taker + 6 judges + invisible fan-in junction ---
@@ -509,12 +621,27 @@ def agent_graph_dot(
     for arm in arms:
         ts = taker_state.get(arm, {})
         taker_status = ts.get("status", "pending")
+        taker_tip = (
+            f"Coding agent running under the '{skill_names[arm]}' skill.\n"
+            "Thinking: 'read the project, clarify what the brief leaves open (per my "
+            "skill), implement, test.'\n"
+            f"Status: {taker_status}"
+        )
+        if taker_status == "done":
+            taker_tip += (
+                f" — stop: {ts.get('stop_reason', '—')}, questions: "
+                f"{ts.get('num_questions', '—')}, turns: {ts.get('num_turns', '—')}, "
+                f"{ts.get('wall_seconds', '—')}s"
+            )
+        taker_tip += "\nFull thinking trajectory: Phoenix trace (taker span)."
 
         lines.append(f"    subgraph cluster_{arm} {{")
         lines.append(f'        label="{arm}"')
         lines.append('        style="rounded,filled" fillcolor="#FAFAFA" color="#DDDDDD"')
         lines.append("")
-        lines.append(_node(f"taker_{arm}", f"taker\\n({taker_status})", taker_status, "        "))
+        lines.append(
+            _node(f"taker_{arm}", f"taker\n({taker_status})", taker_status, taker_tip, "        ")
+        )
         lines.append("")
 
         for criterion in _CRITERIA_ORDER:
@@ -522,24 +649,64 @@ def agent_graph_dot(
             j_status = js.get("status", "pending")
             score = js.get("score")
             if j_status == "done" and score is not None:
-                j_label = f"{criterion}\\n{score}/20"
+                j_label = f"{criterion}\n{score}/20"
             else:
                 j_label = criterion
-            lines.append(_node(f"judge_{arm}_{criterion}", j_label, j_status, "        "))
+            j_tip = f"Judge: {_CRITERION_BLURB.get(criterion, criterion)}\nStatus: {j_status}"
+            if j_status == "done" and score is not None:
+                j_tip += f" — scored {score}/20"
+            rationale = rationales.get((arm, criterion), "")
+            if rationale:
+                j_tip += f"\nRationale: {rationale}"
+            lines.append(_node(f"judge_{arm}_{criterion}", j_label, j_status, j_tip, "        "))
 
         # Invisible junction: 6 judge edges merge here, ONE edge continues on.
         lines.append(f'        j_{arm} [shape=point width=0.06 label="" color="#999999"]')
         lines.append("    }")
         lines.append("")
 
-    # --- assemble node ---
-    assemble_status = pipeline.get("report", "pending")
-    lines.append(_node("assemble", "assemble", assemble_status))
+    # --- assemble + report nodes ---
+    report_status = pipeline.get("report", "pending")
+    lines.append(
+        _node(
+            "assemble",
+            "assemble",
+            report_status,
+            "Thinking: 'aggregate replicate judges per criterion (median), sum totals, "
+            "derive the pairwise verdict.'",
+        )
+    )
+    verdict = m.get("verdict", "")
+    lines.append(
+        _node(
+            "report",
+            "report",
+            report_status,
+            ("Verdict: " + verdict)
+            if verdict
+            else "The ComparisonReport: per-criterion scores + rationales, metrics, "
+            "diffs, Q&A — rendered below and archived to runs/.",
+        )
+    )
     lines.append("")
 
     # --- edges ---
     for arm in arms:
+        lines.append(f"    skill_{arm} -> test_generator")
+    lines.append("    test_generator -> test_cases")
+    lines.append("    test_cases -> sandbox")
+    for arm in arms:
         lines.append(f"    sandbox -> taker_{arm}")
+    # sandbox feeds the simulator its gold tree — and the constrained edge
+    # anchors the simulator into the main flow (between sandbox and takers).
+    lines.append('    sandbox -> simulator [style=dashed color="#00000055" arrowsize=0.6]')
+    # takers <-> simulator (clarifying-question round-trips); constraint=false
+    # keeps these back-edges from distorting the left-to-right flow.
+    for arm in arms:
+        lines.append(
+            f"    taker_{arm} -> simulator [dir=both style=dashed constraint=false"
+            ' color="#00000055"]'
+        )
 
     lines.append("")
 
@@ -554,6 +721,7 @@ def agent_graph_dot(
         for criterion in _CRITERIA_ORDER:
             lines.append(f"    judge_{arm}_{criterion} -> j_{arm} [arrowhead=none]")
         lines.append(f'    j_{arm} -> assemble [penwidth=1.2 color="#666666" arrowsize=0.8]')
+    lines.append("    assemble -> report")
 
     lines.append("}")
     return "\n".join(lines)

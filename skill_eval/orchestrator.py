@@ -277,6 +277,7 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
                 "criterion": criterion.value,
                 "status": "done",
                 "score": score.score,
+                "rationale": score.rationale,
             },
         )
 
