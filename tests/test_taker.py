@@ -108,6 +108,38 @@ def test_stop_reason_completed_below_max() -> None:
     assert _stop_reason(_FakeResult(9, "end_turn"), False, 10) is StopReason.COMPLETED  # type: ignore[arg-type]
 
 
+def test_stop_reason_max_tokens_post_check() -> None:
+    """Over the token budget (post-check) → MAX_TOKENS."""
+    assert (
+        _stop_reason(_FakeResult(3, "end_turn"), False, 30, total_tokens=501, max_tokens=500)  # type: ignore[arg-type]
+        is StopReason.MAX_TOKENS
+    )
+
+
+def test_stop_reason_max_tokens_within_budget() -> None:
+    """At or under the token budget → COMPLETED (cap is exclusive)."""
+    assert (
+        _stop_reason(_FakeResult(3, "end_turn"), False, 30, total_tokens=500, max_tokens=500)  # type: ignore[arg-type]
+        is StopReason.COMPLETED
+    )
+
+
+def test_stop_reason_max_tokens_none_means_no_cap() -> None:
+    """max_tokens=None (the default) never trips the budget."""
+    assert (
+        _stop_reason(_FakeResult(3, "end_turn"), False, 30, total_tokens=10**9, max_tokens=None)  # type: ignore[arg-type]
+        is StopReason.COMPLETED
+    )
+
+
+def test_stop_reason_priority_turns_over_tokens() -> None:
+    """When both budgets trip, MAX_TURNS (the harder stop) wins."""
+    assert (
+        _stop_reason(_FakeResult(30, None), False, 30, total_tokens=10**9, max_tokens=1)  # type: ignore[arg-type]
+        is StopReason.MAX_TURNS
+    )
+
+
 # ---------------------------------------------------------------------------
 # _compute_diff
 # ---------------------------------------------------------------------------

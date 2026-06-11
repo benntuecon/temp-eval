@@ -65,12 +65,21 @@ def _stop_reason(
     result_msg: ResultMessage,
     timed_out: bool,
     max_turns: int,
+    total_tokens: int = 0,
+    max_tokens: int | None = None,
 ) -> StopReason:
-    """Map SDK fields to a ``StopReason`` enum value."""
+    """Map SDK fields to a ``StopReason`` enum value.
+
+    ``max_tokens`` is a best-effort *post*-check (the SDK offers no mid-run
+    token abort): a run that finished over budget is reported as MAX_TOKENS
+    so judges and the report know the budget tripped.
+    """
     if timed_out:
         return StopReason.WALL_CLOCK
     if result_msg.num_turns >= max_turns:
         return StopReason.MAX_TURNS
+    if max_tokens is not None and total_tokens > max_tokens:
+        return StopReason.MAX_TOKENS
     return StopReason.COMPLETED
 
 
@@ -369,7 +378,13 @@ def run_taker(
             if timed_out[0]:
                 stop = StopReason.WALL_CLOCK
             else:
-                stop = _stop_reason(result_msg, timed_out[0], cfg.max_turns)
+                stop = _stop_reason(
+                    result_msg,
+                    timed_out[0],
+                    cfg.max_turns,
+                    total_tokens=metrics.total_tokens,
+                    max_tokens=cfg.max_tokens,
+                )
 
     # -- Enrich the current taker span (set by orchestrator) ---------------
     taker_span = trace.get_current_span()
