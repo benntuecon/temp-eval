@@ -22,3 +22,7 @@ runs/
 # frontend
 frontend/node_modules/
 frontend/dist/
+# Local vector DB / generated eval case repos
+.vectordb/
+.skill-eval-cases/
+cases.json
