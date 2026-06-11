@@ -12,6 +12,7 @@ dependencies = [
     "openinference-instrumentation-langchain",
     "openinference-instrumentation-anthropic",
     "streamlit",
+    "chromadb",
 ]
 
 [build-system]
