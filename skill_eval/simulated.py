@@ -8,6 +8,7 @@ tasks and criteria yield different scores, with a small challenger bias on avera
 """
 
 import hashlib
+from collections.abc import Callable
 from pathlib import Path
 
 from skill_eval import git_ops
@@ -78,9 +79,27 @@ def sim_run_taker(
     skill_path: str,
     cfg: RunConfig,
     ask_fn: AskFn,
+    on_event: Callable[[dict], None] | None = None,
 ) -> TakerResult:
     """Simulate a taker: ask clarifying questions, write a marker, return result."""
     is_challenger = ws.arm is Arm.CHALLENGER
+
+    def _emit_stream(kind: str, **payload: object) -> None:
+        if on_event is None:
+            return
+        try:
+            on_event({"stage": "taker_stream", "kind": kind, "arm": ws.arm.value, **payload})
+        except Exception:  # noqa: BLE001
+            pass
+
+    # Synthetic thinking so the free/simulated path exercises the live
+    # hover-thinking panel exactly like a real run would.
+    _emit_stream(
+        "thinking",
+        text=f"[simulated] Reading the project as the {ws.arm.value} arm; "
+        f"brief: {cfg.task_brief[:80]}…",
+    )
+    _emit_stream("tool", tool="Read", summary='{"file": "the project source"}')
 
     # Derive a task-specific seed from the brief so per-case metrics differ
     task_seed = _stable_hash_int(cfg.task_brief)

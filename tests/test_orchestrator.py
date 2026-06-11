@@ -77,6 +77,46 @@ def test_judge_model_decoupling_reaches_judges(tmp_path):
     assert seen_models and set(seen_models) == {"claude-sonnet-4-6"}
 
 
+def test_arun_eval_is_natively_awaitable(tmp_path):
+    """The async entrypoint must run inside an existing event loop (FastAPI)."""
+    import asyncio
+
+    from skill_eval.orchestrator import arun_eval
+
+    cfg = build_sample_repo(str(tmp_path / "repo"))
+
+    async def main():
+        return await arun_eval(
+            cfg,
+            taker_fn=sim_run_taker,
+            simulator_factory=sim_make_simulator,
+            judge_fn=sim_run_judge,
+        )
+
+    report = asyncio.run(main())
+    assert isinstance(report, ComparisonReport)
+    assert len(report.arms) == 2
+
+
+def test_taker_stream_events_flow_through_orchestrator(tmp_path):
+    """taker_stream events (thinking / tool / Q&A) must reach on_event,
+    node-taggable by arm — the data behind hover-live-thinking."""
+    cfg = build_sample_repo(str(tmp_path / "repo"))
+    events: list[dict] = []
+    run_eval(
+        cfg,
+        taker_fn=sim_run_taker,
+        simulator_factory=sim_make_simulator,
+        judge_fn=sim_run_judge,
+        on_event=events.append,
+    )
+    stream = [e for e in events if e.get("stage") == "taker_stream"]
+    kinds = {e.get("kind") for e in stream}
+    assert {"thinking", "tool"} <= kinds
+    arms = {e.get("arm") for e in stream}
+    assert arms == {"baseline", "challenger"}
+
+
 def test_reducer_counts(tmp_path):
     """Send-based fan-out must produce exactly 2 taker_results and 12 score entries."""
     cfg = build_sample_repo(str(tmp_path / "repo"))

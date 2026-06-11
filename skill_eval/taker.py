@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import json
 import time
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -109,6 +110,7 @@ def run_taker(
     skill_path: str,
     cfg: RunConfig,
     ask_fn: AskFn,
+    on_event: Callable[[dict], None] | None = None,
 ) -> TakerResult:
     """Run a Claude Agent SDK session under budget and return the result.
 
@@ -130,6 +132,16 @@ def run_taker(
     skill_md_path = Path(skill_path) / "SKILL.md"
     skill_md = skill_md_path.read_text() if skill_md_path.exists() else ""
 
+    # -- Live stream sink: forwards thinking / tool calls / Q&A as they happen
+    # (node-tagged upstream); never allowed to break the run.
+    def _emit_stream(kind: str, **payload: Any) -> None:
+        if on_event is None:
+            return
+        try:
+            on_event({"stage": "taker_stream", "kind": kind, "arm": ws.arm.value, **payload})
+        except Exception:  # noqa: BLE001
+            pass
+
     # -- Mutable state shared between run_taker and the async tool handler --
     # Using a list-as-counter avoids nonlocal friction in nested async funcs.
     question_counter: list[int] = [0]
@@ -143,6 +155,7 @@ def run_taker(
         question = args["question"]
         asked_questions.append(question)
         tracer = get_tracer()
+        _emit_stream("question", question=question)
         with tool_span(tracer, "ask_question", {"question": question}) as span:
             set_input(span, question)
             # Make the tool span current while ask_fn runs so the simulator's
@@ -151,6 +164,7 @@ def run_taker(
                 answer = ask_fn(question)
             set_output(span, answer)
         qa_pairs.append((question, answer))
+        _emit_stream("answer", question=question, answer=answer)
         return {"content": [{"type": "text", "text": answer}]}
 
     server = create_sdk_mcp_server(name="hitl", version="1.0.0", tools=[_ask_question])
@@ -239,6 +253,7 @@ def run_taker(
                             thinking_text = getattr(block, "thinking", "") or ""
                             thinking_texts.append(thinking_text)
                             transcript.append({"role": "thinking", "content": thinking_text})
+                            _emit_stream("thinking", text=thinking_text)
                             # Create a nested child span for the thinking block
                             thinking_span = tracer.start_span("thinking")
                             try:
@@ -254,6 +269,7 @@ def run_taker(
                         elif btype == "TextBlock":
                             text = getattr(block, "text", "") or ""
                             transcript.append({"role": "assistant", "content": text})
+                            _emit_stream("text", text=text)
 
                         # Open a span for each tool-use block
                         elif btype == "ToolUseBlock":
@@ -261,6 +277,11 @@ def run_taker(
                             tool_name = getattr(block, "name", None) or "unknown"
                             tool_input = getattr(block, "input", None) or {}
                             if tool_id and tool_id not in open_tool_spans:
+                                _emit_stream(
+                                    "tool",
+                                    tool=str(tool_name),
+                                    summary=json.dumps(tool_input, default=str)[:300],
+                                )
                                 child = tracer.start_span(f"tool.{tool_name}")
                                 try:
                                     child.set_attribute("openinference.span.kind", "TOOL")

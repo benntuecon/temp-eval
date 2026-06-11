@@ -157,7 +157,20 @@ async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
 
         _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
 
-        result: TakerResult = await asyncio.to_thread(taker_fn, ws, model, skill_path, cfg, ask_fn)
+        # Pass the live event sink to takers that support streaming (real +
+        # simulated takers); plain TakerFn implementations work unchanged.
+        import inspect
+
+        taker_kwargs: dict[str, Any] = {}
+        try:
+            if "on_event" in inspect.signature(taker_fn).parameters:
+                taker_kwargs["on_event"] = on_event
+        except (TypeError, ValueError):  # builtins / exotic callables
+            pass
+
+        result: TakerResult = await asyncio.to_thread(
+            taker_fn, ws, model, skill_path, cfg, ask_fn, **taker_kwargs
+        )
 
         span.set_attribute("stop_reason", result.stop_reason.value)
         span.set_attribute("num_questions", result.metrics.num_questions)
@@ -396,7 +409,7 @@ _GRAPH = _build_graph()
 # ---------------------------------------------------------------------------
 
 
-def run_eval(
+async def arun_eval(
     cfg: RunConfig,
     *,
     taker_fn: TakerFn | None = None,
@@ -404,7 +417,7 @@ def run_eval(
     judge_fn: JudgeFn | None = None,
     on_event: EventFn | None = None,
 ) -> ComparisonReport:
-    """Orchestrate a full eval: sandbox → takers → judges → report.
+    """Orchestrate a full eval: sandbox → takers → judges → report (async).
 
     Phase A: pass ``taker_fn=sim_run_taker``, ``simulator_factory=sim_make_simulator``,
     ``judge_fn=sim_run_judge`` from ``skill_eval.simulated``.
@@ -502,7 +515,7 @@ def run_eval(
                 "taker_results": [],
                 "scores": [],
             }
-            final_state: _EvalState = asyncio.run(_GRAPH.ainvoke(initial_state))
+            final_state: _EvalState = await _GRAPH.ainvoke(initial_state)
             report: ComparisonReport = final_state["report"]
             root.set_attribute("verdict", report.pairwise_verdict)
             # Log per-judge scores to Phoenix as span evaluations (best-effort)
@@ -526,3 +539,23 @@ def run_eval(
         cleanup_workspaces(spaces)
 
     return report
+
+
+def run_eval(
+    cfg: RunConfig,
+    *,
+    taker_fn: TakerFn | None = None,
+    simulator_factory: MakeSimulator | None = None,
+    judge_fn: JudgeFn | None = None,
+    on_event: EventFn | None = None,
+) -> ComparisonReport:
+    """Synchronous wrapper around :func:`arun_eval` (CLI / tests / scripts)."""
+    return asyncio.run(
+        arun_eval(
+            cfg,
+            taker_fn=taker_fn,
+            simulator_factory=simulator_factory,
+            judge_fn=judge_fn,
+            on_event=on_event,
+        )
+    )

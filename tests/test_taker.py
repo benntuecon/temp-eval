@@ -316,6 +316,27 @@ def test_run_taker_mocked(tmp_path) -> None:
     assert "thinking about this problem" in thinking_entries[0]["content"]
 
 
+def test_run_taker_streams_thinking_events(tmp_path) -> None:
+    """ThinkingBlocks from the SDK stream must be forwarded to on_event live —
+    the data behind the UI's hover-thinking panels."""
+    ws = _make_workspace(tmp_path)
+    cfg = _make_cfg()
+    events: list[dict] = []
+
+    with patch("skill_eval.taker.query", side_effect=_fake_query_gen):
+        from skill_eval.taker import run_taker
+
+        run_taker(
+            ws, "claude-haiku-4-5", "/fake/skill", cfg, lambda q: "ok", on_event=events.append
+        )
+
+    stream = [e for e in events if e.get("stage") == "taker_stream"]
+    assert stream, "expected taker_stream events"
+    thinking = [e for e in stream if e.get("kind") == "thinking"]
+    assert thinking and "thinking about this problem" in thinking[0]["text"]
+    assert thinking[0]["arm"] == ws.arm.value
+
+
 def test_run_taker_with_skill_md(tmp_path) -> None:
     """SKILL.md is injected into the system_prompt (Approach B)."""
     ws = _make_workspace(tmp_path)
