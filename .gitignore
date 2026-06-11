@@ -17,3 +17,7 @@ build/
 # graphify local-only artifacts (the graph itself is committed)
 graphify-out/cache/
 graphify-out/cost.json
+# Local vector DB / generated eval case repos
+.vectordb/
+.skill-eval-cases/
+cases.json
