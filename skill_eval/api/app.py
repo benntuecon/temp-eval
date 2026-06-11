@@ -25,7 +25,7 @@ from skill_eval.api.schemas import (
     RunSummary,
     SkillInput,
 )
-from skill_eval.events import dump_event
+from skill_eval.events import RunEvent, dump_event
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -97,6 +97,13 @@ def create_app(runs_dir: str | None = None, init_tracing: bool = True) -> FastAP
     @app.get("/api/health", response_model=HealthInfo)
     def health() -> HealthInfo:
         return HealthInfo(status="ok", phoenix_url=app.state.phoenix_url)
+
+    # Documentation-only: pulls the RunEvent discriminated union into the
+    # OpenAPI components so the generated TypeScript client gets typed events
+    # (the SSE route itself streams text/event-stream and can't carry a model).
+    @app.get("/api/schema/event-types", response_model=list[RunEvent])
+    def event_types() -> list:
+        return []
 
     @app.get("/api/fixtures", response_model=list[FixtureInfo])
     def fixtures() -> list[FixtureInfo]:

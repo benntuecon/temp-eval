@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+@theme {
+  --color-baseline: #e45756;
+  --color-challenger: #4c78a8;
+}
+
+/* Pulse for running pipeline nodes */
+@keyframes node-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 213 79 / 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(255 213 79 / 0);
+  }
+}
+.node-running {
+  animation: node-pulse 1.4s ease-in-out infinite;
+}

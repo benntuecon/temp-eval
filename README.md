@@ -40,16 +40,39 @@ Everything is **injectable**: simulated stand-ins (free, instant) for the plumbi
 ## Quickstart
 
 ```bash
-uv sync                       # install
-cp .env.example .env          # add ANTHROPIC_API_KEY
-just app                      # dashboard at localhost:8501 (auto-starts Phoenix at :6006)
+uv sync && cp .env.example .env   # backend deps + ANTHROPIC_API_KEY
+cd frontend && npm install && cd ..
+just dev                          # FastAPI :8600 + React :5173 (Phoenix auto-starts at :6006)
 ```
 
-The dashboard has two tabs:
-- **Run eval** — bring your own skills: paste two `SKILL.md` bodies (prefilled with the flagship ship-it-fast vs disciplined matchup), pick a task fixture, set `max_turns`/thinking budget, judge model, and judges-per-criterion, then race them (real Haiku agents, or free simulated components to demo the flow). A live **architecture graph** shows the whole pipeline — skills → test generator (mock service) → test cases (before/after project) → sandbox → takers ↔ HITL simulator → judges → assemble → report — with nodes lighting up as stages run; **hover any node** to read what it's doing/thinking (judge tooltips include the rationale as soon as each score lands).
-- **History** — every completed run is archived to `runs/` as JSON; browse past runs and **diff two runs** per criterion (did your skill edit actually help?).
+Open http://localhost:5173. Two tabs:
+- **Run eval** — paste two `SKILL.md` bodies (prefilled with the flagship ship-it-fast vs
+  disciplined matchup), pick a fixture, set budgets/judge model/k, and race them (real Haiku
+  agents, or free simulated components). The **whole architecture renders as a live React Flow
+  graph** — skills → test generator (mock) → test cases → sandbox → takers ↔ HITL simulator →
+  judges → assemble → report — nodes pulse amber while running and turn green when done, and
+  **hovering any node opens a panel streaming that agent's live thinking** (taker reasoning and
+  tool calls as they happen, simulator Q&A, judge rationales the moment they land).
+- **History** — every run is archived (`runs/<id>/report.json` + `events.jsonl`); browse past
+  runs and **diff two runs** per criterion with green/red deltas.
 
-Results persist across reruns (stored in session state) and every report is downloadable as JSON.
+## Architecture (service)
+
+```
+frontend/ (Vite+React+TS) ──openapi-ts client──► skill_eval/api/ (FastAPI :8600)
+   React Flow live graph        SSE /api/runs/{id}/events (typed event union)
+   hover-thinking panels        POST/GET /api/runs · /api/fixtures · /api/health
+   react-vega results funnel              │
+                                   RunManager (asyncio task per run)
+                                          │
+                            agent layer: orchestrator → takers ↔ simulator → judges
+                                          │
+                            runs/ archive + Phoenix traces (one session per run)
+```
+
+The contract is **Pydantic v2** end to end: `skill_eval/contracts.py` (report types) and
+`skill_eval/events.py` (node-addressed event union) generate the OpenAPI schema, and the
+TypeScript client is generated from it (`just gen-client`) — frontend and backend cannot drift.
 
 ## Measurement validity
 
@@ -61,36 +84,35 @@ Results persist across reruns (stored in session state) and every report is down
 
 ## Visualizations
 
-The results page follows the **aggregate → matrix → drill-down funnel** used by the two most credible OSS eval UIs (promptfoo 22k★, Langfuse 28k★):
+The results funnel follows the **aggregate → matrix → drill-down** pattern of the two most
+credible OSS eval UIs (promptfoo 22k★, Langfuse 28k★): delta metric cards → per-criterion
+score matrix with green/red Δ and "why?" rationale drill-downs → evidence (each arm's actual
+diff, the gold reference diff, clarifying Q&A) → JSON download. Charts are vega-lite via
+react-vega (dumbbell gap chart, quality-vs-cost scatter) — one colour per arm everywhere,
+grouped never stacked. The **live architecture graph** is the centerpiece: per-node status
+lighting plus hover panels streaming each agent's thinking in real time.
 
-- **Live architecture graph** — the *whole* pipeline as a left-to-right Graphviz DAG (skills → test generator → test cases → sandbox → takers ↔ simulator → judges → assemble → report), nodes lighting grey→gold→green as stages run; per-arm clusters with junction nodes so the 12-judge fan-in reads as 2 clean edges; **hover tooltips** narrate each node's thinking (incl. live judge rationales).
-- **Control room** — per-arm panels (stop reason, questions, turns, wall time), a 12-tile judges grid, headline delta metrics.
-- **Comparison dataviz** (best-practice, one colour per arm everywhere):
-  - **Dumbbell / gap chart** — connects each arm's score per criterion, sorted by the gap, so the *difference* is the primary visual.
-  - **Score matrix + judge rationales** — exact scores with green/red Δ, then an expander per criterion showing *why* each judge scored each arm (rationale as a first-class field, the promptfoo `llm-rubric` pattern).
-  - **Quality-vs-cost scatter** — total score against total tokens, answering "is the better skill worth what it costs?".
-  - **Evidence panels** — the actual diff each taker produced, the gold reference diff, and the clarifying Q&A, side by side.
-  - **History compare** — per-criterion green/red deltas between any two archived runs.
-- **Phoenix** (`localhost:6006`) — deep per-agent traces, all grouped into **one Session** per run:
-  - **Taker** (AGENT): tool timeline (Read/Edit/Bash/ask_question), thinking trajectory, an LLM `model` child span carrying real prompt/completion/cache token counts, and metadata (skill, stop_reason, thinking budget).
-  - **HITL simulator** (LLM): every stakeholder answer captured as its own span — model, tokens, and the structured system/user/assistant messages it saw.
-  - **Judges** (LLM): each prompt + rationale as structured input/output messages, model name, invocation parameters, and token counts.
-  - Judge scores logged as span annotations; auto-instrumentation adds raw Anthropic `messages.create` and LangGraph node spans on top.
+
+**Phoenix** (`localhost:6006`) — deep per-agent traces, all grouped into **one Session** per run:
+taker tool timelines + thinking trajectory + real token counts, every simulator answer as its own
+LLM span, every judge prompt + rationale as structured messages, judge scores as span annotations.
 
 ## Dev
 
 ```bash
-just check        # ruff format + lint + mypy + pytest  (112 tests incl. headless AppTest UI tests, no network)
-just e2e          # Playwright + real Chromium: tabs, architecture-graph tooltips in the live DOM, full simulated run clicked through the browser
-just screenshot   # full-page Playwright screenshot of the running dashboard
+just check        # python: ruff format + lint + mypy + pytest (123 tests incl. API contract + SSE, no network)
+just check-web    # frontend: tsc + vitest (event-store reducer & co.)
+just e2e          # Playwright + real Chromium against the real stack: live graph, hover-thinking panels, full run
+just gen-client   # regenerate the typed TS client from the OpenAPI schema
+just screenshot   # full-page Playwright screenshot of the running app
 just test-live    # the one real end-to-end smoke test (needs API + credits)
-just phoenix      # standalone Phoenix (just app auto-starts it otherwise)
+just phoenix      # standalone Phoenix (the API auto-starts it otherwise)
 just graph        # refresh the graphify code knowledge graph
 ```
 
 ## Layout
-- `skill_eval/` — `contracts.py` (the typed contract), `orchestrator.py` (LangGraph), `sandbox.py`/`git_ops.py` (worktrees), `taker.py`/`simulator.py`/`judge.py` (real components), `simulated.py` (free stand-ins), `reporting.py`, `tracing.py`.
-- `flagship/skills/` — the two demo skills (`disciplined`, `ship-it-fast`).
-- `app.py` — the Streamlit dashboard. `docs/superpowers/` — specs, plans, decisions, spikes.
+- `skill_eval/` — `contracts.py` + `events.py` (the Pydantic contract), `api/` (FastAPI + RunManager), `orchestrator.py` (LangGraph), `sandbox.py`/`git_ops.py` (worktrees), `taker.py`/`simulator.py`/`judge.py` (real components), `simulated.py` (free stand-ins), `reporting.py`, `tracing.py`.
+- `frontend/` — Vite + React + TS app (React Flow graph, hover-thinking panels, react-vega funnel, generated client in `src/api/schema.d.ts`).
+- `flagship/skills/` — the two demo skills (`disciplined`, `ship-it-fast`). `docs/superpowers/` — specs, plans, decisions, spikes.
 
 See `DEMO.md` for the 2-minute presentation script.
