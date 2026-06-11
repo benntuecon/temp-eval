@@ -32,6 +32,10 @@ check: fmt lint types test
 app:
     uv run streamlit run app.py
 
+# FastAPI backend on :8600 (OpenAPI at /openapi.json)
+api:
+    uv run uvicorn skill_eval.api.app:app --port 8600 --reload
+
 phoenix:
     uv run phoenix serve
 
