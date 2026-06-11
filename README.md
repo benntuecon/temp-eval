@@ -81,6 +81,8 @@ The results page follows the **aggregate → matrix → drill-down funnel** used
 
 ```bash
 just check        # ruff format + lint + mypy + pytest  (112 tests incl. headless AppTest UI tests, no network)
+just e2e          # Playwright + real Chromium: tabs, architecture-graph tooltips in the live DOM, full simulated run clicked through the browser
+just screenshot   # full-page Playwright screenshot of the running dashboard
 just test-live    # the one real end-to-end smoke test (needs API + credits)
 just phoenix      # standalone Phoenix (just app auto-starts it otherwise)
 just graph        # refresh the graphify code knowledge graph
