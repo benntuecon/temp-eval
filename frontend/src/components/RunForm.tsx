@@ -29,7 +29,6 @@ export function RunForm({
   const [maxTurns, setMaxTurns] = useState(5);
   const [thinking, setThinking] = useState(2048);
   const [judgeModel, setJudgeModel] = useState("gpt-4.1-mini");
-  const [realAgents, setRealAgents] = useState(false);
   const [extraSkills, setExtraSkills] = useState<ExtraSkillCard[]>([]);
   const fixtureOptions = fixtures.data?.length ? fixtures.data : DEMO_FIXTURES;
   const judgeCostWeight: Record<string, number> = {
@@ -189,7 +188,7 @@ export function RunForm({
       </div>
 
       <div className="sketch-card bg-sketch-paper p-4">
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Field label="max_turns">
             <input
               type="number"
@@ -232,15 +231,6 @@ export function RunForm({
               Demo only; updates with turns, model, and thinking budget.
             </div>
           </div>
-          <label className="flex items-end gap-2 pb-2 text-sm font-semibold text-sketch-ink">
-            <input
-              type="checkbox"
-              checked={realAgents}
-              onChange={(e) => setRealAgents(e.target.checked)}
-              data-testid="real-agents-toggle"
-            />
-            Run real agents
-          </label>
         </div>
       </div>
 
@@ -261,7 +251,7 @@ export function RunForm({
               thinking_budget: thinking,
               judge_model: judgeModel,
               judges_per_criterion: 1,
-              real_agents: realAgents,
+              real_agents: false,
             })
           }
         >

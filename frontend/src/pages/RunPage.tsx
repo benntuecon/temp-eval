@@ -305,10 +305,7 @@ function OnboardingRoadmap() {
   return (
     <section className="demo-screen demo-screen-panel sketch-card onboarding-screen bg-sketch-paper p-5" aria-label="Onboarding to SkillForge">
       <div className="onboarding-code-area">
-        <h2 className="font-hand text-4xl font-bold leading-tight text-sketch-ink md:text-6xl">
-          Onboard to SkillForge Now
-        </h2>
-        <pre className="onboarding-code-block mt-4" data-scroll-free>
+        <pre className="onboarding-code-block" data-scroll-free>
           <code>{SKILLFORGE_ONBOARDING_MARKDOWN}</code>
         </pre>
       </div>
@@ -324,15 +321,15 @@ function OnboardingRoadmap() {
 function FutureRoadmapScreen() {
   return (
     <section className="demo-screen demo-screen-panel sketch-card future-roadmap-screen bg-sketch-paper p-5" aria-label="Future roadmaps">
-      <h2 className="problem-title font-hand">
+      <h2 className="future-roadmap-title font-hand">
         Future Roadmaps
       </h2>
-      <div className="future-roadmap-grid mt-8">
+      <div className="future-roadmap-grid mt-5">
         <article className="future-roadmap-card">
           <div className="future-roadmap-number font-hand">1</div>
           <div>
-            <h3 className="font-hand text-2xl font-bold">Configurable Judge Groups</h3>
-            <p className="mt-4 text-lg font-semibold leading-8">
+            <h3 className="font-hand text-xl font-bold">Configurable Judge Groups</h3>
+            <p className="mt-3 text-sm font-semibold leading-6">
               Allow teams to define and prioritize the evaluation criteria that matter most to their skills,
               making SkillForge assessments more flexible, targeted, and use-case specific.
             </p>
@@ -341,13 +338,16 @@ function FutureRoadmapScreen() {
         <article className="future-roadmap-card">
           <div className="future-roadmap-number font-hand">2</div>
           <div>
-            <h3 className="font-hand text-2xl font-bold">JPMC Skills Marketplace Integration</h3>
-            <p className="mt-4 text-lg font-semibold leading-8">
+            <h3 className="font-hand text-xl font-bold">JPMC Skills Marketplace Integration</h3>
+            <p className="mt-3 text-sm font-semibold leading-6">
               Connect SkillForge with the JPMC Skills Marketplace to establish a consistent quality evaluation
               and pruning framework for skills across the JPMC Agentic AI ecosystem.
             </p>
           </div>
         </article>
+      </div>
+      <div className="future-qa font-hand" aria-label="Q and A">
+        Q&amp;A
       </div>
     </section>
   );
