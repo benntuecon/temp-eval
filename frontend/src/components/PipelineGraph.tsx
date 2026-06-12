@@ -12,8 +12,24 @@ import {
   type NodeTypes,
 } from "@xyflow/react";
 import { useMemo } from "react";
+import type { BatchCaseState } from "../api/client";
 import { ARMS, CRITERIA, type NodeStatus, type RunLiveState } from "../state/eventStore";
 import { cn } from "./ui";
+
+/** Batch context: the retrieved cases become first-class graph tiles. */
+export type BatchGraphContext = {
+  query: string;
+  cases: BatchCaseState[];
+  selectedCaseId: string | null;
+  onSelectCase: (caseId: string) => void;
+};
+
+const CASE_STATUS: Record<string, NodeStatus> = {
+  queued: "pending",
+  running: "running",
+  completed: "done",
+  failed: "failed",
+};
 
 const STATUS_BG: Record<NodeStatus, string> = {
   pending: "bg-slate-200 border-slate-300 text-slate-700",
@@ -56,7 +72,10 @@ function judgeY(armIdx: number, ci: number): number {
   return base + ci * 44;
 }
 
-export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>[]; edges: Edge[] } {
+export function buildGraph(
+  state: RunLiveState,
+  batch?: BatchGraphContext,
+): { nodes: Node<PipelineNodeData>[]; edges: Edge[] } {
   const s = state.nodeStatus;
   const nodes: Node<PipelineNodeData>[] = [
     {
@@ -70,18 +89,6 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
       type: "pipeline",
       position: { x: X.skills, y: 180 },
       data: { label: "challenger skill", status: s["skill:challenger"], hint: "Input #2 — the only thing that differs between arms" },
-    },
-    {
-      id: "test_generator",
-      type: "pipeline",
-      position: { x: X.generator, y: 150 },
-      data: { label: "test generator", sub: "(mock service)", status: s["test_generator"], hint: "Designs a test case that can tell the two skills apart" },
-    },
-    {
-      id: "test_cases",
-      type: "pipeline",
-      position: { x: X.cases, y: 150 },
-      data: { label: "test cases", sub: "before/after project", status: s["test_cases"], hint: "The eval payload: a before-project + a gold after-project" },
     },
     {
       id: "sandbox",
@@ -109,13 +116,85 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
     },
   ];
 
-  const edges: Edge[] = [
-    { id: "e-sb", source: "skill:baseline", target: "test_generator" },
-    { id: "e-sc", source: "skill:challenger", target: "test_generator" },
-    { id: "e-gc", source: "test_generator", target: "test_cases" },
-    { id: "e-cs", source: "test_cases", target: "sandbox" },
-    { id: "e-ar", source: "assemble", target: "report" },
-  ];
+  const edges: Edge[] = [{ id: "e-ar", source: "assemble", target: "report" }];
+
+  if (batch && batch.cases.length > 0) {
+    // vecDB retriever fans out into one tile per retrieved case; the selected
+    // case feeds the rest of the pipeline.
+    nodes.push({
+      id: "retriever",
+      type: "pipeline",
+      position: { x: X.generator, y: 150 },
+      data: {
+        label: "vecDB retriever",
+        sub: `${batch.cases.length} case${batch.cases.length === 1 ? "" : "s"}`,
+        status: "done",
+        hint: `Embedded your query and pulled the top-K matching test cases: "${batch.query}"`,
+      },
+    });
+    edges.push(
+      { id: "e-sb", source: "skill:baseline", target: "retriever" },
+      { id: "e-sc", source: "skill:challenger", target: "retriever" },
+    );
+
+    const n = batch.cases.length;
+    batch.cases.forEach((c, i) => {
+      const id = `case:${c.case_id}`;
+      const isSelected = c.case_id === batch.selectedCaseId;
+      nodes.push({
+        id,
+        type: "pipeline",
+        position: { x: X.cases, y: 150 + (i - (n - 1) / 2) * 52 },
+        data: {
+          label: c.case_id,
+          sub:
+            c.baseline_total != null && c.challenger_total != null
+              ? `B ${c.baseline_total} · C ${c.challenger_total}`
+              : c.status,
+          status: CASE_STATUS[c.status] ?? "pending",
+          hint: isSelected
+            ? c.description
+            : `${c.description}\n\nClick to watch this case's pipeline.`,
+        },
+        className: isSelected ? "case-selected" : undefined,
+      });
+      edges.push({
+        id: `e-r-${c.case_id}`,
+        source: "retriever",
+        target: id,
+        style: { opacity: 0.45 },
+      });
+      edges.push({
+        id: `e-c-${c.case_id}`,
+        source: id,
+        target: "sandbox",
+        animated: isSelected && CASE_STATUS[c.status] === "running",
+        style: isSelected ? undefined : { opacity: 0.12 },
+      });
+    });
+  } else {
+    // Legacy single-fixture layout (no batch context).
+    nodes.push(
+      {
+        id: "test_generator",
+        type: "pipeline",
+        position: { x: X.generator, y: 150 },
+        data: { label: "test generator", sub: "(mock service)", status: s["test_generator"], hint: "Designs a test case that can tell the two skills apart" },
+      },
+      {
+        id: "test_cases",
+        type: "pipeline",
+        position: { x: X.cases, y: 150 },
+        data: { label: "test cases", sub: "before/after project", status: s["test_cases"], hint: "The eval payload: a before-project + a gold after-project" },
+      },
+    );
+    edges.push(
+      { id: "e-sb", source: "skill:baseline", target: "test_generator" },
+      { id: "e-sc", source: "skill:challenger", target: "test_generator" },
+      { id: "e-gc", source: "test_generator", target: "test_cases" },
+      { id: "e-cs", source: "test_cases", target: "sandbox" },
+    );
+  }
 
   ARMS.forEach((arm, ai) => {
     const takerId = `taker:${arm}`;
@@ -164,11 +243,13 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
 export function PipelineGraph({
   state,
   onSelectNode,
+  batch,
 }: {
   state: RunLiveState;
   onSelectNode: (nodeId: string) => void;
+  batch?: BatchGraphContext;
 }) {
-  const { nodes, edges } = useMemo(() => buildGraph(state), [state]);
+  const { nodes, edges } = useMemo(() => buildGraph(state, batch), [state, batch]);
   return (
     <div className="h-[560px] w-full rounded-xl border border-slate-200 bg-white">
       <ReactFlow
@@ -179,7 +260,13 @@ export function PipelineGraph({
         proOptions={{ hideAttribution: true }}
         nodesDraggable={false}
         nodesConnectable={false}
-        onNodeClick={(_, node) => onSelectNode(node.id)}
+        onNodeClick={(_, node) => {
+          onSelectNode(node.id);
+          // Clicking a case tile also switches which case is being watched.
+          if (batch && node.id.startsWith("case:")) {
+            batch.onSelectCase(node.id.slice("case:".length));
+          }
+        }}
         onNodeMouseEnter={(_, node) => onSelectNode(node.id)}
       >
         <Background gap={24} />

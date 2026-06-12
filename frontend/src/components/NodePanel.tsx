@@ -2,6 +2,7 @@
 // New entries append while the run streams — this is the "see what the
 // underlying agent is thinking right now" feature.
 import { useEffect, useRef } from "react";
+import type { BatchCaseState } from "../api/client";
 import type { RunLiveState } from "../state/eventStore";
 import { Badge, Card } from "./ui";
 
@@ -18,6 +19,8 @@ const KIND_TONE: Record<string, "slate" | "green" | "red" | "amber" | "blue"> = 
 const NODE_DESCRIPTION: Record<string, string> = {
   "skill:baseline": "Input — the baseline skill, injected verbatim into its taker's system prompt.",
   "skill:challenger": "Input — the challenger skill; the only thing that differs between arms.",
+  retriever:
+    "vecDB retriever — embeds your query and pulls the top-K matching test cases from the vector DB. Each case carries its own task description, which becomes that run's brief.",
   test_generator:
     "MOCK service. Thinking: design a test case that tells the two skills apart — a before-project to fix and a gold after-project to grade against. Input: the two skills + brief. Output: test cases (before/after project).",
   test_cases: "The eval payload: the before commit takers start from + the gold after commit judges compare against.",
@@ -39,7 +42,53 @@ function describe(nodeId: string): string {
   return "";
 }
 
-export function NodePanel({ state, nodeId }: { state: RunLiveState; nodeId: string | null }) {
+const CASE_TONE: Record<string, "slate" | "amber" | "green" | "red"> = {
+  queued: "slate",
+  running: "amber",
+  completed: "green",
+  failed: "red",
+};
+
+function CaseInfoPanel({ c }: { c: BatchCaseState }) {
+  return (
+    <Card className="flex h-[560px] flex-col p-4" data-testid="node-panel">
+      <div className="mb-2 flex items-center gap-2">
+        <h3 className="font-mono text-sm font-semibold text-slate-800">{c.case_id}</h3>
+        <Badge tone={CASE_TONE[c.status] ?? "slate"}>{c.status}</Badge>
+      </div>
+      <p className="mb-3 text-xs leading-relaxed text-slate-600">{c.description}</p>
+      <div className="space-y-1 text-xs text-slate-600">
+        {c.distance != null && <p>retrieval distance: {Number(c.distance).toFixed(3)}</p>}
+        {c.run_id && <p className="font-mono">run: {c.run_id}</p>}
+        {c.baseline_total != null && c.challenger_total != null && (
+          <p>
+            score — baseline {c.baseline_total} · challenger {c.challenger_total}
+          </p>
+        )}
+        {c.baseline_tokens != null && c.challenger_tokens != null && (
+          <p>
+            tokens — baseline {c.baseline_tokens.toLocaleString()} · challenger{" "}
+            {c.challenger_tokens.toLocaleString()}
+          </p>
+        )}
+        {c.verdict && <p className="font-medium text-slate-800">{c.verdict}</p>}
+      </div>
+      <p className="mt-auto text-xs text-slate-400">
+        Click the tile to watch this case's pipeline live.
+      </p>
+    </Card>
+  );
+}
+
+export function NodePanel({
+  state,
+  nodeId,
+  cases,
+}: {
+  state: RunLiveState;
+  nodeId: string | null;
+  cases?: BatchCaseState[];
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const buffer = nodeId ? (state.buffers[nodeId] ?? []) : [];
 
@@ -54,6 +103,11 @@ export function NodePanel({ state, nodeId }: { state: RunLiveState; nodeId: stri
         Hover or click a node to see what it's thinking.
       </Card>
     );
+  }
+
+  if (nodeId.startsWith("case:")) {
+    const c = cases?.find((x) => x.case_id === nodeId.slice("case:".length));
+    if (c) return <CaseInfoPanel c={c} />;
   }
 
   const status = state.nodeStatus[nodeId] ?? "pending";

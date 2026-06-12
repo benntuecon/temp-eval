@@ -26,8 +26,21 @@ const STATUS_TONE: Record<string, "slate" | "blue" | "green" | "red"> = {
 };
 
 /** Live pipeline + results for one child run (SSE replays history, so this
- *  works for already-finished cases too). */
-function CaseLiveView({ runId }: { runId: string }) {
+ *  works for already-finished cases too). The retrieved cases render as
+ *  first-class tiles: hover for the case's info, click to switch cases. */
+function CaseLiveView({
+  runId,
+  query,
+  cases,
+  selectedCaseId,
+  onSelectCase,
+}: {
+  runId: string;
+  query: string;
+  cases: BatchCaseState[];
+  selectedCaseId: string | null;
+  onSelectCase: (caseId: string) => void;
+}) {
   const [live, setLive] = useState<RunLiveState>(initialRunState);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
@@ -48,12 +61,17 @@ function CaseLiveView({ runId }: { runId: string }) {
         <h2 className="mb-1 text-sm font-semibold text-slate-800">
           Pipeline{" "}
           <span className="font-normal text-slate-500">
-            — hover or click any node to see what it's thinking
+            — hover any node (including the case tiles) to inspect it; click a case tile to
+            switch
           </span>
         </h2>
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[2fr_1fr]">
-          <PipelineGraph state={live} onSelectNode={setSelectedNode} />
-          <NodePanel state={live} nodeId={selectedNode} />
+          <PipelineGraph
+            state={live}
+            onSelectNode={setSelectedNode}
+            batch={{ query, cases, selectedCaseId, onSelectCase }}
+          />
+          <NodePanel state={live} nodeId={selectedNode} cases={cases} />
         </div>
       </div>
 
@@ -380,7 +398,16 @@ export function RunPage() {
             ))}
           </Card>
 
-          {selected?.run_id && <CaseLiveView key={selected.run_id} runId={selected.run_id} />}
+          {selected?.run_id && (
+            <CaseLiveView
+              key={selected.run_id}
+              runId={selected.run_id}
+              query={detail.data.summary.query}
+              cases={detail.data.cases}
+              selectedCaseId={selectedCase}
+              onSelectCase={setSelectedCase}
+            />
+          )}
 
           {detail.data.stats && (
             <BatchStats
