@@ -4,7 +4,13 @@
 import { useState } from "react";
 import { VegaLite } from "react-vega";
 import type { ArmReport, ComparisonReport } from "../api/client";
-import { dumbbellSpec, gapRows, qualityCostSpec } from "./charts";
+import {
+  batchQualityCostSpec,
+  dumbbellSpec,
+  gapRows,
+  qualityCostSpec,
+  type BatchQualityCostRow,
+} from "./charts";
 import { Badge, Card, cn } from "./ui";
 
 type DecisionAction = "promote" | "restrict" | "retest";
@@ -272,7 +278,15 @@ function byArm(report: ComparisonReport): Record<string, ArmReport> {
   return Object.fromEntries(report.arms.map((a) => [a.arm, a]));
 }
 
-export function ResultsFunnel({ report }: { report: ComparisonReport }) {
+export function ResultsFunnel({
+  report,
+  batchQualityCost,
+}: {
+  report: ComparisonReport;
+  // When present (batch flow), the Quality-vs-cost card plots one dot per
+  // case per skill instead of the single-run two-dot version.
+  batchQualityCost?: BatchQualityCostRow[];
+}) {
   const arms = byArm(report);
   const base = arms["baseline"];
   const chal = arms["challenger"];
@@ -455,8 +469,20 @@ export function ResultsFunnel({ report }: { report: ComparisonReport }) {
         </Card>
         <Card className="p-4">
           <h3 className="mb-1 font-hand text-lg font-bold text-sketch-ink">Quality vs cost</h3>
-          <p className="mb-2 text-xs font-semibold text-sketch-muted">Up-and-to-the-left is better.</p>
-          <VegaLite spec={qualityCostSpec(report)} actions={false} style={{ width: "100%" }} />
+          <p className="mb-2 text-xs font-semibold text-sketch-muted">
+            {batchQualityCost?.length
+              ? "One dot per case per skill — up-and-to-the-left is better."
+              : "Up-and-to-the-left is better."}
+          </p>
+          <VegaLite
+            spec={
+              batchQualityCost?.length
+                ? batchQualityCostSpec(batchQualityCost)
+                : qualityCostSpec(report)
+            }
+            actions={false}
+            style={{ width: "100%" }}
+          />
         </Card>
       </div>
 

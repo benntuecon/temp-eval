@@ -85,7 +85,7 @@ export interface BatchQualityCostRow {
 export function batchQualityCostSpec(rows: BatchQualityCostRow[]): TopLevelSpec {
   return {
     width: "container",
-    height: 280,
+    height: 260, // same footprint as the single-run quality/cost card
     data: { values: rows },
     mark: { type: "circle", size: 260, opacity: 0.85 },
     encoding: {

@@ -12,8 +12,7 @@ import {
   type BatchStats,
   type CreateBatchRequest,
 } from "../api/client";
-import { VegaLite } from "react-vega";
-import { ARM_COLORS, batchQualityCostSpec, type BatchQualityCostRow } from "../components/charts";
+import { ARM_COLORS, type BatchQualityCostRow } from "../components/charts";
 import { PipelineGraph } from "../components/PipelineGraph";
 import { ResultsFunnel } from "../components/ResultsFunnel";
 import { RunForm } from "../components/RunForm";
@@ -199,6 +198,20 @@ function NodeThinkingCodeBlock({
   );
 }
 
+/** One dot per (case, arm): join the batch's score and token rows by case. */
+function qualityCostRows(stats: BatchStats): BatchQualityCostRow[] {
+  const tokensByCase = new Map(stats.tokens_per_case.map((r) => [String(r.case), r]));
+  return stats.per_case_totals.flatMap((r) => {
+    const t = tokensByCase.get(String(r.case));
+    return (["baseline", "challenger"] as const).map((arm) => ({
+      case: String(r.case),
+      arm,
+      score: Number(r[arm] ?? 0),
+      tokens: Number(t?.[arm] ?? 0),
+    }));
+  });
+}
+
 function BarPair({
   label,
   baseline,
@@ -238,17 +251,6 @@ function BatchStatsBoard({ stats, partial }: { stats: BatchStats; partial: boole
     1,
     ...stats.tokens_per_case.flatMap((r) => [Number(r.baseline ?? 0), Number(r.challenger ?? 0)]),
   );
-  // One dot per (case, arm): join score and token rows by case id.
-  const tokensByCase = new Map(stats.tokens_per_case.map((r) => [String(r.case), r]));
-  const qualityCostRows: BatchQualityCostRow[] = stats.per_case_totals.flatMap((r) => {
-    const t = tokensByCase.get(String(r.case));
-    return (["baseline", "challenger"] as const).map((arm) => ({
-      case: String(r.case),
-      arm,
-      score: Number(r[arm] ?? 0),
-      tokens: Number(t?.[arm] ?? 0),
-    }));
-  });
   return (
     <div className="space-y-4" data-testid="batch-stats">
       <div className="flex flex-wrap items-center gap-3">
@@ -303,15 +305,6 @@ function BatchStatsBoard({ stats, partial }: { stats: BatchStats; partial: boole
               max={120}
             />
           ))}
-        </div>
-        <div className="sketch-card bg-sketch-paper p-4 lg:col-span-2">
-          <h4 className="font-hand mb-3 text-sm font-bold text-sketch-muted">
-            QUALITY VS COST — ONE DOT PER CASE PER SKILL
-          </h4>
-          <p className="-mt-2 mb-2 text-xs font-semibold text-sketch-muted">
-            Up-and-to-the-left is better. Hover a dot for its case.
-          </p>
-          <VegaLite spec={batchQualityCostSpec(qualityCostRows)} actions={false} style={{ width: "100%" }} />
         </div>
         <div className="sketch-card bg-sketch-paper p-4 lg:col-span-2">
           <h4 className="font-hand mb-3 text-sm font-bold text-sketch-muted">
@@ -635,7 +628,10 @@ export function RunPage({ navSlot }: { navSlot?: ReactNode }) {
           <div className="font-hand mb-2 text-sm font-bold text-sketch-muted">
             Decision report — case {selected?.case_id}
           </div>
-          <ResultsFunnel report={report} />
+          <ResultsFunnel
+            report={report}
+            batchQualityCost={detail.data?.stats ? qualityCostRows(detail.data.stats) : undefined}
+          />
         </section>
       ) : null}
 
