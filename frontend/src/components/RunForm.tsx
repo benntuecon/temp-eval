@@ -12,6 +12,34 @@ import {
 } from "../api/client";
 import { Field, inputClass } from "./ui";
 
+type ExtraSkillCard = {
+  id: number;
+  name: string;
+  markdown: string;
+};
+
+// Demo third candidate: visual only — the eval contract is pairwise, so
+// extra cards are never submitted. At the live demo, click its × to show
+// how a wider skill lineup would be narrowed to a head-to-head race.
+const DEMO_THIRD_SKILL: ExtraSkillCard = {
+  id: 1,
+  name: "logging-structured-json",
+  markdown: `---
+name: logging-structured-json
+description: >
+  Emit every log line as a single JSON object with a fixed schema so
+  downstream pipelines never parse free text.
+---
+
+# Structured JSON Logging
+
+- Every event is one JSON object: {"ts", "level", "event", "ctx"}.
+- Never interpolate values into the message — put them in "ctx".
+- One schema for the whole service; reject ad-hoc fields in review.
+- Logs are for machines first; humans read them through the pipeline.
+`,
+};
+
 export function RunForm({
   running,
   onSubmit,
@@ -28,9 +56,20 @@ export function RunForm({
   const [baseMd, setBaseMd] = useState("");
   const [chalName, setChalName] = useState("");
   const [chalMd, setChalMd] = useState("");
+  const [extraSkills, setExtraSkills] = useState<ExtraSkillCard[]>([DEMO_THIRD_SKILL]);
   const [preview, setPreview] = useState<RetrievedCase[] | null>(null);
   const [previewing, setPreviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const addSkillCard = () =>
+    setExtraSkills((cards) => [
+      ...cards,
+      { id: Date.now(), name: `candidate-skill-${cards.length + 3}`, markdown: "" },
+    ]);
+  const removeExtraSkill = (id: number) =>
+    setExtraSkills((cards) => cards.filter((c) => c.id !== id));
+  const updateExtraSkill = (id: number, patch: Partial<ExtraSkillCard>) =>
+    setExtraSkills((cards) => cards.map((c) => (c.id === id ? { ...c, ...patch } : c)));
 
   // Prefill the two skill cards once with the server's default pair.
   const fixtures = useQuery({ queryKey: ["fixtures"], queryFn: api.fixtures });
@@ -224,7 +263,58 @@ export function RunForm({
             />
           </Field>
         </div>
+
+        {extraSkills.map((skill, index) => (
+          <div key={skill.id} className="skill-input-card bg-sketch-green">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-hand rounded-[12px_9px_13px_8px] border-2 border-sketch-ink bg-sketch-paper px-2 py-0.5 text-xs font-bold">
+                skill {index + 3} · candidate
+              </span>
+              <button
+                type="button"
+                className="remove-skill-button"
+                onClick={() => removeExtraSkill(skill.id)}
+                aria-label={`Remove skill ${index + 3}`}
+                title={`Remove skill ${index + 3}`}
+                data-testid={`drop-skill-${index + 3}`}
+              >
+                ×
+              </button>
+            </div>
+            <Field label="Name" className="mt-2">
+              <input
+                className={inputClass}
+                value={skill.name}
+                onChange={(e) => updateExtraSkill(skill.id, { name: e.target.value })}
+              />
+            </Field>
+            <Field label="SKILL.md" className="mt-2">
+              <textarea
+                className={`${inputClass} h-44 font-mono text-xs`}
+                value={skill.markdown}
+                onChange={(e) => updateExtraSkill(skill.id, { markdown: e.target.value })}
+              />
+            </Field>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          className="add-skill-button"
+          onClick={addSkillCard}
+          aria-label="Add skill card"
+          title="Add skill card"
+        >
+          +
+        </button>
       </div>
+
+      {extraSkills.length > 0 ? (
+        <p className="font-hand mt-2 text-xs font-bold text-sketch-muted">
+          SkillForge races two skills head-to-head — drop the extra card{extraSkills.length === 1 ? "" : "s"} (×)
+          to narrow the lineup; only skill 1 and skill 2 are submitted.
+        </p>
+      ) : null}
 
       {error && <p className="mt-2 text-xs font-bold text-sketch-red">{error}</p>}
 
