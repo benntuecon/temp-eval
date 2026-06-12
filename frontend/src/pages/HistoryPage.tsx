@@ -13,7 +13,7 @@ function DeltaTable({ a, b }: { a: ComparisonReport; b: ComparisonReport }) {
   return (
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
+        <tr className="border-b-2 border-dashed border-sketch-ink text-left font-hand text-xs font-bold text-sketch-muted">
           <th className="py-1.5">criterion</th>
           <th>baseline A→B</th>
           <th>Δ</th>
@@ -27,13 +27,13 @@ function DeltaTable({ a, b }: { a: ComparisonReport; b: ComparisonReport }) {
           const db = rb.baseline - (ra?.baseline ?? 0);
           const dc = rb.challenger - (ra?.challenger ?? 0);
           const cell = (d: number) => (
-            <td className={cn("font-semibold", d > 0 && "text-green-600", d < 0 && "text-red-600", d === 0 && "text-slate-400")}>
+            <td className={cn("font-semibold", d > 0 && "text-blue-700", d < 0 && "text-sketch-red", d === 0 && "text-sketch-muted")}>
               {d > 0 ? "+" : ""}
               {d}
             </td>
           );
           return (
-            <tr key={rb.criterion} className="border-b border-slate-100">
+            <tr key={rb.criterion} className="border-b border-sketch-ink/20">
               <td className="py-1.5 font-mono text-xs">{rb.criterion}</td>
               <td>
                 {ra?.baseline ?? 0} → {rb.baseline}
@@ -70,10 +70,10 @@ export function HistoryPage() {
     enabled: compareWith !== "",
   });
 
-  if (runs.isLoading) return <p className="text-sm text-slate-500">Loading runs…</p>;
+  if (runs.isLoading) return <p className="font-hand text-sm font-bold text-sketch-muted">Loading runs…</p>;
   if (completed.length === 0)
     return (
-      <p className="text-sm text-slate-500" data-testid="history-empty">
+      <p className="sticky-note bg-sketch-yellow p-4 font-hand text-sm font-bold text-sketch-ink" data-testid="history-empty">
         No archived runs yet — finish a run on the Run tab first.
       </p>
     );
@@ -110,7 +110,7 @@ export function HistoryPage() {
           </Field>
         </div>
         {detail.data?.summary.verdict ? (
-          <p className="mt-2 text-xs text-slate-600">
+          <p className="mt-2 text-xs font-semibold text-sketch-muted">
             <Badge tone="green">verdict</Badge> {detail.data.summary.verdict}
           </p>
         ) : null}
@@ -118,7 +118,7 @@ export function HistoryPage() {
 
       {compareDetail.data?.report && detail.data?.report ? (
         <Card className="p-4">
-          <h3 className="mb-2 text-sm font-semibold text-slate-800">Run-over-run deltas (B − A)</h3>
+          <h3 className="font-hand mb-2 text-lg font-bold text-sketch-ink">Run-over-run deltas (B − A)</h3>
           <DeltaTable a={compareDetail.data.report} b={detail.data.report} />
         </Card>
       ) : null}

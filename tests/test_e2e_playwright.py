@@ -100,7 +100,7 @@ def test_simulated_run_lights_graph_and_streams_thinking(app_server, page):
     page.get_by_test_id("batch-query").fill("payment api logging banking")
     page.get_by_test_id("batch-topk").fill("1")
     page.get_by_test_id("run-button").click()
-    page.get_by_test_id("batch-board").wait_for(timeout=30_000)
+    page.get_by_test_id("graph-progress").wait_for(timeout=30_000)
 
     # The graph lights up live (amber pulse) and finishes with results.
     saw_running = False

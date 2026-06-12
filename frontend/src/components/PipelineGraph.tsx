@@ -1,12 +1,13 @@
-// The whole architecture as a live React Flow graph. One full pipeline band
-// (sandbox -> takers -> simulator -> judges -> assemble -> report) renders
-// PER RETRIEVED CASE, so a K-case batch is K bands tall. The selected case's
-// band gets fine-grained live statuses from its SSE stream; other bands
-// animate coarsely from the polled batch status. Clicking anywhere in a band
-// attaches the live stream to that case.
+// The whole architecture as a live React Flow graph in SkillForge sketch
+// style. One full pipeline band (sandbox -> takers -> simulator -> judges)
+// renders PER RETRIEVED CASE; every band's judges funnel into ONE shared
+// assemble -> report pair. The selected case's band gets fine-grained live
+// statuses from its SSE stream; other bands animate coarsely from the polled
+// batch status. Clicking anywhere in a band attaches the stream to that case.
 import {
   Background,
   Handle,
+  Panel,
   Position,
   ReactFlow,
   type Edge,
@@ -34,11 +35,12 @@ const CASE_STATUS: Record<string, NodeStatus> = {
   failed: "failed",
 };
 
+// SkillForge sketch palette for node states (grey -> yellow pulse -> green).
 const STATUS_BG: Record<NodeStatus, string> = {
-  pending: "bg-slate-200 border-slate-300 text-slate-700",
-  running: "bg-amber-300 border-amber-500 text-amber-950 node-running",
-  done: "bg-green-300 border-green-600 text-green-950",
-  failed: "bg-red-300 border-red-600 text-red-950",
+  pending: "bg-sketch-paper border-sketch-muted text-sketch-muted",
+  running: "bg-sketch-yellow border-sketch-ink text-sketch-ink node-running",
+  done: "bg-sketch-green border-sketch-ink text-sketch-ink",
+  failed: "bg-sketch-pink border-sketch-ink text-sketch-ink",
 };
 
 type PipelineNodeData = {
@@ -53,14 +55,14 @@ function PipelineNode({ data }: NodeProps<Node<PipelineNodeData>>) {
     <div
       title={data.hint}
       className={cn(
-        "rounded-lg border px-3 py-1.5 text-center text-xs font-medium shadow-sm",
+        "pipeline-node-visible rounded-[12px_9px_13px_10px] border-2 px-3 py-1.5 text-center text-xs font-bold shadow-[3px_3px_0_rgba(48,42,37,0.15)]",
         STATUS_BG[data.status],
       )}
     >
-      <Handle type="target" position={Position.Left} className="!bg-slate-400" />
-      <div>{data.label}</div>
+      <Handle type="target" position={Position.Left} className="!bg-sketch-muted" />
+      <div className="font-hand">{data.label}</div>
       {data.sub ? <div className="text-[10px] opacity-75">{data.sub}</div> : null}
-      <Handle type="source" position={Position.Right} className="!bg-slate-400" />
+      <Handle type="source" position={Position.Right} className="!bg-sketch-muted" />
     </div>
   );
 }
@@ -151,7 +153,7 @@ export function buildGraph(
       data: {
         label: "report",
         status: allDone ? "done" : "pending",
-        hint: "The one result: the batch stats dashboard below (per-case reports archived to runs/)",
+        hint: "The one result: the decision report below (per-case reports archived to runs/)",
       },
     },
   );
@@ -274,8 +276,20 @@ export function PipelineGraph({
   batch: BatchGraphContext;
 }) {
   const { nodes, edges } = useMemo(() => buildGraph(state, batch), [state, batch]);
+  const terminal = batch.cases.filter(
+    (c) => c.status === "completed" || c.status === "failed",
+  ).length;
+  const phase =
+    batch.cases.length === 0
+      ? "waiting for retrieval"
+      : terminal === batch.cases.length
+        ? "decision assembled"
+        : terminal > 0
+          ? `judging — ${terminal}/${batch.cases.length} cases done`
+          : "running all cases";
+
   return (
-    <div className="h-[560px] w-full rounded-xl border border-slate-200 bg-white">
+    <div className="sketch-card h-[560px] w-full overflow-hidden bg-sketch-paper">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -295,6 +309,18 @@ export function PipelineGraph({
         }}
         onNodeMouseEnter={(_, node) => onSelectNode(node.id)}
       >
+        <Panel position="top-right" className="graph-timeline-label" data-testid="graph-progress">
+          <div className="sticky-note rotate-[0.6deg] bg-sketch-yellow px-3 py-2">
+            <div className="font-hand text-xs font-bold">{phase}</div>
+            <div className="graph-progress-track mt-1">
+              <i
+                style={{
+                  width: `${batch.cases.length ? Math.round((terminal / batch.cases.length) * 100) : 0}%`,
+                }}
+              />
+            </div>
+          </div>
+        </Panel>
         <Background gap={24} />
       </ReactFlow>
     </div>

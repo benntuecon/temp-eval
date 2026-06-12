@@ -4,8 +4,8 @@ import type { TopLevelSpec } from "vega-lite";
 import type { ComparisonReport } from "../api/client";
 
 export const ARM_COLORS: Record<string, string> = {
-  baseline: "#E45756",
-  challenger: "#4C78A8",
+  baseline: "#EF8F8C",
+  challenger: "#8FB7DD",
 };
 
 const armScale = {

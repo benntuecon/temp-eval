@@ -11,14 +11,14 @@ export function Button({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "default" | "outline" | "ghost" }) {
   const styles = {
-    default: "bg-rose-600 text-white hover:bg-rose-700 disabled:bg-rose-300",
-    outline: "border border-slate-300 hover:bg-slate-100 text-slate-800",
-    ghost: "hover:bg-slate-100 text-slate-700",
+    default: "border-sketch-ink bg-sketch-yellow text-sketch-ink shadow-[4px_4px_0_rgba(48,42,37,0.2)] hover:-rotate-1 hover:bg-sketch-blue disabled:bg-sketch-grid",
+    outline: "border-sketch-ink bg-sketch-paper text-sketch-ink shadow-[3px_3px_0_rgba(48,42,37,0.16)] hover:rotate-1 hover:bg-sketch-green",
+    ghost: "border-transparent text-sketch-ink hover:border-sketch-ink hover:bg-sketch-paper",
   }[variant];
   return (
     <button
       className={cn(
-        "rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed",
+        "font-hand rounded-[15px_11px_14px_12px] border-2 px-4 py-2 text-sm font-bold transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none disabled:cursor-not-allowed",
         styles,
         className,
       )}
@@ -30,7 +30,7 @@ export function Button({
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("rounded-xl border border-slate-200 bg-white shadow-sm", className)}
+      className={cn("sketch-card bg-sketch-paper", className)}
       {...props}
     />
   );
@@ -42,19 +42,21 @@ export function Badge({
   children,
 }: {
   className?: string;
-  tone?: "slate" | "green" | "red" | "amber" | "blue";
+  tone?: "slate" | "green" | "red" | "amber" | "blue" | "yellow" | "black";
   children: ReactNode;
 }) {
   const tones = {
-    slate: "bg-slate-100 text-slate-700",
-    green: "bg-green-100 text-green-800",
-    red: "bg-red-100 text-red-800",
-    amber: "bg-amber-100 text-amber-800",
-    blue: "bg-blue-100 text-blue-800",
+    slate: "bg-sketch-paper text-sketch-ink",
+    green: "bg-sketch-green text-sketch-ink",
+    red: "bg-sketch-pink text-sketch-ink",
+    amber: "bg-sketch-yellow text-sketch-ink",
+    yellow: "bg-sketch-yellow text-sketch-ink",
+    blue: "bg-sketch-blue text-sketch-ink",
+    black: "bg-sketch-ink text-white",
   }[tone];
   return (
     <span
-      className={cn("inline-block rounded-full px-2 py-0.5 text-xs font-medium", tones, className)}
+      className={cn("font-hand inline-block rounded-[12px_9px_13px_8px] border border-sketch-ink px-2 py-0.5 text-xs font-bold", tones, className)}
     >
       {children}
     </span>
@@ -72,11 +74,11 @@ export function Field({
 }) {
   return (
     <label className={cn("block", className)}>
-      <span className="mb-1 block text-xs font-medium text-slate-600">{label}</span>
+      <span className="font-hand mb-1 block text-xs font-bold text-sketch-muted">{label}</span>
       {children}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none";
+  "w-full rounded-[14px_10px_16px_11px] border-2 border-sketch-ink bg-sketch-paper px-3 py-2 text-sm shadow-[3px_3px_0_rgba(48,42,37,0.1)] focus:bg-sketch-yellow/30 focus:outline-none";
