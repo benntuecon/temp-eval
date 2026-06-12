@@ -255,8 +255,8 @@
     "semantic_hash": ""
   },
   "frontend/src/api/schema.d.ts": {
-    "mtime": 1781242746.3986232,
-    "ast_hash": "bd6c5d482044bba38a6e16445ec1ab7d",
+    "mtime": 1781244490.8269107,
+    "ast_hash": "9064aa406cafbe630907d230df9a71c2",
     "semantic_hash": ""
   },
   "frontend/src/components/PipelineGraph.tsx": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/charts.ts": {
-    "mtime": 1781241884.556453,
-    "ast_hash": "83a141614fce182418c67479be0b881b",
+    "mtime": 1781243311.5687518,
+    "ast_hash": "bbe35d84c8f657222471c460b02893a0",
     "semantic_hash": ""
   },
   "frontend/src/components/ui.tsx": {
@@ -290,8 +290,8 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/RunPage.tsx": {
-    "mtime": 1781242117.4894185,
-    "ast_hash": "7a3139734b5d0d118718b5b4626b7a97",
+    "mtime": 1781244437.61687,
+    "ast_hash": "5b714701d907696f970ae8a72dde6740",
     "semantic_hash": ""
   },
   "frontend/src/state/eventStore.test.ts": {
@@ -330,18 +330,18 @@
     "semantic_hash": ""
   },
   "skill_eval/api/app.py": {
-    "mtime": 1781238295.6492934,
-    "ast_hash": "3c0cfc7141440ef102808ab6929e841c",
+    "mtime": 1781244415.3012516,
+    "ast_hash": "64538ce48343a4966af9d73f19f3d9ec",
     "semantic_hash": ""
   },
   "skill_eval/api/run_manager.py": {
-    "mtime": 1781238816.687194,
-    "ast_hash": "db27b714bbf7309dafe815d732b22c6c",
+    "mtime": 1781244365.1693046,
+    "ast_hash": "cb5df59b61a13c10e196ae0e6e75adc3",
     "semantic_hash": ""
   },
   "skill_eval/api/schemas.py": {
-    "mtime": 1781242724.5880516,
-    "ast_hash": "0bf9218c1586fd11bd94506deea51751",
+    "mtime": 1781244346.04769,
+    "ast_hash": "26ef59ffdc487ce0bdd3e739be30434e",
     "semantic_hash": ""
   },
   "skill_eval/events.py": {
@@ -500,18 +500,18 @@
     "semantic_hash": ""
   },
   "tests/test_api.py": {
-    "mtime": 1781235912.8022058,
-    "ast_hash": "119a4b7f3d300b3a130216a40ce1969b",
+    "mtime": 1781244456.16757,
+    "ast_hash": "87dd43c81b30ce7fc20c9410674c7045",
     "semantic_hash": ""
   },
   "tests/test_e2e_playwright.py": {
-    "mtime": 1781242172.461026,
-    "ast_hash": "df7ca77918331ab431369a42fdb81f5c",
+    "mtime": 1781244488.2576296,
+    "ast_hash": "58285389d787b365ff0ad03542ec1df5",
     "semantic_hash": ""
   },
   "tests/test_events.py": {
-    "mtime": 1781164486.6263092,
-    "ast_hash": "37a3fab6cecdd9352faf1d6a9e0672ec",
+    "mtime": 1781244506.6657214,
+    "ast_hash": "7c86546d601f7f2e1475f178e2150592",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-11-fastapi-react-service.md": {
@@ -525,13 +525,13 @@
     "semantic_hash": ""
   },
   "flagship/skills/logging-best-practices/SKILL.md": {
-    "mtime": 1781226228.1576765,
-    "ast_hash": "f3cd716abc2ce49f67ae22d06d63adec",
+    "mtime": 1781244047.480513,
+    "ast_hash": "785ec3cd8566d807c149f140d039ce79",
     "semantic_hash": ""
   },
   "flagship/skills/logging-naive/SKILL.md": {
-    "mtime": 1781226204.5043724,
-    "ast_hash": "2971c5f91ce2acaedfb96acdf976b325",
+    "mtime": 1781244050.1142836,
+    "ast_hash": "f590c63e7628b82255b900409993b6d3",
     "semantic_hash": ""
   },
   "frontend/index.html": {
@@ -560,8 +560,8 @@
     "semantic_hash": ""
   },
   "skill_eval/api/batch_manager.py": {
-    "mtime": 1781242732.4046137,
-    "ast_hash": "ab7f3769706d029268dca3a7800b14b6",
+    "mtime": 1781244409.1994948,
+    "ast_hash": "9da4533d48477f22a6c11fe87c10fb3b",
     "semantic_hash": ""
   },
   "skill_eval/retriever.py": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "tests/test_batch_api.py": {
-    "mtime": 1781242789.5735152,
-    "ast_hash": "da8099378c8faf7a1f93f3be3d19d1ae",
+    "mtime": 1781244475.0489616,
+    "ast_hash": "630f935c98630c3a66262e9afd8c18fe",
     "semantic_hash": ""
   },
   "frontend/src/components/RunForm.tsx": {
-    "mtime": 1781242784.3967848,
-    "ast_hash": "852d0a12513601975ec8ae618c003945",
+    "mtime": 1781244436.5965683,
+    "ast_hash": "c140787bcbf2e8bce39d90ef61eb853b",
     "semantic_hash": ""
   }
 }

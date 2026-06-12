@@ -33,7 +33,6 @@ class CreateRunRequest(BaseModel):
     wall_clock_seconds: int | None = Field(default=None, ge=10, le=3600)
     judge_model: str | None = None
     judges_per_criterion: int = Field(default=1, ge=1, le=5)
-    real_agents: bool = False  # False = free simulated components
 
     @field_validator("task_brief")
     @classmethod
@@ -108,7 +107,6 @@ class CreateBatchRequest(BaseModel):
     wall_clock_seconds: int | None = Field(default=180, ge=10, le=3600)
     judge_model: str | None = None
     judges_per_criterion: int = Field(default=1, ge=1, le=5)
-    real_agents: bool = False
     # Cap on concurrently-running child evals; None = run all K at once.
     max_concurrent: int | None = Field(default=None, ge=1, le=50)
 
@@ -143,7 +141,6 @@ class BatchSummary(BaseModel):
     query: str
     status: str  # running | completed | failed | interrupted (stale archive)
     created_at: float
-    real_agents: bool = False
     total: int = 0
     completed: int = 0
     failed: int = 0

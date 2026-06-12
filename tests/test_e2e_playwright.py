@@ -39,6 +39,9 @@ def app_server(tmp_path_factory):
     """Launch uvicorn + vite dev for the session; tear both down after."""
     env = os.environ.copy()
     env["SKILL_EVAL_RUNS_DIR"] = str(tmp_path_factory.mktemp("runs"))
+    # Browser tests must stay offline: the env hook swaps in the simulated
+    # taker/simulator/judge (this is a test seam, not a product mode).
+    env["SKILL_EVAL_SIMULATED"] = "1"
 
     api = subprocess.Popen(
         ["uv", "run", "uvicorn", "skill_eval.api.app:app", "--port", str(API_PORT)],

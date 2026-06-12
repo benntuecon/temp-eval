@@ -60,7 +60,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>skill-eval — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 1220 nodes, 2666 edges, 86 communities. Commit: 0deb839</p>
+<p class="subtitle">Generated from graphify knowledge graph: 1226 nodes, 2683 edges, 83 communities. Commit: 839fd62</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
@@ -71,13 +71,13 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
     <a href="#serve-api">Serving API</a>
     <a href="#security-global">Security &amp; Global Graph</a>
     <a href="#tests-fixtures">Tests &amp; Fixtures</a>
-    <a href="#community-37">Community 37</a>
+    <a href="#community-1">Community 1</a>
     <a href="#community-5">Community 5</a>
     <a href="#community-43">Community 43</a>
     <a href="#community-12">Community 12</a>
+    <a href="#community-37">Community 37</a>
     <a href="#community-28">Community 28</a>
     <a href="#community-78">Community 78</a>
-    <a href="#community-80">Community 80</a>
     <a href="#other">Other</a>
 </div>
 
@@ -90,45 +90,46 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 flowchart LR
     BUILD_GRAPH_321CBB04("Graph Build<br/><small>109 nodes</small>")
     class BUILD_GRAPH_321CBB04 module;
-    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>44 nodes</small>")
+    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>37 nodes</small>")
     class ANALYSIS_CLUSTERING_C79796DA module;
-    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>413 nodes</small>")
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>445 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
     INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>12 nodes</small>")
     class INGEST_CACHE_UPDATE_FF457338 module;
-    SERVE_API_35EC8E86("Serving API<br/><small>61 nodes</small>")
+    SERVE_API_35EC8E86("Serving API<br/><small>39 nodes</small>")
     class SERVE_API_35EC8E86 module;
     SECURITY_GLOBAL_5B9C6A04("Security &amp; Global Graph<br/><small>135 nodes</small>")
     class SECURITY_GLOBAL_5B9C6A04 module;
-    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>388 nodes</small>")
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>380 nodes</small>")
     class TESTS_FIXTURES_B84B1DCC module;
-    COMMUNITY_37_489F9468("Community 37<br/><small>14 nodes</small>")
-    class COMMUNITY_37_489F9468 module;
+    COMMUNITY_1_3073A0DB("Community 1<br/><small>17 nodes</small>")
+    class COMMUNITY_1_3073A0DB module;
     COMMUNITY_5_2966028D("Community 5<br/><small>12 nodes</small>")
     class COMMUNITY_5_2966028D module;
     COMMUNITY_43_5DF3A0B0("Community 43<br/><small>11 nodes</small>")
     class COMMUNITY_43_5DF3A0B0 module;
     COMMUNITY_12_82F13F05("Community 12<br/><small>10 nodes</small>")
     class COMMUNITY_12_82F13F05 module;
+    COMMUNITY_37_489F9468("Community 37<br/><small>8 nodes</small>")
+    class COMMUNITY_37_489F9468 module;
     COMMUNITY_28_3AE3708D("Community 28<br/><small>6 nodes</small>")
     class COMMUNITY_28_3AE3708D module;
     COMMUNITY_78_BB09B2A0("Community 78<br/><small>3 nodes</small>")
     class COMMUNITY_78_BB09B2A0 module;
-    COMMUNITY_80_CF395CA3("Community 80<br/><small>1 nodes</small>")
-    class COMMUNITY_80_CF395CA3 module;
-    OTHER_D0941E68("Other<br/><small>1 nodes</small>")
+    OTHER_D0941E68("Other<br/><small>2 nodes</small>")
     class OTHER_D0941E68 module;
-    CLI_SKILLS_9964CBB8 -->|imports x149| TESTS_FIXTURES_B84B1DCC
-    TESTS_FIXTURES_B84B1DCC -->|contains x55| CLI_SKILLS_9964CBB8
-    SERVE_API_35EC8E86 -->|imports x15| CLI_SKILLS_9964CBB8
+    CLI_SKILLS_9964CBB8 -->|imports x151| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|imports x59| CLI_SKILLS_9964CBB8
     CLI_SKILLS_9964CBB8 -->|imports x10| SERVE_API_35EC8E86
-    SERVE_API_35EC8E86 -->|imports x7| TESTS_FIXTURES_B84B1DCC
-    COMMUNITY_37_489F9468 -->|imports x5| TESTS_FIXTURES_B84B1DCC
-    ANALYSIS_CLUSTERING_C79796DA -->|imports x4| TESTS_FIXTURES_B84B1DCC
-    COMMUNITY_37_489F9468 -->|imports x3| SERVE_API_35EC8E86
-    COMMUNITY_37_489F9468 -->|imports x3| CLI_SKILLS_9964CBB8
-    ANALYSIS_CLUSTERING_C79796DA -->|imports x3| CLI_SKILLS_9964CBB8
-    SERVE_API_35EC8E86 -->|contains x2| COMMUNITY_37_489F9468
+    SERVE_API_35EC8E86 -->|imports x9| TESTS_FIXTURES_B84B1DCC
+    COMMUNITY_1_3073A0DB -->|imports x8| CLI_SKILLS_9964CBB8
+    SERVE_API_35EC8E86 -->|contains x5| CLI_SKILLS_9964CBB8
+    COMMUNITY_37_489F9468 -->|contains x4| COMMUNITY_1_3073A0DB
+    COMMUNITY_37_489F9468 -->|imports x4| SERVE_API_35EC8E86
+    SERVE_API_35EC8E86 -->|contains x3| COMMUNITY_37_489F9468
+    TESTS_FIXTURES_B84B1DCC -->|imports x3| SERVE_API_35EC8E86
+    SERVE_API_35EC8E86 -->|imports x2| COMMUNITY_1_3073A0DB
+    COMMUNITY_37_489F9468 -->|imports x2| CLI_SKILLS_9964CBB8
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -145,19 +146,19 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Graph Build</td><td>109</td><td><code>36, 38, 51, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 13, 77</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>44</td><td><code>6, 7, 25, 10, 89</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>413</td><td><code>19, 0, 32, 30, 16, 3, 39, 35, 84, 22, 40, 23, 42, 24, 8, 9, 26, 27, 14, 17</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>12</td><td><code>75, 76</code></td></tr><tr><td>Serving API</td><td>61</td><td><code>2, 1, 72, 74</code></td></tr><tr><td>Security &amp; Global Graph</td><td>135</td><td><code>41, 47, 48, 49, 50, 52, 64, 66, 67, 69, 70, 65, 68, 71, 73</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>388</td><td><code>29, 44, 20, 31, 4, 46, 33, 21, 34, 11, 45, 83, 87, 88, 15, 18, 82</code></td></tr><tr><td>Community 37</td><td>14</td><td><code>37</code></td></tr><tr><td>Community 5</td><td>12</td><td><code>5</code></td></tr><tr><td>Community 43</td><td>11</td><td><code>43</code></td></tr><tr><td>Community 12</td><td>10</td><td><code>12</code></td></tr><tr><td>Community 28</td><td>6</td><td><code>28</code></td></tr><tr><td>Community 78</td><td>3</td><td><code>78</code></td></tr><tr><td>Community 80</td><td>1</td><td><code>80</code></td></tr><tr><td>Other</td><td>1</td><td><code>81</code></td></tr>
+      <tr><td>Graph Build</td><td>109</td><td><code>36, 38, 51, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 13, 77</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>37</td><td><code>6, 7, 25, 10</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>445</td><td><code>19, 0, 16, 44, 30, 3, 39, 32, 35, 22, 40, 42, 23, 24, 8, 9, 26, 27, 14, 17</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>12</td><td><code>75, 76</code></td></tr><tr><td>Serving API</td><td>39</td><td><code>2, 72, 74</code></td></tr><tr><td>Security &amp; Global Graph</td><td>135</td><td><code>41, 47, 48, 49, 50, 52, 64, 66, 67, 69, 70, 65, 68, 71, 73</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>380</td><td><code>29, 31, 20, 46, 4, 21, 33, 84, 83, 34, 11, 45, 15, 18, 82</code></td></tr><tr><td>Community 1</td><td>17</td><td><code>1</code></td></tr><tr><td>Community 5</td><td>12</td><td><code>5</code></td></tr><tr><td>Community 43</td><td>11</td><td><code>43</code></td></tr><tr><td>Community 12</td><td>10</td><td><code>12</code></td></tr><tr><td>Community 37</td><td>8</td><td><code>37</code></td></tr><tr><td>Community 28</td><td>6</td><td><code>28</code></td></tr><tr><td>Community 78</td><td>3</td><td><code>78</code></td></tr><tr><td>Other</td><td>2</td><td><code>80, 81</code></td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Core Flow</h4>
-    <div class="arrow-chain">Graph Build -&gt; Analysis &amp; Clustering -&gt; Tests &amp; Fixtures -&gt; CLI &amp; Skill Installers -&gt; Serving API -&gt; Community 37 -&gt; Ingestion &amp; Updates</div>
+    <div class="arrow-chain">Graph Build -&gt; Analysis &amp; Clustering -&gt; CLI &amp; Skill Installers -&gt; Tests &amp; Fixtures -&gt; Serving API -&gt; Community 37 -&gt; Community 1</div>
   </div>
 </div>
 <div class="grid">
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>1220 nodes · 2666 edges · 86 communities (78 shown, 8 thin omitted)</li>
+      <li>1226 nodes · 2683 edges · 83 communities (75 shown, 8 thin omitted)</li>
       <li>Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 561 edges (avg confidence: 0.5)</li>
       <li>Token cost: 0 input · 0 output</li>
       <li>1. `RunConfig` - 90 edges</li>
@@ -518,12 +519,12 @@ flowchart LR
 
 <!-- ====== 3. Analysis & Clustering ====== -->
 <h2 id="analysis-clustering">3. Analysis &amp; Clustering</h2>
-<p>Analysis &amp; Clustering groups implementation around 2026, ask, docs, superpowers, mostly in spikes/spike_ask_question.py, superpowers/spikes/2026-06-06-ask-question-and-metrics.md, superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md. This section covers 44 nodes and 47 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Analysis &amp; Clustering groups implementation around 2026, ask, docs, superpowers, mostly in spikes/spike_ask_question.py, superpowers/spikes/2026-06-06-ask-question-and-metrics.md, superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md. This section covers 37 nodes and 37 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Analysis &amp; Clustering (44 nodes, 47 edges)
+    %% Section: Analysis &amp; Clustering (37 nodes, 37 edges)
     subgraph analysis_clustering_spikes_spike_ask_question_py_2ac6de12["spikes/spike_ask_question.py"]
         spikes_spike_ask_question_dump_metrics_bd88e537("dump_metrics()<br/><small>spikes/spike_ask_question.py</small>")
         spikes_spike_ask_question_my_callback_d226e2b0("my_callback()<br/><small>spikes/spike_ask_question.py</small>")
@@ -536,22 +537,19 @@ flowchart LR
         spikes_spike_ask_question_rationale_73_db0945e3("Discover the REAL metric attribute name...<br/><small>spikes/spike_ask_question.py</small>")
         spikes_spike_ask_question_rationale_1_cb287e0b("Spike (4): custom ask_question tool to ...<br/><small>spikes/spike_ask_question.py</small>")
     end
-    subgraph analysis_clustering_scripts_run_testcase_eval_py_73c322f5["scripts/run_testcase_eval.py"]
-        scripts_run_testcase_eval_copy_tree_f420c17a("_copy_tree()<br/><small>scripts/run_testcase_eval.py</small>")
-        scripts_run_testcase_eval_py_path_6cfca617("Path<br/><small>scripts/run_testcase_eval.py</small>")
-        scripts_run_testcase_eval_materialize_case_repo_f1da5f6d("materialize_case_repo()<br/><small>scripts/run_testcase_eval.py</small>")
-        scripts_run_testcase_eval_main_df2374cb("main()<br/><small>scripts/run_testcase_eval.py</small>")
-        scripts_run_testcase_eval_7857a892("run_testcase_eval.py")
-        scripts_run_testcase_eval_rationale_1_06494697("Run one skill-eval against a testcases/...<br/><small>scripts/run_testcase_eval.py</small>")
-        scripts_run_testcase_eval_rationale_41_fca6ce82("Turn before/ and after/ dirs into two c...<br/><small>scripts/run_testcase_eval.py</small>")
+    subgraph analysis_clustering_superpowers_decisions_2026_0_cc85583a["superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md"]
+        decisions_2026_06_08_shell_isolation_and_worktre_f6581279("1. Two shell categories → two tools<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_5a9c2c66("2. Worktree concurrency hardening (in ...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_829a73e7("2026-06-08-shell-isolation-and-worktree...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_7bc7fb4f("3. Worktrunk — not in the runtime path<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_becf2646("Decision: Shell isolation + worktree co...<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_857775e8("Decisions<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_a5012f74("Deferred / future<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
+        decisions_2026_06_08_shell_isolation_and_worktre_8bf7b60b("Implementation<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
     end
-    decisions_2026_06_08_shell_isolation_and_worktre_f6581279("1. Two shell categories → two tools<br/><small>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</small>")
-    scripts_run_testcase_eval_copy_tree_f420c17a -->|calls| scripts_run_testcase_eval_materialize_case_repo_f1da5f6d
-    scripts_run_testcase_eval_py_path_6cfca617 -->|calls| scripts_run_testcase_eval_main_df2374cb
-    scripts_run_testcase_eval_materialize_case_repo_f1da5f6d -->|calls| scripts_run_testcase_eval_main_df2374cb
     spikes_spike_ask_question_my_callback_d226e2b0 -->|calls| spikes_spike_ask_question_ask_question_ca3be6e6
     spikes_spike_ask_question_dump_metrics_bd88e537 -->|calls| spikes_spike_ask_question_main_786ae43c
-    %% Omitted for readability: 26 nodes, 0 edges
+    %% Omitted for readability: 19 nodes, 0 edges
     class spikes_spike_ask_question_dump_metrics_bd88e537 function;
     class spikes_spike_ask_question_my_callback_d226e2b0 function;
     class spikes_spike_ask_question_ask_question_ca3be6e6 function;
@@ -562,14 +560,14 @@ flowchart LR
     class spikes_spike_ask_question_bb6e133d module;
     class spikes_spike_ask_question_rationale_73_db0945e3 concept;
     class spikes_spike_ask_question_rationale_1_cb287e0b concept;
-    class scripts_run_testcase_eval_copy_tree_f420c17a test;
-    class scripts_run_testcase_eval_py_path_6cfca617 test;
-    class scripts_run_testcase_eval_materialize_case_repo_f1da5f6d test;
-    class scripts_run_testcase_eval_main_df2374cb test;
-    class scripts_run_testcase_eval_7857a892 test;
-    class scripts_run_testcase_eval_rationale_1_06494697 concept;
-    class scripts_run_testcase_eval_rationale_41_fca6ce82 concept;
     class decisions_2026_06_08_shell_isolation_and_worktre_f6581279 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_5a9c2c66 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_829a73e7 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_7bc7fb4f concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_becf2646 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_857775e8 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_a5012f74 concept;
+    class decisions_2026_06_08_shell_isolation_and_worktre_8bf7b60b concept;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -842,24 +840,23 @@ flowchart LR
 <tr><td><code>spikes/spike_ask_question.py</code></td><td>10 nodes</td></tr>
 <tr><td><code>superpowers/decisions/2026-06-08-shell-isolation-and-worktree-concurrency.md</code></td><td>9 nodes</td></tr>
 <tr><td><code>superpowers/plans/2026-06-06-foundation.md</code></td><td>8 nodes</td></tr>
-<tr><td><code>scripts/run_testcase_eval.py</code></td><td>7 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x32, references x6, calls x5, explains x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x29, references x4, explains x2, calls x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 4. CLI & Skill Installers ====== -->
 <h2 id="cli-skills">4. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around eval, skill, api, 2026, mostly in skill_eval/api/run_manager.py, skill_eval/api/batch_manager.py, skill_eval/api/schemas.py. This section covers 413 nodes and 1055 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>CLI &amp; Skill Installers groups implementation around skill, eval, api, flagship, mostly in skill_eval/api/run_manager.py, skill_eval/git_ops.py, skill_eval/api/batch_manager.py. This section covers 445 nodes and 1159 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (413 nodes, 1055 edges)
+    %% Section: CLI &amp; Skill Installers (445 nodes, 1159 edges)
     subgraph cli_skills_src_components_ui_tsx_61beec82["src/components/ui.tsx"]
         components_ui_cn_e88cd734("cn()<br/><small>src/components/ui.tsx</small>")
         components_ui_badge_6a225d57("Badge()<br/><small>src/components/ui.tsx</small>")
@@ -872,10 +869,9 @@ flowchart LR
         scripts_index_testcases_materialize_6731f8bd("materialize()<br/><small>scripts/index_testcases.py</small>")
         scripts_index_testcases_main_ec4935b5("main()<br/><small>scripts/index_testcases.py</small>")
     end
-    subgraph cli_skills_skill_eval_api_app_py_262873e1["skill_eval/api/app.py"]
-        api_app_7343e516("app.py")
-        api_app_default_runs_dir_985d6fb0("_default_runs_dir()<br/><small>skill_eval/api/app.py</small>")
-        api_app_create_app_2febb1a2("create_app()<br/><small>skill_eval/api/app.py</small>")
+    subgraph cli_skills_scripts_run_testcase_eval_py_3d3a8fbf["scripts/run_testcase_eval.py"]
+        scripts_run_testcase_eval_copy_tree_f420c17a("_copy_tree()<br/><small>scripts/run_testcase_eval.py</small>")
+        scripts_run_testcase_eval_materialize_case_repo_f1da5f6d("materialize_case_repo()<br/><small>scripts/run_testcase_eval.py</small>")
     end
     subgraph cli_skills_skill_eval_api_batch_manager_py_aae1dfad["skill_eval/api/batch_manager.py"]
         api_batch_manager_99154b77("batch_manager.py")
@@ -889,6 +885,7 @@ flowchart LR
         skill_eval_eval_vector_db_evalcase_36755730("EvalCase<br/><small>skill_eval/eval_vector_db.py</small>")
         skill_eval_eval_vector_db_index_cases_b6c5f81e("index_cases()<br/><small>skill_eval/eval_vector_db.py</small>")
     end
+    api_app_7343e516("app.py")
     skill_eval_git_ops_run_930b10d9("_run()<br/><small>skill_eval/git_ops.py</small>")
     components_ui_cn_e88cd734 -->|calls| components_ui_badge_6a225d57
     components_ui_cn_e88cd734 -->|calls| components_ui_button_83ab0aa6
@@ -898,13 +895,11 @@ flowchart LR
     scripts_index_testcases_materialize_6731f8bd -->|calls| scripts_index_testcases_main_ec4935b5
     scripts_index_testcases_materialize_6731f8bd -->|calls| skill_eval_eval_vector_db_evalcase_36755730
     scripts_index_testcases_main_ec4935b5 -->|calls| skill_eval_eval_vector_db_index_cases_b6c5f81e
-    api_app_default_runs_dir_985d6fb0 -->|calls| api_app_create_app_2febb1a2
-    api_app_create_app_2febb1a2 -->|calls| api_batch_manager_batchmanager_8230db63
-    api_app_create_app_2febb1a2 -->|calls| api_run_manager_runmanager_ec4a7386
+    scripts_run_testcase_eval_copy_tree_f420c17a -->|calls| scripts_run_testcase_eval_materialize_case_repo_f1da5f6d
     api_app_7343e516 -->|imports| api_batch_manager_batchmanager_8230db63
     api_app_7343e516 -->|imports| api_run_manager_runmanager_ec4a7386
     api_batch_manager_99154b77 -->|imports| api_run_manager_runmanager_ec4a7386
-    %% Omitted for readability: 395 nodes, 0 edges
+    %% Omitted for readability: 427 nodes, 0 edges
     class components_ui_cn_e88cd734 ui;
     class components_ui_badge_6a225d57 ui;
     class components_ui_button_83ab0aa6 ui;
@@ -913,15 +908,15 @@ flowchart LR
     class scripts_index_testcases_copy_tree_0c3bb3e4 test;
     class scripts_index_testcases_materialize_6731f8bd test;
     class scripts_index_testcases_main_ec4935b5 test;
-    class api_app_7343e516 module;
-    class api_app_default_runs_dir_985d6fb0 function;
-    class api_app_create_app_2febb1a2 function;
+    class scripts_run_testcase_eval_copy_tree_f420c17a test;
+    class scripts_run_testcase_eval_materialize_case_repo_f1da5f6d test;
     class api_batch_manager_99154b77 module;
     class api_batch_manager_batchmanager_8230db63 klass;
     class api_run_manager_8d7692f3 module;
     class api_run_manager_runmanager_ec4a7386 klass;
     class skill_eval_eval_vector_db_evalcase_36755730 klass;
     class skill_eval_eval_vector_db_index_cases_b6c5f81e function;
+    class api_app_7343e516 module;
     class skill_eval_git_ops_run_930b10d9 function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
@@ -949,7 +944,7 @@ flowchart LR
   <td><code>app.py</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>BatchCreated</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchManager</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br>+16 more</td>
+  <td><code>BatchCreated</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchManager</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br>+18 more</td>
   <td>Module file in skill_eval/api/app.py.</td>
 </tr>
 <tr>
@@ -1018,18 +1013,18 @@ flowchart LR
 </tr>
 <tr>
   <td>10</td>
-  <td><code>Build the FastAPI app.</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small></td>
+  <td><code>Build the FastAPI app.      Runs always use the real LLM-backed components. The</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Design note for Build the FastAPI app..</td>
+  <td>Design note for Build the FastAPI app.      Runs always use the real LLM-backed components. The.</td>
 </tr>
 <tr>
   <td>11</td>
   <td><code>batch_manager.py</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+12 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+11 more</td>
   <td>Module file in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1053,7 +1048,7 @@ flowchart LR
   <td><code>Path</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>__init__()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+8 more</td>
+  <td><code>__init__()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
   <td>Path node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1061,7 +1056,7 @@ flowchart LR
   <td><code>SkillInput</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+6 more</td>
   <td>SkillInput node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1069,7 +1064,7 @@ flowchart LR
   <td><code>_Case</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+8 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
   <td>_Case node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1077,7 +1072,7 @@ flowchart LR
   <td><code>BatchState</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+8 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
   <td>BatchState node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1085,7 +1080,7 @@ flowchart LR
   <td><code>BatchManager</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td><code>app.py</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small><br><code>create_app()</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small><br><code>FastAPI</code><br><small style="color:var(--muted)">skill_eval/api/app.py</small><br>+2 more</td>
-  <td><code>__init__()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>_execute()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>_fill_case_results()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br>+17 more</td>
+  <td><code>__init__()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>_execute()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br><code>_fill_case_results()</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small><br>+16 more</td>
   <td>BatchManager node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1101,7 +1096,7 @@ flowchart LR
   <td><code>RunManager</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+6 more</td>
   <td>RunManager node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1117,7 +1112,7 @@ flowchart LR
   <td><code>CreateBatchRequest</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+6 more</td>
   <td>CreateBatchRequest node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1141,7 +1136,7 @@ flowchart LR
   <td><code>BatchSummary</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+6 more</td>
   <td>BatchSummary node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1165,7 +1160,7 @@ flowchart LR
   <td><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/batch_manager.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+7 more</td>
+  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br><code>BatchStats</code><br><small style="color:var(--muted)">skill_eval/api/schemas.py</small><br>+6 more</td>
   <td>BatchDetail node in skill_eval/api/batch_manager.py.</td>
 </tr>
 <tr>
@@ -1192,18 +1187,18 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>skill_eval/api/run_manager.py</code></td><td>35 nodes</td></tr>
+<tr><td><code>skill_eval/git_ops.py</code></td><td>30 nodes</td></tr>
 <tr><td><code>skill_eval/api/batch_manager.py</code></td><td>29 nodes</td></tr>
 <tr><td><code>skill_eval/api/schemas.py</code></td><td>29 nodes</td></tr>
-<tr><td><code>skill_eval/git_ops.py</code></td><td>28 nodes</td></tr>
-<tr><td><code>skill_eval/orchestrator.py</code></td><td>25 nodes</td></tr>
 <tr><td><code>superpowers/specs/2026-06-06-skill-eval-system-design.md</code></td><td>22 nodes</td></tr>
+<tr><td><code>skills/logging-best-practices/SKILL.md</code></td><td>22 nodes</td></tr>
 <tr><td><code>skill_eval/eval_vector_db.py</code></td><td>22 nodes</td></tr>
-<tr><td><code>skills/logging-best-practices/SKILL.md</code></td><td>21 nodes</td></tr>
+<tr><td><code>skill_eval/events.py</code></td><td>18 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x215, calls x147, references x88, imports x87. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x238, calls x161, imports x93, references x86. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -1383,73 +1378,72 @@ flowchart LR
 
 <!-- ====== 6. Serving API ====== -->
 <h2 id="serve-api">6. Serving API</h2>
-<p>Serving API groups implementation around frontend, records, components, api, mostly in src/api/client.ts, src/components/ResultsFunnel.tsx, src/pages/RunPage.tsx. This section covers 61 nodes and 96 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Serving API groups implementation around records, frontend, api, clientts, mostly in src/api/client.ts, src/pages/RunPage.tsx, repo/after/records_api.py. This section covers 39 nodes and 49 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Serving API (61 nodes, 96 edges)
-    subgraph serve_api_src_components_ResultsFunnel_tsx_9f811f89["src/components/ResultsFunnel.tsx"]
-        components_resultsfunnel_ab0aafac("ResultsFunnel.tsx")
-        components_resultsfunnel_scorefor_627a9c1f("scoreFor()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5("mockedBehaviorInsights()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_mockedrequirementunlock_9a3d8502("mockedRequirementUnlocks()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_inferdecision_ea6a2897("inferDecision()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_resultsfunnel_5246754b("ResultsFunnel()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_mocktaskkind_dbe48953("mockTaskKind()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_mockedassumptionsandmis_8d5b632b("mockedAssumptionsAndMisses()<br/><small>src/components/ResultsFunnel.tsx</small>")
-        components_resultsfunnel_byarm_51f15cd2("byArm()<br/><small>src/components/ResultsFunnel.tsx</small>")
-    end
+    %% Section: Serving API (39 nodes, 49 edges)
     subgraph serve_api_src_api_client_ts_e86a89f6["src/api/client.ts"]
         api_client_b19a5a36("client.ts")
-        api_client_api_2b2e04a8("api<br/><small>src/api/client.ts</small>")
-        api_client_comparisonreport_ae1f55b3("ComparisonReport<br/><small>src/api/client.ts</small>")
         api_client_createbatchrequest_633930b8("CreateBatchRequest<br/><small>src/api/client.ts</small>")
         api_client_fixtureinfo_c30c3460("FixtureInfo<br/><small>src/api/client.ts</small>")
+        api_client_retrievedcase_0b39565c("RetrievedCase<br/><small>src/api/client.ts</small>")
+        api_client_batchdetail_1db02b4c("BatchDetail<br/><small>src/api/client.ts</small>")
+        api_client_batchstats_07a8f9fe("BatchStats<br/><small>src/api/client.ts</small>")
+        api_client_createrunrequest_4d53a6b4("CreateRunRequest<br/><small>src/api/client.ts</small>")
+        api_client_subscribeevents_b347915a("subscribeEvents()<br/><small>src/api/client.ts</small>")
     end
-    subgraph serve_api_src_components_charts_ts_b436b0fd["src/components/charts.ts"]
-        components_charts_dumbbellspec_eee8aa7e("dumbbellSpec()<br/><small>src/components/charts.ts</small>")
-        components_charts_gaprows_e7e277d1("gapRows()<br/><small>src/components/charts.ts</small>")
-        components_charts_qualitycostspec_16009b6a("qualityCostSpec()<br/><small>src/components/charts.ts</small>")
+    subgraph serve_api_repo_after_records_api_py_8ef5f214["repo/after/records_api.py"]
+        after_records_api_can_access_5f7aaeff("can_access()<br/><small>repo/after/records_api.py</small>")
+        after_records_api_get_record_c1bc2491("get_record()<br/><small>repo/after/records_api.py</small>")
+        after_records_api_2d089700("records_api.py")
+        after_records_api_update_diagnosis_9a34a3e0("update_diagnosis()<br/><small>repo/after/records_api.py</small>")
+        after_records_api_valid_mrn_262da284("valid_mrn()<br/><small>repo/after/records_api.py</small>")
     end
-    pages_historypage_deltatable_716abfcc("DeltaTable()<br/><small>src/pages/HistoryPage.tsx</small>")
-    components_resultsfunnel_scorefor_627a9c1f -->|calls| components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5
-    components_resultsfunnel_scorefor_627a9c1f -->|calls| components_resultsfunnel_mockedrequirementunlock_9a3d8502
-    components_resultsfunnel_inferdecision_ea6a2897 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
-    components_resultsfunnel_mocktaskkind_dbe48953 -->|calls| components_resultsfunnel_mockedassumptionsandmis_8d5b632b
-    components_resultsfunnel_mocktaskkind_dbe48953 -->|calls| components_resultsfunnel_mockedrequirementunlock_9a3d8502
-    components_resultsfunnel_mockedrequirementunlock_9a3d8502 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
-    components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
-    components_resultsfunnel_mockedassumptionsandmis_8d5b632b -->|calls| components_resultsfunnel_resultsfunnel_5246754b
-    components_resultsfunnel_byarm_51f15cd2 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
-    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_dumbbellspec_eee8aa7e
-    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_gaprows_e7e277d1
-    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_qualitycostspec_16009b6a
-    components_charts_gaprows_e7e277d1 -->|calls| pages_historypage_deltatable_716abfcc
-    api_client_b19a5a36 -->|imports| components_resultsfunnel_ab0aafac
-    api_client_comparisonreport_ae1f55b3 -->|imports| components_resultsfunnel_ab0aafac
-    components_resultsfunnel_ab0aafac -->|imports| components_charts_dumbbellspec_eee8aa7e
-    components_resultsfunnel_ab0aafac -->|imports| components_charts_gaprows_e7e277d1
-    components_resultsfunnel_ab0aafac -->|imports| components_charts_qualitycostspec_16009b6a
-    %% Omitted for readability: 43 nodes, 0 edges
-    class components_resultsfunnel_ab0aafac ui;
-    class components_resultsfunnel_scorefor_627a9c1f ui;
-    class components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5 ui;
-    class components_resultsfunnel_mockedrequirementunlock_9a3d8502 ui;
-    class components_resultsfunnel_inferdecision_ea6a2897 ui;
-    class components_resultsfunnel_resultsfunnel_5246754b ui;
-    class components_resultsfunnel_mocktaskkind_dbe48953 ui;
-    class components_resultsfunnel_mockedassumptionsandmis_8d5b632b async;
-    class components_resultsfunnel_byarm_51f15cd2 ui;
+    subgraph serve_api_src_pages_RunPage_tsx_2122af4b["src/pages/RunPage.tsx"]
+        pages_runpage_batchmilestones_46dfbbc4("batchMilestones()<br/><small>src/pages/RunPage.tsx</small>")
+        pages_runpage_milestonecards_ffb1a997("MilestoneCards()<br/><small>src/pages/RunPage.tsx</small>")
+        pages_runpage_1db6b6dc("RunPage.tsx")
+    end
+    subgraph serve_api_src_components_RunForm_tsx_347f598e["src/components/RunForm.tsx"]
+        components_runform_fb84bb9d("RunForm.tsx")
+        components_runform_runform_8e597d19("RunForm()<br/><small>src/components/RunForm.tsx</small>")
+    end
+    pages_runpage_batchmilestones_46dfbbc4 -->|calls| pages_runpage_milestonecards_ffb1a997
+    api_client_b19a5a36 -->|imports| components_runform_fb84bb9d
+    api_client_b19a5a36 -->|imports| pages_runpage_1db6b6dc
+    api_client_fixtureinfo_c30c3460 -->|imports| components_runform_fb84bb9d
+    api_client_fixtureinfo_c30c3460 -->|imports| pages_runpage_1db6b6dc
+    api_client_createrunrequest_4d53a6b4 -->|imports| pages_runpage_1db6b6dc
+    api_client_retrievedcase_0b39565c -->|imports| components_runform_fb84bb9d
+    api_client_retrievedcase_0b39565c -->|imports| pages_runpage_1db6b6dc
+    api_client_createbatchrequest_633930b8 -->|imports| components_runform_fb84bb9d
+    api_client_createbatchrequest_633930b8 -->|imports| pages_runpage_1db6b6dc
+    api_client_batchdetail_1db02b4c -->|imports| pages_runpage_1db6b6dc
+    api_client_batchstats_07a8f9fe -->|imports| pages_runpage_1db6b6dc
+    api_client_subscribeevents_b347915a -->|imports| pages_runpage_1db6b6dc
+    components_runform_fb84bb9d -->|imports| pages_runpage_1db6b6dc
+    components_runform_runform_8e597d19 -->|imports| pages_runpage_1db6b6dc
+    %% Omitted for readability: 21 nodes, 0 edges
     class api_client_b19a5a36 entry;
-    class api_client_api_2b2e04a8 api;
-    class api_client_comparisonreport_ae1f55b3 klass;
     class api_client_createbatchrequest_633930b8 klass;
     class api_client_fixtureinfo_c30c3460 klass;
-    class components_charts_dumbbellspec_eee8aa7e function;
-    class components_charts_gaprows_e7e277d1 function;
-    class components_charts_qualitycostspec_16009b6a function;
-    class pages_historypage_deltatable_716abfcc ui;
+    class api_client_retrievedcase_0b39565c klass;
+    class api_client_batchdetail_1db02b4c klass;
+    class api_client_batchstats_07a8f9fe klass;
+    class api_client_createrunrequest_4d53a6b4 klass;
+    class api_client_subscribeevents_b347915a function;
+    class after_records_api_can_access_5f7aaeff test;
+    class after_records_api_get_record_c1bc2491 test;
+    class after_records_api_2d089700 test;
+    class after_records_api_update_diagnosis_9a34a3e0 test;
+    class after_records_api_valid_mrn_262da284 test;
+    class pages_runpage_batchmilestones_46dfbbc4 ui;
+    class pages_runpage_milestonecards_ffb1a997 ui;
+    class pages_runpage_1db6b6dc ui;
+    class components_runform_fb84bb9d ui;
+    class components_runform_runform_8e597d19 ui;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1476,7 +1470,7 @@ flowchart LR
   <td><code>client.ts</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-cmd">Entry</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>charts.ts</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>RunForm.tsx</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small><br>+1 more</td>
+  <td><code>RunForm.tsx</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small><br><code>RunPage.tsx</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td>Module file in src/api/client.ts.</td>
 </tr>
 <tr>
@@ -1513,6 +1507,14 @@ flowchart LR
 </tr>
 <tr>
   <td>6</td>
+  <td><code>ArmReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ArmReport node in src/api/client.ts.</td>
+</tr>
+<tr>
+  <td>7</td>
   <td><code>JudgeScore</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1520,7 +1522,7 @@ flowchart LR
   <td>JudgeScore node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>7</td>
+  <td>8</td>
   <td><code>SkillInput</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1528,7 +1530,7 @@ flowchart LR
   <td>SkillInput node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>8</td>
+  <td>9</td>
   <td><code>RetrievedCase</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1536,7 +1538,7 @@ flowchart LR
   <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
 </tr>
 <tr>
-  <td>9</td>
+  <td>10</td>
   <td><code>CreateBatchRequest</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1544,7 +1546,7 @@ flowchart LR
   <td>CreateBatchRequest node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>10</td>
+  <td>11</td>
   <td><code>BatchSummary</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1552,7 +1554,7 @@ flowchart LR
   <td>BatchSummary node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>12</td>
   <td><code>BatchDetail</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1560,7 +1562,7 @@ flowchart LR
   <td>BatchDetail node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>12</td>
+  <td>13</td>
   <td><code>BatchStats</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -1568,20 +1570,12 @@ flowchart LR
   <td>BatchStats node in src/api/client.ts.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>14</td>
   <td><code>json()</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>json() node in src/api/client.ts.</td>
-</tr>
-<tr>
-  <td>14</td>
-  <td><code>api</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
-  <td><span class="tag tag-endpoint">API</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>RunForm.tsx</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small><br><code>RunPage.tsx</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
-  <td>api node in src/api/client.ts.</td>
 </tr>
 <tr>
   <td>15</td>
@@ -1595,12 +1589,28 @@ flowchart LR
   <td>16</td>
   <td><code>RunForm.tsx</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td><code>api</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>client.ts</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>CreateBatchRequest</code><br><small style="color:var(--muted)">src/api/client.ts</small><br>+2 more</td>
+  <td><code>client.ts</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>CreateBatchRequest</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>FixtureInfo</code><br><small style="color:var(--muted)">src/api/client.ts</small><br>+1 more</td>
   <td><code>RunPage.tsx</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td>Module file in src/components/RunForm.tsx.</td>
 </tr>
 <tr>
   <td>17</td>
+  <td><code>ExtraSkillCard</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ExtraSkillCard node in src/components/RunForm.tsx.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>DEMO_THIRD_SKILL</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>DEMO_THIRD_SKILL node in src/components/RunForm.tsx.</td>
+</tr>
+<tr>
+  <td>19</td>
   <td><code>RunForm()</code><br><small style="color:var(--muted)">src/components/RunForm.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1608,15 +1618,15 @@ flowchart LR
   <td>RunForm() node in src/components/RunForm.tsx.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>20</td>
   <td><code>RunPage.tsx</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td><code>api</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>ARM_COLORS</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>BatchDetail</code><br><small style="color:var(--muted)">src/api/client.ts</small><br>+12 more</td>
+  <td><code>BatchDetail</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>BatchStats</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>client.ts</code><br><small style="color:var(--muted)">src/api/client.ts</small><br>+7 more</td>
   <td>No direct outbound edge</td>
   <td>Module file in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>21</td>
   <td><code>MilestoneCard</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1624,7 +1634,7 @@ flowchart LR
   <td>MilestoneCard node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>22</td>
   <td><code>batchMilestones()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1632,7 +1642,7 @@ flowchart LR
   <td>batchMilestones() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>23</td>
   <td><code>MilestoneCards()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>batchMilestones()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
@@ -1640,7 +1650,7 @@ flowchart LR
   <td>MilestoneCards() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>24</td>
   <td><code>NodeThinkingCodeBlock()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1648,7 +1658,7 @@ flowchart LR
   <td>NodeThinkingCodeBlock() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>25</td>
   <td><code>BarPair()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1656,15 +1666,7 @@ flowchart LR
   <td>BarPair() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>24</td>
-  <td><code>BatchStatsBoard()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>BatchStatsBoard() node in src/pages/RunPage.tsx.</td>
-</tr>
-<tr>
-  <td>25</td>
+  <td>26</td>
   <td><code>OnboardingRoadmap()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1672,7 +1674,7 @@ flowchart LR
   <td>OnboardingRoadmap() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>27</td>
   <td><code>FutureRoadmapScreen()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1680,36 +1682,28 @@ flowchart LR
   <td>FutureRoadmapScreen() node in src/pages/RunPage.tsx.</td>
 </tr>
 <tr>
-  <td>27</td>
-  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>charts.ts</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
-  <td>ComparisonReport node in src/api/client.ts.</td>
-</tr>
-<tr>
   <td>28</td>
-  <td><code>ArmReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
+  <td><code>records_api.py</code><br><small style="color:var(--muted)">repo/after/records_api.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
-  <td>ArmReport node in src/api/client.ts.</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in repo/after/records_api.py.</td>
 </tr>
 <tr>
   <td>29</td>
-  <td><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>ArmReport</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>client.ts</code><br><small style="color:var(--muted)">src/api/client.ts</small><br><code>ComparisonReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
-  <td><code>charts.ts</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>dumbbellSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>gapRows()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br>+2 more</td>
-  <td>Module file in src/components/ResultsFunnel.tsx.</td>
+  <td><code>valid_mrn()</code><br><small style="color:var(--muted)">repo/after/records_api.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>valid_mrn() node in repo/after/records_api.py.</td>
 </tr>
 <tr>
   <td>30</td>
-  <td><code>DecisionAction</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>can_access()</code><br><small style="color:var(--muted)">repo/after/records_api.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>DecisionAction node in src/components/ResultsFunnel.tsx.</td>
+  <td>can_access() node in repo/after/records_api.py.</td>
 </tr>
 </table>
 
@@ -1718,19 +1712,16 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>src/api/client.ts</code></td><td>17 nodes</td></tr>
-<tr><td><code>src/components/ResultsFunnel.tsx</code></td><td>13 nodes</td></tr>
-<tr><td><code>src/pages/RunPage.tsx</code></td><td>9 nodes</td></tr>
-<tr><td><code>src/components/charts.ts</code></td><td>7 nodes</td></tr>
+      <tr><td><code>src/api/client.ts</code></td><td>15 nodes</td></tr>
+<tr><td><code>src/pages/RunPage.tsx</code></td><td>8 nodes</td></tr>
 <tr><td><code>repo/after/records_api.py</code></td><td>6 nodes</td></tr>
 <tr><td><code>repo/before/records_api.py</code></td><td>6 nodes</td></tr>
-<tr><td><code>src/components/RunForm.tsx</code></td><td>2 nodes</td></tr>
-<tr><td><code>src/pages/HistoryPage.tsx</code></td><td>1 nodes</td></tr>
+<tr><td><code>src/components/RunForm.tsx</code></td><td>4 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x51, imports x21, calls x14, imports x8. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x32, imports x11, imports x3, explains x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -2081,12 +2072,12 @@ flowchart LR
 
 <!-- ====== 8. Tests & Fixtures ====== -->
 <h2 id="tests-fixtures">8. Tests &amp; Fixtures</h2>
-<p>Tests &amp; Fixtures groups implementation around test, tests, skill, eval, mostly in tests/test_taker.py, skill_eval/reporting.py, tests/test_reporting.py. This section covers 388 nodes and 795 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Tests &amp; Fixtures groups implementation around test, tests, eval, skill, mostly in tests/test_taker.py, skill_eval/reporting.py, tests/test_reporting.py. This section covers 380 nodes and 726 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Tests &amp; Fixtures (388 nodes, 795 edges)
+    %% Section: Tests &amp; Fixtures (380 nodes, 726 edges)
     subgraph tests_fixtures_tests_test_batch_py_4080be96["tests/test_batch.py"]
         tests_test_batch_test_run_batch_arms_and_scores_0fabf333("arms and scores()<br/><small>tests/test_batch.py</small>")
         tests_test_batch_test_run_batch_on_event_03f86c82("test_run_batch_on_event()<br/><small>tests/test_batch.py</small>")
@@ -2095,60 +2086,54 @@ flowchart LR
         tests_test_batch_test_run_batch_returns_3_report_88de4f1a("returns 3 reports()<br/><small>tests/test_batch.py</small>")
     end
     subgraph tests_fixtures_skill_eval_contracts_py_dde55b73["skill_eval/contracts.py"]
-        skill_eval_contracts_runconfig_a490fa9a("RunConfig<br/><small>skill_eval/contracts.py</small>")
         skill_eval_contracts_bdd252d3("contracts.py")
-        skill_eval_contracts_takerresult_e5375bfc("TakerResult<br/><small>skill_eval/contracts.py</small>")
-    end
-    subgraph tests_fixtures_skill_eval_sample_cases_py_21e3afa1["skill_eval/sample_cases.py"]
-        skill_eval_sample_cases_build_sample_cases_94a753da("build_sample_cases()<br/><small>skill_eval/sample_cases.py</small>")
-        skill_eval_sample_cases_make_case_4fa65dc2("_make_case()<br/><small>skill_eval/sample_cases.py</small>")
+        skill_eval_contracts_judgeinput_4652226e("JudgeInput<br/><small>skill_eval/contracts.py</small>")
     end
     subgraph tests_fixtures_src_state_eventStore_ts_090b816f["src/state/eventStore.ts"]
         state_eventstore_append_f7a9a9ac("append()<br/><small>src/state/eventStore.ts</small>")
         state_eventstore_reduceevent_8d646300("reduceEvent()<br/><small>src/state/eventStore.ts</small>")
     end
     skill_eval_batch_run_batch_12d5b456("run_batch()<br/><small>skill_eval/batch.py</small>")
-    skill_eval_flagship_case_build_flagship_case_4c20dfc6("build_flagship_case()<br/><small>skill_eval/flagship_case.py</small>")
-    skill_eval_reporting_report_from_json_678ea6ab("report_from_json()<br/><small>skill_eval/reporting.py</small>")
+    skill_eval_judge_build_prompt_9f085834("_build_prompt()<br/><small>skill_eval/judge.py</small>")
+    skill_eval_orchestrator_run_eval_c860048b("run_eval()<br/><small>skill_eval/orchestrator.py</small>")
+    skill_eval_sample_cases_build_sample_cases_94a753da("build_sample_cases()<br/><small>skill_eval/sample_cases.py</small>")
     skill_eval_sample_repo_build_sample_repo_f2f08aec("build_sample_repo()<br/><small>skill_eval/sample_repo.py</small>")
-    tests_test_contracts_test_full_report_compositio_1795edc8("full report composition()<br/><small>tests/test_contracts.py</small>")
+    skill_eval_taker_stop_reason_710a8e60("_stop_reason()<br/><small>skill_eval/taker.py</small>")
+    tests_test_contracts_test_judge_input_constructs_fd64cd27("judge input constructs()<br/><small>tests/test_contracts.py</small>")
+    tests_test_judge_ji_bbfe46a6("_ji()<br/><small>tests/test_judge.py</small>")
     tests_test_taker_fakeresult_cc599706("_FakeResult<br/><small>tests/test_taker.py</small>")
     state_eventstore_append_f7a9a9ac -->|calls| state_eventstore_reduceevent_8d646300
+    skill_eval_batch_run_batch_12d5b456 -->|calls| skill_eval_orchestrator_run_eval_c860048b
     skill_eval_batch_run_batch_12d5b456 -->|calls| tests_test_batch_test_run_batch_arms_and_scores_0fabf333
     skill_eval_batch_run_batch_12d5b456 -->|calls| tests_test_batch_test_run_batch_on_event_03f86c82
     skill_eval_batch_run_batch_12d5b456 -->|calls| tests_test_batch_test_run_batch_per_case_varianc_f8612743
     skill_eval_batch_run_batch_12d5b456 -->|calls| tests_test_batch_test_run_batch_preserves_order_51feb9e1
     skill_eval_batch_run_batch_12d5b456 -->|calls| tests_test_batch_test_run_batch_returns_3_report_88de4f1a
-    skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_flagship_case_build_flagship_case_4c20dfc6
-    skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_reporting_report_from_json_678ea6ab
-    skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_sample_cases_make_case_4fa65dc2
-    skill_eval_contracts_runconfig_a490fa9a -->|calls| skill_eval_sample_repo_build_sample_repo_f2f08aec
-    skill_eval_contracts_runconfig_a490fa9a -->|calls| tests_test_contracts_test_full_report_compositio_1795edc8
-    skill_eval_contracts_takerresult_e5375bfc -->|calls| tests_test_contracts_test_full_report_compositio_1795edc8
-    skill_eval_sample_cases_make_case_4fa65dc2 -->|calls| skill_eval_sample_cases_build_sample_cases_94a753da
+    skill_eval_contracts_judgeinput_4652226e -->|calls| tests_test_contracts_test_judge_input_constructs_fd64cd27
+    skill_eval_contracts_judgeinput_4652226e -->|calls| tests_test_judge_ji_bbfe46a6
     skill_eval_sample_cases_build_sample_cases_94a753da -->|calls| tests_test_batch_test_run_batch_arms_and_scores_0fabf333
     skill_eval_sample_cases_build_sample_cases_94a753da -->|calls| tests_test_batch_test_run_batch_on_event_03f86c82
     skill_eval_sample_cases_build_sample_cases_94a753da -->|calls| tests_test_batch_test_run_batch_per_case_varianc_f8612743
     skill_eval_sample_cases_build_sample_cases_94a753da -->|calls| tests_test_batch_test_run_batch_preserves_order_51feb9e1
     skill_eval_sample_cases_build_sample_cases_94a753da -->|calls| tests_test_batch_test_run_batch_returns_3_report_88de4f1a
-    %% Omitted for readability: 370 nodes, 0 edges
+    %% Omitted for readability: 362 nodes, 0 edges
     class tests_test_batch_test_run_batch_arms_and_scores_0fabf333 test;
     class tests_test_batch_test_run_batch_on_event_03f86c82 test;
     class tests_test_batch_test_run_batch_per_case_varianc_f8612743 test;
     class tests_test_batch_test_run_batch_preserves_order_51feb9e1 test;
     class tests_test_batch_test_run_batch_returns_3_report_88de4f1a test;
-    class skill_eval_contracts_runconfig_a490fa9a klass;
     class skill_eval_contracts_bdd252d3 module;
-    class skill_eval_contracts_takerresult_e5375bfc klass;
-    class skill_eval_sample_cases_build_sample_cases_94a753da function;
-    class skill_eval_sample_cases_make_case_4fa65dc2 function;
+    class skill_eval_contracts_judgeinput_4652226e klass;
     class state_eventstore_append_f7a9a9ac function;
     class state_eventstore_reduceevent_8d646300 function;
     class skill_eval_batch_run_batch_12d5b456 function;
-    class skill_eval_flagship_case_build_flagship_case_4c20dfc6 function;
-    class skill_eval_reporting_report_from_json_678ea6ab function;
+    class skill_eval_judge_build_prompt_9f085834 function;
+    class skill_eval_orchestrator_run_eval_c860048b function;
+    class skill_eval_sample_cases_build_sample_cases_94a753da function;
     class skill_eval_sample_repo_build_sample_repo_f2f08aec function;
-    class tests_test_contracts_test_full_report_compositio_1795edc8 test;
+    class skill_eval_taker_stop_reason_710a8e60 function;
+    class tests_test_contracts_test_judge_input_constructs_fd64cd27 test;
+    class tests_test_judge_ji_bbfe46a6 test;
     class tests_test_taker_fakeresult_cc599706 test;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
@@ -2175,7 +2160,7 @@ flowchart LR
   <td>1</td>
   <td><code>reporting.py</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
-  <td><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>contracts.py</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>Criterion</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br>+1 more</td>
   <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
   <td>Module file in skill_eval/reporting.py.</td>
 </tr>
@@ -2199,7 +2184,7 @@ flowchart LR
   <td>4</td>
   <td><code>ComparisonReport</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
+  <td><code>Arm</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>Criterion</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small><br><code>JudgeScore</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
   <td>No direct outbound edge</td>
   <td>ComparisonReport node in skill_eval/reporting.py.</td>
 </tr>
@@ -2253,14 +2238,6 @@ flowchart LR
 </tr>
 <tr>
   <td>11</td>
-  <td><code>report_from_json()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>RunConfig</code><br><small style="color:var(--muted)">skill_eval/contracts.py</small></td>
-  <td><code>load_report()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small><br><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>trip reconstructs dataclasses()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
-  <td>report_from_json() node in skill_eval/reporting.py.</td>
-</tr>
-<tr>
-  <td>12</td>
   <td><code>save_report()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>report_to_json()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
@@ -2268,7 +2245,7 @@ flowchart LR
   <td>save_report() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>12</td>
   <td><code>list_saved_runs()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2276,15 +2253,15 @@ flowchart LR
   <td>list_saved_runs() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>14</td>
+  <td>13</td>
   <td><code>load_report()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td><code>report_from_json()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td>External entry / no inbound edge</td>
   <td><code>test_reporting.py</code><br><small style="color:var(--muted)">tests/test_reporting.py</small><br><code>test_save_list_load_runs()</code><br><small style="color:var(--muted)">tests/test_reporting.py</small></td>
   <td>load_report() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>15</td>
+  <td>14</td>
   <td><code>run_delta_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2292,7 +2269,7 @@ flowchart LR
   <td>run_delta_rows() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>15</td>
   <td><code>batch_win_summary()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2300,7 +2277,7 @@ flowchart LR
   <td>batch_win_summary() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>16</td>
   <td><code>batch_per_case_totals()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2308,7 +2285,7 @@ flowchart LR
   <td>batch_per_case_totals() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>17</td>
   <td><code>batch_per_criterion_avg()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2316,7 +2293,7 @@ flowchart LR
   <td>batch_per_criterion_avg() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>18</td>
   <td><code>batch_criterion_gap_rows()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>batch_per_criterion_avg()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
@@ -2324,7 +2301,7 @@ flowchart LR
   <td>batch_criterion_gap_rows() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>19</td>
   <td><code>_esc()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2332,7 +2309,7 @@ flowchart LR
   <td>_esc() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>20</td>
   <td><code>agent_graph_dot()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2340,7 +2317,7 @@ flowchart LR
   <td>Builds dependency relationships and graph data.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>21</td>
   <td><code>batch_score_distribution()</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -2348,7 +2325,7 @@ flowchart LR
   <td>batch_score_distribution() node in skill_eval/reporting.py.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>22</td>
   <td><code>Reporting helpers for the skill-eval dashboard.  Pure helpers (``scores_table``,</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2356,7 +2333,7 @@ flowchart LR
   <td>Design note for Reporting helpers for the skill-eval dashboard.  Pure helpers (``scores_table``,.</td>
 </tr>
 <tr>
-  <td>24</td>
+  <td>23</td>
   <td><code>Return a colour per column in ``columns`` order (for ``st.bar_chart``).</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2364,7 +2341,7 @@ flowchart LR
   <td>Design note for Return a colour per column in ``columns`` order (for ``st.bar_chart``)..</td>
 </tr>
 <tr>
-  <td>25</td>
+  <td>24</td>
   <td><code>Return one row per Criterion with a score column per arm.      Each row is ``{&quot;c</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2372,7 +2349,7 @@ flowchart LR
   <td>Design note for Return one row per Criterion with a score column per arm.      Each row is ``{&quot;c.</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>25</td>
   <td><code>Re-derive the winner from total scores and return a human-readable verdict.</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2380,7 +2357,7 @@ flowchart LR
   <td>Design note for Re-derive the winner from total scores and return a human-readable verdict..</td>
 </tr>
 <tr>
-  <td>27</td>
+  <td>26</td>
   <td><code>Return one row per Criterion with baseline, challenger, and the gap.      ``gap</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2388,7 +2365,7 @@ flowchart LR
   <td>Design note for Return one row per Criterion with baseline, challenger, and the gap.      ``gap.</td>
 </tr>
 <tr>
-  <td>28</td>
+  <td>27</td>
   <td><code>Return one row per Criterion with the per-criterion winner and margin.      Each</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2396,7 +2373,7 @@ flowchart LR
   <td>Design note for Return one row per Criterion with the per-criterion winner and margin.      Each.</td>
 </tr>
 <tr>
-  <td>29</td>
+  <td>28</td>
   <td><code>Return one row per arm pairing quality (total score) against cost.      Each row</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -2404,12 +2381,20 @@ flowchart LR
   <td>Design note for Return one row per arm pairing quality (total score) against cost.      Each row.</td>
 </tr>
 <tr>
-  <td>30</td>
+  <td>29</td>
   <td><code>Serialise a ComparisonReport to pretty-printed JSON (Pydantic).</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>Design note for Serialise a ComparisonReport to pretty-printed JSON (Pydantic)..</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>Serialise a batch of ComparisonReports to one JSON array.</code><br><small style="color:var(--muted)">skill_eval/reporting.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Serialise a batch of ComparisonReports to one JSON array..</td>
 </tr>
 </table>
 
@@ -2418,62 +2403,85 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>tests/test_taker.py</code></td><td>56 nodes</td></tr>
-<tr><td><code>skill_eval/reporting.py</code></td><td>43 nodes</td></tr>
+      <tr><td><code>tests/test_taker.py</code></td><td>53 nodes</td></tr>
+<tr><td><code>skill_eval/reporting.py</code></td><td>41 nodes</td></tr>
 <tr><td><code>tests/test_reporting.py</code></td><td>31 nodes</td></tr>
 <tr><td><code>tests/test_judge.py</code></td><td>28 nodes</td></tr>
 <tr><td><code>tests/test_batch_api.py</code></td><td>25 nodes</td></tr>
-<tr><td><code>skill_eval/contracts.py</code></td><td>19 nodes</td></tr>
-<tr><td><code>skill_eval/taker.py</code></td><td>17 nodes</td></tr>
+<tr><td><code>skill_eval/contracts.py</code></td><td>18 nodes</td></tr>
 <tr><td><code>skill_eval/sample_cases.py</code></td><td>14 nodes</td></tr>
+<tr><td><code>src/components/PipelineGraph.tsx</code></td><td>13 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: calls x211, contains x205, explains x118, imports x71. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x209, calls x200, explains x114, imports x85. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 9. Community 37 ====== -->
-<h2 id="community-37">9. Community 37</h2>
-<p>Community 37 groups implementation around frontend, pipelinegraphtsx, components, status, mostly in src/components/PipelineGraph.tsx, src/api/client.ts. This section covers 14 nodes and 13 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 9. Community 1 ====== -->
+<h2 id="community-1">9. Community 1</h2>
+<p>Community 1 groups implementation around frontend, components, resultsfunneltsx, chartsts, mostly in src/components/ResultsFunnel.tsx, src/components/charts.ts, src/pages/HistoryPage.tsx. This section covers 17 nodes and 28 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 37 (14 nodes, 13 edges)
-    subgraph community_37_src_components_PipelineGraph_tsx_76123db1["src/components/PipelineGraph.tsx"]
-        components_pipelinegraph_191064d1("PipelineGraph.tsx")
-        components_pipelinegraph_batchgraphcontext_8582cfd6("BatchGraphContext<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_case_status_c81ec976("CASE_STATUS<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_pipelinegraph_145e827e("PipelineGraph()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_pipelinenode_82d05967("PipelineNode()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_pipelinenodedata_721fd6e1("PipelineNodeData<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_status_bg_823a749f("STATUS_BG<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_x_1870c23f("X<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_buildgraph_1ec6ad84("buildGraph()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_caseidof_a950fa04("caseIdOf()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_coarsenode_6fd65f64("coarseNode()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_judgey_5c5345be("judgeY()<br/><small>src/components/PipelineGraph.tsx</small>")
-        components_pipelinegraph_nodetypes_3476958f("nodeTypes<br/><small>src/components/PipelineGraph.tsx</small>")
+    %% Section: Community 1 (17 nodes, 28 edges)
+    subgraph community_1_src_components_ResultsFunnel_tsx_ded8207a["src/components/ResultsFunnel.tsx"]
+        components_resultsfunnel_ab0aafac("ResultsFunnel.tsx")
+        components_resultsfunnel_mocktaskkind_dbe48953("mockTaskKind()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_scorefor_627a9c1f("scoreFor()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_byarm_51f15cd2("byArm()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_inferdecision_ea6a2897("inferDecision()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_mockedassumptionsandmis_8d5b632b("mockedAssumptionsAndMisses()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5("mockedBehaviorInsights()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_mockedrequirementunlock_9a3d8502("mockedRequirementUnlocks()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_resultsfunnel_5246754b("ResultsFunnel()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_behaviorinsight_13280327("BehaviorInsight<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_decisionaction_624b4214("DecisionAction<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_metriccard_d93a5109("MetricCard()<br/><small>src/components/ResultsFunnel.tsx</small>")
+        components_resultsfunnel_requirementunlock_e7564da3("RequirementUnlock<br/><small>src/components/ResultsFunnel.tsx</small>")
     end
-    api_client_batchcasestate_ebe99285("BatchCaseState<br/><small>src/api/client.ts</small>")
-    api_client_batchcasestate_ebe99285 -->|imports| components_pipelinegraph_191064d1
-    class components_pipelinegraph_191064d1 ui;
-    class components_pipelinegraph_batchgraphcontext_8582cfd6 ui;
-    class components_pipelinegraph_case_status_c81ec976 ui;
-    class components_pipelinegraph_pipelinegraph_145e827e ui;
-    class components_pipelinegraph_pipelinenode_82d05967 ui;
-    class components_pipelinegraph_pipelinenodedata_721fd6e1 ui;
-    class components_pipelinegraph_status_bg_823a749f ui;
-    class components_pipelinegraph_x_1870c23f ui;
-    class components_pipelinegraph_buildgraph_1ec6ad84 ui;
-    class components_pipelinegraph_caseidof_a950fa04 ui;
-    class components_pipelinegraph_coarsenode_6fd65f64 ui;
-    class components_pipelinegraph_judgey_5c5345be ui;
-    class components_pipelinegraph_nodetypes_3476958f ui;
-    class api_client_batchcasestate_ebe99285 klass;
+    subgraph community_1_src_components_charts_ts_5fb55afe["src/components/charts.ts"]
+        components_charts_dumbbellspec_eee8aa7e("dumbbellSpec()<br/><small>src/components/charts.ts</small>")
+        components_charts_gaprows_e7e277d1("gapRows()<br/><small>src/components/charts.ts</small>")
+        components_charts_qualitycostspec_16009b6a("qualityCostSpec()<br/><small>src/components/charts.ts</small>")
+    end
+    pages_historypage_deltatable_716abfcc("DeltaTable()<br/><small>src/pages/HistoryPage.tsx</small>")
+    components_resultsfunnel_scorefor_627a9c1f -->|calls| components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5
+    components_resultsfunnel_scorefor_627a9c1f -->|calls| components_resultsfunnel_mockedrequirementunlock_9a3d8502
+    components_resultsfunnel_inferdecision_ea6a2897 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
+    components_resultsfunnel_mocktaskkind_dbe48953 -->|calls| components_resultsfunnel_mockedassumptionsandmis_8d5b632b
+    components_resultsfunnel_mocktaskkind_dbe48953 -->|calls| components_resultsfunnel_mockedrequirementunlock_9a3d8502
+    components_resultsfunnel_mockedrequirementunlock_9a3d8502 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
+    components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
+    components_resultsfunnel_mockedassumptionsandmis_8d5b632b -->|calls| components_resultsfunnel_resultsfunnel_5246754b
+    components_resultsfunnel_byarm_51f15cd2 -->|calls| components_resultsfunnel_resultsfunnel_5246754b
+    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_dumbbellspec_eee8aa7e
+    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_gaprows_e7e277d1
+    components_resultsfunnel_resultsfunnel_5246754b -->|calls| components_charts_qualitycostspec_16009b6a
+    components_charts_gaprows_e7e277d1 -->|calls| pages_historypage_deltatable_716abfcc
+    components_resultsfunnel_ab0aafac -->|imports| components_charts_dumbbellspec_eee8aa7e
+    components_resultsfunnel_ab0aafac -->|imports| components_charts_gaprows_e7e277d1
+    components_resultsfunnel_ab0aafac -->|imports| components_charts_qualitycostspec_16009b6a
+    class components_resultsfunnel_ab0aafac ui;
+    class components_resultsfunnel_mocktaskkind_dbe48953 ui;
+    class components_resultsfunnel_scorefor_627a9c1f ui;
+    class components_resultsfunnel_byarm_51f15cd2 ui;
+    class components_resultsfunnel_inferdecision_ea6a2897 ui;
+    class components_resultsfunnel_mockedassumptionsandmis_8d5b632b async;
+    class components_resultsfunnel_mockedbehaviorinsights_9b2bd4a5 ui;
+    class components_resultsfunnel_mockedrequirementunlock_9a3d8502 ui;
+    class components_resultsfunnel_resultsfunnel_5246754b ui;
+    class components_resultsfunnel_behaviorinsight_13280327 ui;
+    class components_resultsfunnel_decisionaction_624b4214 ui;
+    class components_resultsfunnel_metriccard_d93a5109 ui;
+    class components_resultsfunnel_requirementunlock_e7564da3 ui;
+    class components_charts_dumbbellspec_eee8aa7e function;
+    class components_charts_gaprows_e7e277d1 function;
+    class components_charts_qualitycostspec_16009b6a function;
+    class pages_historypage_deltatable_716abfcc ui;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -2497,115 +2505,139 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
+  <td><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>PipelineGraph.tsx</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
-  <td>BatchCaseState node in src/api/client.ts.</td>
+  <td><code>dumbbellSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>gapRows()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>qualityCostSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td>Module file in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>2</td>
-  <td><code>PipelineGraph.tsx</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>DecisionAction</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td><code>BatchCaseState</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
+  <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Module file in src/components/PipelineGraph.tsx.</td>
+  <td>DecisionAction node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>3</td>
-  <td><code>BatchGraphContext</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>RequirementUnlock</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Builds dependency relationships and graph data.</td>
+  <td>RequirementUnlock node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>4</td>
-  <td><code>CASE_STATUS</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>BehaviorInsight</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>CASE_STATUS node in src/components/PipelineGraph.tsx.</td>
+  <td>BehaviorInsight node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>5</td>
-  <td><code>STATUS_BG</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>scoreFor()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>STATUS_BG node in src/components/PipelineGraph.tsx.</td>
+  <td><code>mockedBehaviorInsights()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>mockedRequirementUnlocks()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>scoreFor() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>6</td>
-  <td><code>PipelineNodeData</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>inferDecision()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>PipelineNodeData node in src/components/PipelineGraph.tsx.</td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>inferDecision() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>7</td>
-  <td><code>PipelineNode()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>mockTaskKind()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>PipelineNode() node in src/components/PipelineGraph.tsx.</td>
+  <td><code>mockedAssumptionsAndMisses()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>mockedRequirementUnlocks()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>mockTaskKind() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>8</td>
-  <td><code>nodeTypes</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>mockedRequirementUnlocks()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>nodeTypes node in src/components/PipelineGraph.tsx.</td>
+  <td><code>mockTaskKind()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>scoreFor()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>mockedRequirementUnlocks() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>9</td>
-  <td><code>X</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>mockedBehaviorInsights()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>X node in src/components/PipelineGraph.tsx.</td>
+  <td><code>scoreFor()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>mockedBehaviorInsights() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>10</td>
-  <td><code>judgeY()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>judgeY() node in src/components/PipelineGraph.tsx.</td>
+  <td><code>mockedAssumptionsAndMisses()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td><code>mockTaskKind()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>mockedAssumptionsAndMisses() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>11</td>
-  <td><code>coarseNode()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>MetricCard()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>coarseNode() node in src/components/PipelineGraph.tsx.</td>
+  <td>MetricCard() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>12</td>
-  <td><code>buildGraph()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>byArm()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Builds dependency relationships and graph data.</td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>byArm() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>13</td>
-  <td><code>caseIdOf()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>caseIdOf() node in src/components/PipelineGraph.tsx.</td>
+  <td><code>byArm()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>inferDecision()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>mockedAssumptionsAndMisses()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br>+2 more</td>
+  <td><code>dumbbellSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>gapRows()</code><br><small style="color:var(--muted)">src/components/charts.ts</small><br><code>qualityCostSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td>ResultsFunnel() node in src/components/ResultsFunnel.tsx.</td>
 </tr>
 <tr>
   <td>14</td>
-  <td><code>PipelineGraph()</code><br><small style="color:var(--muted)">src/components/PipelineGraph.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>gapRows()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td><code>DeltaTable()</code><br><small style="color:var(--muted)">src/pages/HistoryPage.tsx</small></td>
+  <td>gapRows() node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>dumbbellSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
   <td>No direct outbound edge</td>
-  <td>Builds dependency relationships and graph data.</td>
+  <td>dumbbellSpec() node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>qualityCostSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ResultsFunnel()</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small><br><code>ResultsFunnel.tsx</code><br><small style="color:var(--muted)">src/components/ResultsFunnel.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>qualityCostSpec() node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>DeltaTable()</code><br><small style="color:var(--muted)">src/pages/HistoryPage.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>gapRows()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td>No direct outbound edge</td>
+  <td>DeltaTable() node in src/pages/HistoryPage.tsx.</td>
 </tr>
 </table>
 
@@ -2614,13 +2646,14 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>src/components/PipelineGraph.tsx</code></td><td>13 nodes</td></tr>
-<tr><td><code>src/api/client.ts</code></td><td>1 nodes</td></tr>
+      <tr><td><code>src/components/ResultsFunnel.tsx</code></td><td>13 nodes</td></tr>
+<tr><td><code>src/components/charts.ts</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/pages/HistoryPage.tsx</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x12, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x13, contains x12, imports x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -3123,8 +3156,140 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 13. Community 28 ====== -->
-<h2 id="community-28">13. Community 28</h2>
+<!-- ====== 13. Community 37 ====== -->
+<h2 id="community-37">13. Community 37</h2>
+<p>Community 37 groups implementation around frontend, chartsts, components, comparisonreport, mostly in src/components/charts.ts, src/api/client.ts, src/pages/RunPage.tsx. This section covers 8 nodes and 7 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 37 (8 nodes, 7 edges)
+    subgraph community_37_src_components_charts_ts_28210ba9["src/components/charts.ts"]
+        components_charts_batchqualitycostspec_0c2944a4("batchQualityCostSpec()<br/><small>src/components/charts.ts</small>")
+        components_charts_681d03b2("charts.ts")
+        components_charts_arm_colors_5e452ea0("ARM_COLORS<br/><small>src/components/charts.ts</small>")
+        components_charts_batchqualitycostrow_d9eaa9ca("BatchQualityCostRow<br/><small>src/components/charts.ts</small>")
+        components_charts_gaprow_f00e3775("GapRow<br/><small>src/components/charts.ts</small>")
+        components_charts_armscale_f74c5869("armScale<br/><small>src/components/charts.ts</small>")
+    end
+    api_client_comparisonreport_ae1f55b3("ComparisonReport<br/><small>src/api/client.ts</small>")
+    pages_runpage_batchstatsboard_bf1d2649("BatchStatsBoard()<br/><small>src/pages/RunPage.tsx</small>")
+    components_charts_batchqualitycostspec_0c2944a4 -->|calls| pages_runpage_batchstatsboard_bf1d2649
+    api_client_comparisonreport_ae1f55b3 -->|imports| components_charts_681d03b2
+    class components_charts_batchqualitycostspec_0c2944a4 function;
+    class components_charts_681d03b2 module;
+    class components_charts_arm_colors_5e452ea0 klass;
+    class components_charts_batchqualitycostrow_d9eaa9ca klass;
+    class components_charts_gaprow_f00e3775 klass;
+    class components_charts_armscale_f74c5869 function;
+    class api_client_comparisonreport_ae1f55b3 klass;
+    class pages_runpage_batchstatsboard_bf1d2649 ui;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>charts.ts</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td>ComparisonReport node in src/api/client.ts.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>charts.ts</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>ComparisonReport</code><br><small style="color:var(--muted)">src/api/client.ts</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>ARM_COLORS</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ARM_COLORS node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>armScale</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>armScale node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>GapRow</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>GapRow node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>BatchQualityCostRow</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BatchQualityCostRow node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>batchQualityCostSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>BatchStatsBoard()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
+  <td>batchQualityCostSpec() node in src/components/charts.ts.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>BatchStatsBoard()</code><br><small style="color:var(--muted)">src/pages/RunPage.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>batchQualityCostSpec()</code><br><small style="color:var(--muted)">src/components/charts.ts</small></td>
+  <td>No direct outbound edge</td>
+  <td>BatchStatsBoard() node in src/pages/RunPage.tsx.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/components/charts.ts</code></td><td>6 nodes</td></tr>
+<tr><td><code>src/api/client.ts</code></td><td>1 nodes</td></tr>
+<tr><td><code>src/pages/RunPage.tsx</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x5, imports x1, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 14. Community 28 ====== -->
+<h2 id="community-28">14. Community 28</h2>
 <p>Community 28 groups implementation around demomd, demo, script, min, mostly in DEMO.md. This section covers 6 nodes and 5 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -3234,8 +3399,8 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 14. Community 78 ====== -->
-<h2 id="community-78">14. Community 78</h2>
+<!-- ====== 15. Community 78 ====== -->
+<h2 id="community-78">15. Community 78</h2>
 <p>Community 78 groups implementation around screenshot, dashboardpy, scripts, capture, mostly in scripts/screenshot_dashboard.py. This section covers 3 nodes and 2 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -3312,15 +3477,17 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 15. Community 80 ====== -->
-<h2 id="community-80">15. Community 80</h2>
-<p>Community 80 groups implementation around skill, eval, api, mostly in skill_eval/api/__init__.py. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 16. Other ====== -->
+<h2 id="other">16. Other</h2>
+<p>Other groups implementation around viteconfigts, skill, eval, api, mostly in skill_eval/api/__init__.py, frontend/vite.config.ts. This section covers 2 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 80 (1 nodes, 0 edges)
+    %% Section: Other (2 nodes, 0 edges)
+    frontend_vite_config_3ac59d22("vite.config.ts")
     api_init_7d359f81("__init__.py")
+    class frontend_vite_config_3ac59d22 module;
     class api_init_7d359f81 module;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
@@ -3351,56 +3518,8 @@ flowchart LR
   <td>No direct outbound edge</td>
   <td>Module file in skill_eval/api/__init__.py.</td>
 </tr>
-</table>
-
-<div class="grid">
-  <div class="card">
-    <h4>Key Files</h4>
-    <table style="width:100%;font-size:0.85rem;">
-      <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>skill_eval/api/__init__.py</code></td><td>1 nodes</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
-  </div>
-</div>
-<hr>
-
-<!-- ====== 16. Other ====== -->
-<h2 id="other">16. Other</h2>
-<p>Other groups implementation around viteconfigts, frontend, mostly in frontend/vite.config.ts. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
-
-<div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
-flowchart LR
-    %% Section: Other (1 nodes, 0 edges)
-    frontend_vite_config_3ac59d22("vite.config.ts")
-    class frontend_vite_config_3ac59d22 module;
-    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
-    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
-    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
-    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
-    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
-    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
-    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
-    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
-    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
-</div>
-
-<h3>Call Details</h3>
-<table class="call-table">
 <tr>
-  <th style="width:5%">#</th>
-  <th style="width:28%">Node</th>
-  <th style="width:10%">Type</th>
-  <th style="width:17%">Caller</th>
-  <th style="width:20%">Callees</th>
-  <th style="width:20%">Description</th>
-</tr>
-<tr>
-  <td>1</td>
+  <td>2</td>
   <td><code>vite.config.ts</code><br><small style="color:var(--muted)">frontend/vite.config.ts</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
@@ -3415,6 +3534,7 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>frontend/vite.config.ts</code></td><td>1 nodes</td></tr>
+<tr><td><code>skill_eval/api/__init__.py</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
@@ -3430,17 +3550,17 @@ flowchart LR
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>1220</td></tr>
-      <tr><td>Edges</td><td>2666</td></tr>
+      <tr><td>Nodes</td><td>1226</td></tr>
+      <tr><td>Edges</td><td>2683</td></tr>
       <tr><td>Hyperedges</td><td>0</td></tr>
-      <tr><td>Communities</td><td>86</td></tr>
+      <tr><td>Communities</td><td>83</td></tr>
       <tr><td>Documented Sections</td><td>15</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>2105</td></tr>
+      <tr><td>EXTRACTED</td><td>2122</td></tr>
       <tr><td>INFERRED</td><td>561</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
@@ -3449,7 +3569,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>skill-eval — Architecture Documentation</p>
-  <p>Generated: 2026-06-12 05:41 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-06-12 06:09 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->

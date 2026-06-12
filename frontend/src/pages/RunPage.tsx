@@ -386,8 +386,7 @@ Construct the eval payload:
     "name": "<challenger skill name>",
     "markdown": "<full contents of challenger SKILL.md>"
   },
-  "wall_clock_seconds": 180,
-  "real_agents": true
+  "wall_clock_seconds": 180
 }
 
 Read the actual SKILL.md content for both skills — do not summarize.

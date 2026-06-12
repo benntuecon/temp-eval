@@ -79,7 +79,6 @@ class BatchState:
     batch_id: str
     query: str
     created_at: float
-    real_agents: bool
     cases: list[_Case] = field(default_factory=list)
     status: str = "running"  # running | completed | failed
     task: asyncio.Task | None = None
@@ -111,7 +110,6 @@ class BatchManager:
             batch_id=batch_id,
             query=req.query,
             created_at=time.time(),
-            real_agents=req.real_agents,
             cases=[
                 _Case(
                     case_id=h["case_id"],
@@ -147,7 +145,6 @@ class BatchManager:
                             wall_clock_seconds=req.wall_clock_seconds,
                             judge_model=req.judge_model,
                             judges_per_criterion=req.judges_per_criterion,
-                            real_agents=req.real_agents,
                         )
                         case.run_id = self.manager.start(child)
                         case.status = "running"
@@ -227,7 +224,6 @@ class BatchManager:
             query=state.query,
             status=state.status,
             created_at=state.created_at,
-            real_agents=state.real_agents,
             total=len(state.cases),
             completed=done,
             failed=failed,

@@ -21,7 +21,6 @@ def _run_request(**overrides) -> dict:
         "task_brief": "Fix the add function so the tests pass.",
         "baseline": {"name": "ship-it-fast", "markdown": "# ship it\nJust fix it fast."},
         "challenger": {"name": "disciplined", "markdown": "# disciplined\nAsk, test, then fix."},
-        "real_agents": False,
     }
     body.update(overrides)
     return body
@@ -34,7 +33,15 @@ def anyio_backend():
 
 @pytest.fixture()
 def app(tmp_path):
-    return create_app(runs_dir=str(tmp_path / "runs"))
+    # Tests inject the simulated components (no user-facing simulated mode).
+    from skill_eval.simulated import sim_make_simulator, sim_run_judge, sim_run_taker
+
+    return create_app(
+        runs_dir=str(tmp_path / "runs"),
+        taker_fn=sim_run_taker,
+        simulator_factory=sim_make_simulator,
+        judge_fn=sim_run_judge,
+    )
 
 
 @pytest.fixture()

@@ -15,7 +15,15 @@ def anyio_backend():
 
 @pytest.fixture()
 def app(tmp_path):
-    return create_app(runs_dir=str(tmp_path / "runs"))
+    # Tests inject the simulated components (no user-facing simulated mode).
+    from skill_eval.simulated import sim_make_simulator, sim_run_judge, sim_run_taker
+
+    return create_app(
+        runs_dir=str(tmp_path / "runs"),
+        taker_fn=sim_run_taker,
+        simulator_factory=sim_make_simulator,
+        judge_fn=sim_run_judge,
+    )
 
 
 @pytest.fixture()
@@ -29,7 +37,6 @@ def _batch_request(**overrides):
     body = {
         "query": "logging improvement payment api banking",
         "top_k": 2,
-        "real_agents": False,
         "max_concurrent": 2,
     }
     body.update(overrides)
@@ -160,7 +167,7 @@ async def test_retrieve_rejects_out_of_range_k(client):
 
 @pytest.mark.anyio
 async def test_batch_forwards_config_to_children(tmp_path, monkeypatch):
-    """real_agents/budgets/judge config must reach every child CreateRunRequest."""
+    """Budgets/judge config must reach every child CreateRunRequest."""
     from skill_eval.api.batch_manager import BatchManager
     from skill_eval.api.schemas import CreateBatchRequest, RunSummary
 
@@ -188,7 +195,6 @@ async def test_batch_forwards_config_to_children(tmp_path, monkeypatch):
     req = CreateBatchRequest(
         query="logging",
         top_k=2,
-        real_agents=True,
         max_turns=7,
         thinking_budget=512,
         wall_clock_seconds=180,
@@ -201,7 +207,6 @@ async def test_batch_forwards_config_to_children(tmp_path, monkeypatch):
 
     assert len(captured) == 2
     for child in captured:
-        assert child.real_agents is True
         assert child.max_turns == 7
         assert child.thinking_budget == 512
         assert child.wall_clock_seconds == 180

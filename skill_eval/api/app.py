@@ -96,8 +96,25 @@ def _fixtures() -> list[FixtureInfo]:
     return out
 
 
-def create_app(runs_dir: str | None = None) -> FastAPI:
-    """Build the FastAPI app."""
+def create_app(
+    runs_dir: str | None = None,
+    *,
+    taker_fn=None,
+    simulator_factory=None,
+    judge_fn=None,
+) -> FastAPI:
+    """Build the FastAPI app.
+
+    Runs always use the real LLM-backed components. The keyword overrides
+    (and the ``SKILL_EVAL_SIMULATED=1`` env hook) exist ONLY so the test
+    suites can run offline — they are not a product mode.
+    """
+    if os.environ.get("SKILL_EVAL_SIMULATED") == "1" and taker_fn is None:
+        from skill_eval.simulated import sim_make_simulator, sim_run_judge, sim_run_taker
+
+        taker_fn = sim_run_taker
+        simulator_factory = sim_make_simulator
+        judge_fn = sim_run_judge
     app = FastAPI(title="skill-eval", version="1.0.0")
     app.add_middleware(
         CORSMiddleware,
@@ -107,7 +124,12 @@ def create_app(runs_dir: str | None = None) -> FastAPI:
     )
 
     effective_runs_dir = runs_dir or _default_runs_dir()
-    manager = RunManager(effective_runs_dir)
+    manager = RunManager(
+        effective_runs_dir,
+        taker_fn=taker_fn,
+        simulator_factory=simulator_factory,
+        judge_fn=judge_fn,
+    )
     app.state.manager = manager
     batches = BatchManager(manager, effective_runs_dir)
     app.state.batches = batches

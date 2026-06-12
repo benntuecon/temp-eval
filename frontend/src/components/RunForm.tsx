@@ -51,7 +51,6 @@ export function RunForm({
   const [topK, setTopK] = useState(10);
   const [wallClock, setWallClock] = useState(180);
   const [maxConcurrent, setMaxConcurrent] = useState(""); // "" = all at once
-  const [realAgents, setRealAgents] = useState(false);
   const [baseName, setBaseName] = useState("");
   const [baseMd, setBaseMd] = useState("");
   const [chalName, setChalName] = useState("");
@@ -117,7 +116,6 @@ export function RunForm({
       thinking_budget: 2048,
       wall_clock_seconds: wallClock,
       judges_per_criterion: 1,
-      real_agents: realAgents,
       max_concurrent: maxConcurrent === "" ? null : Number(maxConcurrent),
     });
   }
@@ -174,15 +172,11 @@ export function RunForm({
             onChange={(e) => setMaxConcurrent(e.target.value)}
           />
         </Field>
-        <label className="flex items-end gap-2 pb-2 text-sm font-bold text-sketch-ink">
-          <input
-            type="checkbox"
-            checked={realAgents}
-            onChange={(e) => setRealAgents(e.target.checked)}
-            data-testid="real-agents-toggle"
-          />
-          Real Haiku agents (~$0.40 × K)
-        </label>
+        <div className="flex items-end pb-2">
+          <span className="font-hand text-xs font-bold text-sketch-muted">
+            Live Haiku agents — roughly $0.40 per case
+          </span>
+        </div>
         <div className="flex items-end pb-1">
           <button
             type="button"

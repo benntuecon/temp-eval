@@ -166,11 +166,26 @@ class RunState:
 
 
 class RunManager:
-    """Owns live runs; archives finished ones under ``runs_dir``."""
+    """Owns live runs; archives finished ones under ``runs_dir``.
 
-    def __init__(self, runs_dir: str) -> None:
+    Component functions (taker/simulator/judge) default to the real
+    LLM-backed implementations; tests inject simulated stand-ins via the
+    constructor — there is no user-facing simulated mode.
+    """
+
+    def __init__(
+        self,
+        runs_dir: str,
+        *,
+        taker_fn=None,
+        simulator_factory=None,
+        judge_fn=None,
+    ) -> None:
         self.runs_dir = Path(runs_dir)
         self._runs: dict[str, RunState] = {}
+        self._taker_fn = taker_fn
+        self._simulator_factory = simulator_factory
+        self._judge_fn = judge_fn
 
     # -- run lifecycle ----------------------------------------------------
 
@@ -201,34 +216,17 @@ class RunManager:
                 if typed is not None:
                     loop.call_soon_threadsafe(self._publish, state, typed)
 
-            if req.real_agents:
-                from skill_eval.judge import run_judge
-                from skill_eval.orchestrator import arun_eval
-                from skill_eval.simulator import make_simulator
-                from skill_eval.taker import run_taker
+            from skill_eval.orchestrator import arun_eval
 
-                report = await arun_eval(
-                    cfg,
-                    taker_fn=run_taker,
-                    simulator_factory=make_simulator,
-                    judge_fn=run_judge,
-                    on_event=on_event,
-                )
-            else:
-                from skill_eval.orchestrator import arun_eval
-                from skill_eval.simulated import (
-                    sim_make_simulator,
-                    sim_run_judge,
-                    sim_run_taker,
-                )
-
-                report = await arun_eval(
-                    cfg,
-                    taker_fn=sim_run_taker,
-                    simulator_factory=sim_make_simulator,
-                    judge_fn=sim_run_judge,
-                    on_event=on_event,
-                )
+            # None components -> arun_eval lazily resolves the real
+            # LLM-backed taker/simulator/judge implementations.
+            report = await arun_eval(
+                cfg,
+                taker_fn=self._taker_fn,
+                simulator_factory=self._simulator_factory,
+                judge_fn=self._judge_fn,
+                on_event=on_event,
+            )
 
             state.report = report
             state.verdict = report.pairwise_verdict

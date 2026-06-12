@@ -48,7 +48,7 @@ def test_create_run_request_validates_blank_fields():
         baseline=SkillInput(name="a", markdown="# a"),
         challenger=SkillInput(name="b", markdown="# b"),
     )
-    assert ok.real_agents is False and ok.judges_per_criterion == 1
+    assert ok.judges_per_criterion == 1
 
     with pytest.raises(ValidationError):
         CreateRunRequest(

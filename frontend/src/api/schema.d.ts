@@ -296,11 +296,6 @@ export interface components {
             /** Created At */
             created_at: number;
             /**
-             * Real Agents
-             * @default false
-             */
-            real_agents: boolean;
-            /**
              * Total
              * @default 0
              */
@@ -375,11 +370,6 @@ export interface components {
              * @default 1
              */
             judges_per_criterion: number;
-            /**
-             * Real Agents
-             * @default false
-             */
-            real_agents: boolean;
             /** Max Concurrent */
             max_concurrent?: number | null;
         };
@@ -416,11 +406,6 @@ export interface components {
              * @default 1
              */
             judges_per_criterion: number;
-            /**
-             * Real Agents
-             * @default false
-             */
-            real_agents: boolean;
         };
         /**
          * Criterion
