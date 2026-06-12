@@ -245,18 +245,18 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1781227491.6121447,
-    "ast_hash": "b2d3de0f23200ba5f1e6a985f6bd2939",
+    "mtime": 1781238319.946168,
+    "ast_hash": "b603665eaa8f628a5c487ac2585cd16d",
     "semantic_hash": ""
   },
   "frontend/src/api/client.ts": {
-    "mtime": 1781165230.0258179,
-    "ast_hash": "1383c8ba224b61035ad8bb513ddc5a7a",
+    "mtime": 1781236863.8661077,
+    "ast_hash": "043bf17a5904f7a20a1e5506c426b2e1",
     "semantic_hash": ""
   },
   "frontend/src/api/schema.d.ts": {
-    "mtime": 1781230816.724349,
-    "ast_hash": "7813047a48acd3f892a3f3d66c683bc5",
+    "mtime": 1781236844.4225416,
+    "ast_hash": "e6ef32dd823ef25947e43fbcb337f46b",
     "semantic_hash": ""
   },
   "frontend/src/components/NodePanel.tsx": {
@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "skill_eval/api/app.py": {
-    "mtime": 1781235878.7561946,
-    "ast_hash": "356ba7b74736f84652c99f80012541fe",
+    "mtime": 1781238295.6492934,
+    "ast_hash": "3c0cfc7141440ef102808ab6929e841c",
     "semantic_hash": ""
   },
   "skill_eval/api/run_manager.py": {
@@ -350,8 +350,8 @@
     "semantic_hash": ""
   },
   "skill_eval/api/schemas.py": {
-    "mtime": 1781227465.3263392,
-    "ast_hash": "de73cd4c21a22d5530f45fa62f85060a",
+    "mtime": 1781238300.6996307,
+    "ast_hash": "d38dfbb8347643e7745ffe006a232346",
     "semantic_hash": ""
   },
   "skill_eval/events.py": {
@@ -560,13 +560,38 @@
     "semantic_hash": ""
   },
   "skill_eval/eval_vector_db.py": {
-    "mtime": 1781234977.2724175,
-    "ast_hash": "09b7179d9fc14a243fa7a3dd40f5b2f5",
+    "mtime": 1781238299.410318,
+    "ast_hash": "5efa10d28601d34c33315d276f6d00fd",
     "semantic_hash": ""
   },
   "skill_eval/testcase_fixture.py": {
     "mtime": 1781235858.8926997,
     "ast_hash": "b5fb03936afae4dfa9c9577186dde440",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/BatchStats.tsx": {
+    "mtime": 1781236910.0948453,
+    "ast_hash": "a0cd401f034dfd562652eb67fccf8318",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/BatchPage.tsx": {
+    "mtime": 1781238317.2962997,
+    "ast_hash": "31229fc7c57f9ffa7f6ed979e8b6f170",
+    "semantic_hash": ""
+  },
+  "skill_eval/api/batch_manager.py": {
+    "mtime": 1781238268.4990382,
+    "ast_hash": "94f40398492065c0438eb2f25c6f7b59",
+    "semantic_hash": ""
+  },
+  "skill_eval/retriever.py": {
+    "mtime": 1781238277.8912113,
+    "ast_hash": "a10dcf33bbb5c450627c6cbf444a4aee",
+    "semantic_hash": ""
+  },
+  "tests/test_batch_api.py": {
+    "mtime": 1781238347.5801818,
+    "ast_hash": "6942b3b85287f42cceddea6b22bbf731",
     "semantic_hash": ""
   }
 }

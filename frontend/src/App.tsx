@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api } from "./api/client";
 import { cn } from "./components/ui";
+import { BatchPage } from "./pages/BatchPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { RunPage } from "./pages/RunPage";
 
 export default function App() {
-  const [tab, setTab] = useState<"run" | "history">("run");
+  const [tab, setTab] = useState<"run" | "batch" | "history">("run");
   useQuery({ queryKey: ["health"], queryFn: api.health });
 
   return (
@@ -23,6 +24,7 @@ export default function App() {
           {(
             [
               ["run", "▶ Run eval"],
+              ["batch", "⚡ Batch eval"],
               ["history", "📜 History"],
             ] as const
           ).map(([id, label]) => (
@@ -42,7 +44,12 @@ export default function App() {
           ))}
         </nav>
 
-        {tab === "run" ? <RunPage /> : <HistoryPage />}
+        {/* BatchPage stays mounted so a running batch keeps polling (and its
+            state survives) while the user looks at other tabs. */}
+        <div className={tab === "batch" ? "" : "hidden"}>
+          <BatchPage />
+        </div>
+        {tab === "run" ? <RunPage /> : tab === "history" ? <HistoryPage /> : null}
       </div>
     </div>
   );

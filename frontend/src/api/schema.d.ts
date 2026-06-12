@@ -90,6 +90,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/retrieve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve */
+        get: operations["retrieve_api_retrieve_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Batches */
+        get: operations["list_batches_api_batches_get"];
+        put?: never;
+        /** Create Batch */
+        post: operations["create_batch_api_batches_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batches/{batch_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Batch Detail */
+        get: operations["batch_detail_api_batches__batch_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/runs/{run_id}/events": {
         parameters: {
             query?: never;
@@ -155,6 +207,116 @@ export interface components {
             ][];
         };
         /**
+         * BatchCaseState
+         * @description Live status of one retrieved case inside a batch.
+         */
+        BatchCaseState: {
+            /** Case Id */
+            case_id: string;
+            /** Fixture */
+            fixture: string;
+            /** Description */
+            description: string;
+            /** Distance */
+            distance?: number | null;
+            /** Run Id */
+            run_id?: string | null;
+            /**
+             * Status
+             * @default queued
+             */
+            status: string;
+            /** Verdict */
+            verdict?: string | null;
+            /** Baseline Total */
+            baseline_total?: number | null;
+            /** Challenger Total */
+            challenger_total?: number | null;
+            /** Baseline Tokens */
+            baseline_tokens?: number | null;
+            /** Challenger Tokens */
+            challenger_tokens?: number | null;
+        };
+        /** BatchCreated */
+        BatchCreated: {
+            /** Batch Id */
+            batch_id: string;
+        };
+        /**
+         * BatchDetail
+         * @description Full batch state: summary, per-case statuses, and aggregate stats.
+         */
+        BatchDetail: {
+            summary: components["schemas"]["BatchSummary"];
+            /** Cases */
+            cases: components["schemas"]["BatchCaseState"][];
+            stats?: components["schemas"]["BatchStats"] | null;
+        };
+        /**
+         * BatchStats
+         * @description Aggregates over the batch's completed child reports.
+         */
+        BatchStats: {
+            /** Win Summary */
+            win_summary: {
+                [key: string]: number;
+            };
+            /** Per Criterion Avg */
+            per_criterion_avg: {
+                [key: string]: unknown;
+            }[];
+            /** Criterion Gap */
+            criterion_gap: {
+                [key: string]: unknown;
+            }[];
+            /** Per Case Totals */
+            per_case_totals: {
+                [key: string]: unknown;
+            }[];
+            /** Score Distribution */
+            score_distribution: {
+                [key: string]: unknown;
+            }[];
+            /** Tokens Per Case */
+            tokens_per_case: {
+                [key: string]: unknown;
+            }[];
+        };
+        /**
+         * BatchSummary
+         * @description Lightweight batch listing entry.
+         */
+        BatchSummary: {
+            /** Batch Id */
+            batch_id: string;
+            /** Query */
+            query: string;
+            /** Status */
+            status: string;
+            /** Created At */
+            created_at: number;
+            /**
+             * Real Agents
+             * @default false
+             */
+            real_agents: boolean;
+            /**
+             * Total
+             * @default 0
+             */
+            total: number;
+            /**
+             * Completed
+             * @default 0
+             */
+            completed: number;
+            /**
+             * Failed
+             * @default 0
+             */
+            failed: number;
+        };
+        /**
          * ComparisonReport
          * @description The system's output: baseline vs challenger, per model.
          */
@@ -174,6 +336,48 @@ export interface components {
              * @default
              */
             session_id: string;
+        };
+        /**
+         * CreateBatchRequest
+         * @description Retrieve top-k cases for *query* and eval the skill pair on each.
+         */
+        CreateBatchRequest: {
+            /** Query */
+            query: string;
+            /**
+             * Top K
+             * @default 10
+             */
+            top_k: number;
+            baseline?: components["schemas"]["SkillInput"] | null;
+            challenger?: components["schemas"]["SkillInput"] | null;
+            /**
+             * Max Turns
+             * @default 16
+             */
+            max_turns: number;
+            /**
+             * Thinking Budget
+             * @default 2048
+             */
+            thinking_budget: number | null;
+            /** Judge Model */
+            judge_model?: string | null;
+            /**
+             * Judges Per Criterion
+             * @default 1
+             */
+            judges_per_criterion: number;
+            /**
+             * Real Agents
+             * @default false
+             */
+            real_agents: boolean;
+            /**
+             * Max Concurrent
+             * @default 3
+             */
+            max_concurrent: number;
         };
         /**
          * CreateRunRequest
@@ -328,6 +532,20 @@ export interface components {
             type: "question_asked";
             /** Question */
             question: string;
+        };
+        /**
+         * RetrievedCase
+         * @description One retriever hit, normalised to a runnable testcase fixture.
+         */
+        RetrievedCase: {
+            /** Case Id */
+            case_id: string;
+            /** Fixture */
+            fixture: string;
+            /** Description */
+            description: string;
+            /** Distance */
+            distance?: number | null;
         };
         /** RunCompleted */
         RunCompleted: {
@@ -736,6 +954,122 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RunDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    retrieve_api_retrieve_get: {
+        parameters: {
+            query: {
+                query: string;
+                k?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetrievedCase"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_batches_api_batches_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchSummary"][];
+                };
+            };
+        };
+    };
+    create_batch_api_batches_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    batch_detail_api_batches__batch_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                batch_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchDetail"];
                 };
             };
             /** @description Validation Error */

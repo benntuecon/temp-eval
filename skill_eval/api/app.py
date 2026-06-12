@@ -12,15 +12,21 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
+from skill_eval.api.batch_manager import BatchManager
 from skill_eval.api.run_manager import RunManager
 from skill_eval.api.schemas import (
+    BatchCreated,
+    BatchDetail,
+    BatchSummary,
+    CreateBatchRequest,
     CreateRunRequest,
     FixtureInfo,
     HealthInfo,
+    RetrievedCase,
     RunDetail,
     RunSummary,
     SkillInput,
@@ -100,8 +106,11 @@ def create_app(runs_dir: str | None = None) -> FastAPI:
         allow_headers=["*"],
     )
 
-    manager = RunManager(runs_dir or _default_runs_dir())
+    effective_runs_dir = runs_dir or _default_runs_dir()
+    manager = RunManager(effective_runs_dir)
     app.state.manager = manager
+    batches = BatchManager(manager, effective_runs_dir)
+    app.state.batches = batches
 
     @app.get("/api/health", response_model=HealthInfo)
     def health() -> HealthInfo:
@@ -139,6 +148,53 @@ def create_app(runs_dir: str | None = None) -> FastAPI:
         if summary is None:
             raise HTTPException(status_code=404, detail="unknown run")
         return RunDetail(summary=summary, report=manager.report(run_id))
+
+    # -- batch eval: retrieve K cases for a query, run them all ------------
+
+    @app.get("/api/retrieve", response_model=list[RetrievedCase])
+    async def retrieve(
+        query: str,
+        # same bounds as CreateBatchRequest.top_k: out-of-range k must fail the
+        # same way on both endpoints, not clamp on one and 422 on the other
+        k: int = Query(default=10, ge=1, le=50),
+    ) -> list[RetrievedCase]:
+        if not query.strip():
+            raise HTTPException(status_code=422, detail="query must not be blank")
+        import asyncio
+
+        from skill_eval.retriever import retrieve_cases
+
+        hits = await asyncio.to_thread(retrieve_cases, query, k)
+        return [
+            RetrievedCase(
+                case_id=h["case_id"],
+                fixture=f"testcase:{h['case_id']}",
+                description=h["description"],
+                distance=h["distance"],
+            )
+            for h in hits
+        ]
+
+    @app.post("/api/batches", response_model=BatchCreated, status_code=201)
+    async def create_batch(req: CreateBatchRequest) -> BatchCreated:
+        # async on purpose: BatchManager.start() spawns its task on THIS loop
+        # (retrieval itself runs in a worker thread inside start()).
+        try:
+            batch_id = await batches.start(req)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return BatchCreated(batch_id=batch_id)
+
+    @app.get("/api/batches", response_model=list[BatchSummary])
+    def list_batches() -> list[BatchSummary]:
+        return batches.list_batches()
+
+    @app.get("/api/batches/{batch_id}", response_model=BatchDetail)
+    def batch_detail(batch_id: str) -> BatchDetail:
+        detail = batches.detail(batch_id)
+        if detail is None:
+            raise HTTPException(status_code=404, detail="unknown batch")
+        return detail
 
     @app.get("/api/runs/{run_id}/events")
     async def run_events(run_id: str) -> StreamingResponse:

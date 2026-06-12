@@ -10,6 +10,12 @@ export type ComparisonReport = components["schemas"]["ComparisonReport"];
 export type ArmReport = components["schemas"]["ArmReport"];
 export type JudgeScore = components["schemas"]["JudgeScore"];
 export type SkillInput = components["schemas"]["SkillInput"];
+export type RetrievedCase = components["schemas"]["RetrievedCase"];
+export type CreateBatchRequest = components["schemas"]["CreateBatchRequest"];
+export type BatchSummary = components["schemas"]["BatchSummary"];
+export type BatchDetail = components["schemas"]["BatchDetail"];
+export type BatchCaseState = components["schemas"]["BatchCaseState"];
+export type BatchStats = components["schemas"]["BatchStats"];
 
 // The SSE payload union, lifted from the documentation-only endpoint.
 export type RunEvent =
@@ -37,6 +43,19 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req),
     }).then((r) => json<RunSummary>(r)),
+  retrieve: (query: string, k: number) =>
+    fetch(`${BASE}/api/retrieve?query=${encodeURIComponent(query)}&k=${k}`).then((r) =>
+      json<RetrievedCase[]>(r),
+    ),
+  createBatch: (req: CreateBatchRequest) =>
+    fetch(`${BASE}/api/batches`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    }).then((r) => json<{ batch_id: string }>(r)),
+  batches: () => fetch(`${BASE}/api/batches`).then((r) => json<BatchSummary[]>(r)),
+  batchDetail: (batchId: string) =>
+    fetch(`${BASE}/api/batches/${batchId}`).then((r) => json<BatchDetail>(r)),
 };
 
 /** Subscribe to a run's live event stream. Returns an unsubscribe fn. */

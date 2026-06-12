@@ -42,9 +42,16 @@ addopts = "-m 'not live and not e2e'"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+# testcases/ holds eval fixtures whose "before" trees contain DELIBERATE
+# anti-patterns (bare except, prints) — the linter must not police them.
+extend-exclude = ["testcases"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# scripts insert the repo root onto sys.path before importing skill_eval
+"scripts/*" = ["E402"]
 
 [tool.mypy]
 python_version = "3.11"

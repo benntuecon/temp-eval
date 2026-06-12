@@ -25,14 +25,13 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import chromadb
 
 from skill_eval.contracts import RunConfig
-
 
 DEFAULT_DB_DIR = ".vectordb/chroma"
 DEFAULT_COLLECTION = "skill_eval_cases"
@@ -77,7 +76,7 @@ class EvalCase:
         )
 
 
-def _client(db_dir: str = DEFAULT_DB_DIR) -> chromadb.PersistentClient:
+def _client(db_dir: str = DEFAULT_DB_DIR):
     Path(db_dir).mkdir(parents=True, exist_ok=True)
     return chromadb.PersistentClient(path=db_dir)
 
@@ -242,11 +241,14 @@ def query_cases(
         include=["documents", "metadatas", "distances"],
     )
 
-    metadatas = result.get("metadatas", [[]])[0]
-    distances = result.get("distances", [[]])[0]
+    # ``or [[]]`` guards a key present with value None (chroma version drift);
+    # strict zip makes a parallel-array length mismatch loud instead of
+    # silently pairing cases with the wrong distances.
+    metadatas = (result.get("metadatas") or [[]])[0]
+    distances = (result.get("distances") or [[]])[0]
 
     matches: list[tuple[EvalCase, float | None]] = []
-    for metadata, distance in zip(metadatas, distances, strict=False):
+    for metadata, distance in zip(metadatas, distances, strict=True):
         matches.append((_case_from_metadata(metadata), distance))
 
     return matches
