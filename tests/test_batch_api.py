@@ -123,6 +123,33 @@ async def test_batch_detail_unknown_id(client):
 
 
 @pytest.mark.anyio
+async def test_batch_with_explicit_case_ids(client):
+    """A pruned preview runs exactly the selected cases, no re-retrieval."""
+    r = await client.post(
+        "/api/batches",
+        json=_batch_request(case_ids=["03-etl-pipeline", "01-payment-api"]),
+    )
+    assert r.status_code == 201
+    batch_id = r.json()["batch_id"]
+    detail = None
+    for _ in range(120):
+        await asyncio.sleep(0.25)
+        detail = (await client.get(f"/api/batches/{batch_id}")).json()
+        if detail["summary"]["status"] != "running":
+            break
+    assert detail is not None and detail["summary"]["status"] == "completed"
+    # exactly the selected cases, in the selected order
+    assert [c["case_id"] for c in detail["cases"]] == ["03-etl-pipeline", "01-payment-api"]
+
+
+@pytest.mark.anyio
+async def test_batch_rejects_unknown_case_ids(client):
+    r = await client.post("/api/batches", json=_batch_request(case_ids=["nope-case"]))
+    assert r.status_code == 422
+    assert "unknown test case" in r.json()["detail"]
+
+
+@pytest.mark.anyio
 async def test_retrieve_rejects_out_of_range_k(client):
     """k bounds must match CreateBatchRequest.top_k: 422, not silent clamping."""
     r = await client.get("/api/retrieve", params={"query": "logging", "k": 99})

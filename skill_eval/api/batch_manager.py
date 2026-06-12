@@ -32,6 +32,30 @@ from skill_eval.retriever import retrieve_cases
 from skill_eval.testcase_fixture import BASELINE_SKILL, CHALLENGER_SKILL
 
 
+def _load_explicit_cases(case_ids: list[str]) -> list[dict]:
+    """Resolve user-selected case ids to retrieval-shaped hits (dedup, ordered)."""
+    from skill_eval.testcase_fixture import list_testcase_ids, load_case
+
+    known = set(list_testcase_ids())
+    unknown = [c for c in case_ids if c not in known]
+    if unknown:
+        raise ValueError(f"unknown test case id(s): {', '.join(sorted(set(unknown)))}")
+    seen: set[str] = set()
+    hits: list[dict] = []
+    for cid in case_ids:
+        if cid in seen:
+            continue
+        seen.add(cid)
+        hits.append(
+            {
+                "case_id": cid,
+                "description": str(load_case(cid).get("description", "")),
+                "distance": None,
+            }
+        )
+    return hits
+
+
 def _default_skill(path: Path) -> SkillInput:
     name = path.name
     try:
@@ -72,9 +96,13 @@ class BatchManager:
     # -- lifecycle ----------------------------------------------------------
 
     async def start(self, req: CreateBatchRequest) -> str:
-        # Retrieval embeds the query (chromadb + ONNX model) — keep that work
-        # off the event loop or every SSE stream stalls while it runs.
-        hits = await asyncio.to_thread(retrieve_cases, req.query, req.top_k)
+        if req.case_ids:
+            # The user pruned the retrieval preview: run exactly these cases.
+            hits = await asyncio.to_thread(_load_explicit_cases, req.case_ids)
+        else:
+            # Retrieval embeds the query (chromadb + ONNX model) — keep that
+            # work off the event loop or every SSE stream stalls while it runs.
+            hits = await asyncio.to_thread(retrieve_cases, req.query, req.top_k)
         if not hits:
             raise ValueError("retriever found no test cases (is testcases/ present?)")
 

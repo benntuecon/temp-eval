@@ -95,6 +95,10 @@ class CreateBatchRequest(BaseModel):
 
     query: str = Field(min_length=1)
     top_k: int = Field(default=10, ge=1, le=50)
+    # Explicit case selection: when set (e.g. after the user pruned the
+    # retrieval preview), the batch runs exactly these cases in this order
+    # instead of re-retrieving for the query.
+    case_ids: list[str] | None = Field(default=None, max_length=50)
     # Optional overrides; when omitted the server uses the logging skill pair.
     baseline: SkillInput | None = None
     challenger: SkillInput | None = None

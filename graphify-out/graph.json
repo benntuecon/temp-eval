@@ -657,7 +657,7 @@
       "label": "$defs",
       "file_type": "code",
       "source_file": "frontend/src/api/schema.d.ts",
-      "source_location": "L828",
+      "source_location": "L830",
       "_origin": "ast",
       "id": "api_schema_d_defs",
       "community": 51,
@@ -667,7 +667,7 @@
       "label": "operations",
       "file_type": "code",
       "source_file": "frontend/src/api/schema.d.ts",
-      "source_location": "L829",
+      "source_location": "L831",
       "_origin": "ast",
       "id": "api_schema_d_operations",
       "community": 51,
@@ -1864,10 +1864,20 @@
       "norm_label": "batch_manager.py"
     },
     {
-      "label": "_default_skill()",
+      "label": "_load_explicit_cases()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
       "source_location": "L35",
+      "_origin": "ast",
+      "id": "api_batch_manager_load_explicit_cases",
+      "community": 19,
+      "norm_label": "_load_explicit_cases()"
+    },
+    {
+      "label": "_default_skill()",
+      "file_type": "code",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "api_batch_manager_default_skill",
       "community": 19,
@@ -1877,7 +1887,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L35",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "skill_eval_api_batch_manager_py_path",
       "community": 19,
@@ -1887,7 +1897,7 @@
       "label": "SkillInput",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L35",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "skill_eval_api_batch_manager_py_skillinput",
       "community": 19,
@@ -1897,7 +1907,7 @@
       "label": "_Case",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L44",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "api_batch_manager_case",
       "community": 19,
@@ -1907,7 +1917,7 @@
       "label": "BatchState",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L54",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "api_batch_manager_batchstate",
       "community": 19,
@@ -1917,7 +1927,7 @@
       "label": "BatchManager",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L64",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager",
       "community": 19,
@@ -1927,7 +1937,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L67",
+      "source_location": "L91",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_init",
       "community": 19,
@@ -1937,7 +1947,7 @@
       "label": "RunManager",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L67",
+      "source_location": "L91",
       "_origin": "ast",
       "id": "runmanager",
       "community": 19,
@@ -1947,7 +1957,7 @@
       "label": ".start()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L74",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_start",
       "community": 19,
@@ -1957,7 +1967,7 @@
       "label": "CreateBatchRequest",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L74",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "createbatchrequest",
       "community": 19,
@@ -1967,7 +1977,7 @@
       "label": "._execute()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L102",
+      "source_location": "L130",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_execute",
       "community": 19,
@@ -1977,7 +1987,7 @@
       "label": ".summary()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L149",
+      "source_location": "L177",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_summary",
       "community": 19,
@@ -1987,7 +1997,7 @@
       "label": "BatchSummary",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L149",
+      "source_location": "L177",
       "_origin": "ast",
       "id": "batchsummary",
       "community": 19,
@@ -1997,7 +2007,7 @@
       "label": ".list_batches()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L155",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_list_batches",
       "community": 19,
@@ -2007,7 +2017,7 @@
       "label": ".detail()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L167",
+      "source_location": "L195",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_detail",
       "community": 19,
@@ -2017,7 +2027,7 @@
       "label": "BatchDetail",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L167",
+      "source_location": "L195",
       "_origin": "ast",
       "id": "batchdetail",
       "community": 19,
@@ -2027,7 +2037,7 @@
       "label": "._summary_of()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L194",
+      "source_location": "L222",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_summary_of",
       "community": 19,
@@ -2037,7 +2047,7 @@
       "label": "._fill_case_results()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L209",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_fill_case_results",
       "community": 19,
@@ -2047,7 +2057,7 @@
       "label": "BatchCaseState",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L209",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "batchcasestate",
       "community": 19,
@@ -2057,7 +2067,7 @@
       "label": "ComparisonReport",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L209",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "skill_eval_api_batch_manager_py_comparisonreport",
       "community": 19,
@@ -2067,7 +2077,7 @@
       "label": "._persist()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L219",
+      "source_location": "L247",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_persist",
       "community": 19,
@@ -2077,7 +2087,7 @@
       "label": "._load_archived()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L231",
+      "source_location": "L259",
       "_origin": "ast",
       "id": "api_batch_manager_batchmanager_load_archived",
       "community": 19,
@@ -2087,7 +2097,7 @@
       "label": "_compute_stats()",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L247",
+      "source_location": "L275",
       "_origin": "ast",
       "id": "api_batch_manager_compute_stats",
       "community": 19,
@@ -2097,7 +2107,7 @@
       "label": "BatchStats",
       "file_type": "code",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L247",
+      "source_location": "L275",
       "_origin": "ast",
       "id": "batchstats",
       "community": 19,
@@ -2114,12 +2124,22 @@
       "norm_label": "batch eval execution: retrieve k cases for a query, run each as a child run.  a"
     },
     {
+      "label": "Resolve user-selected case ids to retrieval-shaped hits (dedup, ordered).",
+      "file_type": "rationale",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "api_batch_manager_rationale_36",
+      "community": 19,
+      "norm_label": "resolve user-selected case ids to retrieval-shaped hits (dedup, ordered)."
+    },
+    {
       "label": "Owns live batches; child runs live in the wrapped RunManager.",
       "file_type": "rationale",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L65",
+      "source_location": "L89",
       "_origin": "ast",
-      "id": "api_batch_manager_rationale_65",
+      "id": "api_batch_manager_rationale_89",
       "community": 19,
       "norm_label": "owns live batches; child runs live in the wrapped runmanager."
     },
@@ -2597,7 +2617,7 @@
       "label": "._query_not_blank()",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L113",
+      "source_location": "L117",
       "_origin": "ast",
       "id": "api_schemas_createbatchrequest_query_not_blank",
       "community": 19,
@@ -2607,7 +2627,7 @@
       "label": "BatchCaseState",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L119",
+      "source_location": "L123",
       "_origin": "ast",
       "id": "api_schemas_batchcasestate",
       "community": 19,
@@ -2617,7 +2637,7 @@
       "label": "BatchSummary",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L135",
+      "source_location": "L139",
       "_origin": "ast",
       "id": "api_schemas_batchsummary",
       "community": 19,
@@ -2627,7 +2647,7 @@
       "label": "BatchStats",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L148",
+      "source_location": "L152",
       "_origin": "ast",
       "id": "api_schemas_batchstats",
       "community": 19,
@@ -2637,7 +2657,7 @@
       "label": "BatchCreated",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L159",
+      "source_location": "L163",
       "_origin": "ast",
       "id": "api_schemas_batchcreated",
       "community": 19,
@@ -2647,7 +2667,7 @@
       "label": "BatchDetail",
       "file_type": "code",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L163",
+      "source_location": "L167",
       "_origin": "ast",
       "id": "api_schemas_batchdetail",
       "community": 19,
@@ -2737,9 +2757,9 @@
       "label": "Live status of one retrieved case inside a batch.",
       "file_type": "rationale",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L120",
+      "source_location": "L124",
       "_origin": "ast",
-      "id": "api_schemas_rationale_120",
+      "id": "api_schemas_rationale_124",
       "community": 19,
       "norm_label": "live status of one retrieved case inside a batch."
     },
@@ -2747,9 +2767,9 @@
       "label": "Lightweight batch listing entry.",
       "file_type": "rationale",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L136",
+      "source_location": "L140",
       "_origin": "ast",
-      "id": "api_schemas_rationale_136",
+      "id": "api_schemas_rationale_140",
       "community": 19,
       "norm_label": "lightweight batch listing entry."
     },
@@ -2757,9 +2777,9 @@
       "label": "Aggregates over the batch's completed child reports.",
       "file_type": "rationale",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L149",
+      "source_location": "L153",
       "_origin": "ast",
-      "id": "api_schemas_rationale_149",
+      "id": "api_schemas_rationale_153",
       "community": 19,
       "norm_label": "aggregates over the batch's completed child reports."
     },
@@ -2767,9 +2787,9 @@
       "label": "Full batch state: summary, per-case statuses, and aggregate stats.",
       "file_type": "rationale",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "_origin": "ast",
-      "id": "api_schemas_rationale_164",
+      "id": "api_schemas_rationale_168",
       "community": 19,
       "norm_label": "full batch state: summary, per-case statuses, and aggregate stats."
     },
@@ -2880,7 +2900,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_contracts",
-      "community": 91,
+      "community": 46,
       "norm_label": "contracts.py"
     },
     {
@@ -2930,7 +2950,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "skill_eval_contracts_runconfig",
-      "community": 83,
+      "community": 44,
       "norm_label": "runconfig"
     },
     {
@@ -2980,7 +3000,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "skill_eval_contracts_judgescore",
-      "community": 79,
+      "community": 32,
       "norm_label": "judgescore"
     },
     {
@@ -3010,7 +3030,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "skill_eval_contracts_prepare_workspaces",
-      "community": 83,
+      "community": 44,
       "norm_label": "prepare_workspaces()"
     },
     {
@@ -3040,7 +3060,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "skill_eval_contracts_make_simulator",
-      "community": 91,
+      "community": 46,
       "norm_label": "make_simulator()"
     },
     {
@@ -3050,7 +3070,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_judge",
-      "community": 79,
+      "community": 32,
       "norm_label": "run_judge()"
     },
     {
@@ -3060,7 +3080,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_eval",
-      "community": 91,
+      "community": 20,
       "norm_label": "run_eval()"
     },
     {
@@ -3070,7 +3090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_1",
-      "community": 91,
+      "community": 46,
       "norm_label": "shared data contracts for the skill-eval harness.  this is the single integratio"
     },
     {
@@ -3110,7 +3130,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_48",
-      "community": 83,
+      "community": 44,
       "norm_label": "the eval's input: commits, task, skills, and the test budget."
     },
     {
@@ -3160,7 +3180,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_143",
-      "community": 79,
+      "community": 32,
       "norm_label": "a single judge's 0-20 score plus rationale."
     },
     {
@@ -3190,7 +3210,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_191",
-      "community": 83,
+      "community": 44,
       "norm_label": "component 1: create git worktrees and compute the gold diff."
     },
     {
@@ -3210,7 +3230,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_207",
-      "community": 91,
+      "community": 46,
       "norm_label": "component 3: build the askfn the simulator uses to answer questions."
     },
     {
@@ -3220,7 +3240,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_212",
-      "community": 79,
+      "community": 32,
       "norm_label": "component 5: score one criterion for one taker (0-20)."
     },
     {
@@ -3230,7 +3250,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_217",
-      "community": 91,
+      "community": 20,
       "norm_label": "component 6: orchestrate the whole eval and return the comparison."
     },
     {
@@ -3670,7 +3690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_git_ops",
-      "community": 16,
+      "community": 46,
       "norm_label": "git_ops.py"
     },
     {
@@ -3830,7 +3850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_git_ops_rationale_1",
-      "community": 16,
+      "community": 46,
       "norm_label": "git_ops \u2014 the sole git shell-out point for skill-eval.  all functions accept a *"
     },
     {
@@ -3990,7 +4010,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "skill_eval_judge_py_judgeinput",
-      "community": 4,
+      "community": 32,
       "norm_label": "judgeinput"
     },
     {
@@ -4020,7 +4040,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_judge_py_judgescore",
-      "community": 79,
+      "community": 32,
       "norm_label": "judgescore"
     },
     {
@@ -4280,7 +4300,7 @@
       "source_location": "L453",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_run_eval",
-      "community": 46,
+      "community": 32,
       "norm_label": "run_eval()"
     },
     {
@@ -4320,7 +4340,7 @@
       "source_location": "L461",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_rationale_461",
-      "community": 46,
+      "community": 32,
       "norm_label": "synchronous wrapper around :func:`arun_eval` (cli / tests / scripts)."
     },
     {
@@ -4380,7 +4400,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_gap_rows",
-      "community": 79,
+      "community": 29,
       "norm_label": "criterion_gap_rows()"
     },
     {
@@ -4390,7 +4410,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_winners",
-      "community": 79,
+      "community": 29,
       "norm_label": "criterion_winners()"
     },
     {
@@ -4410,7 +4430,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "skill_eval_reporting_report_to_json",
-      "community": 85,
+      "community": 29,
       "norm_label": "report_to_json()"
     },
     {
@@ -4430,7 +4450,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "skill_eval_reporting_report_from_json",
-      "community": 85,
+      "community": 29,
       "norm_label": "report_from_json()"
     },
     {
@@ -4440,7 +4460,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "skill_eval_reporting_save_report",
-      "community": 85,
+      "community": 29,
       "norm_label": "save_report()"
     },
     {
@@ -4450,7 +4470,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "skill_eval_reporting_list_saved_runs",
-      "community": 85,
+      "community": 29,
       "norm_label": "list_saved_runs()"
     },
     {
@@ -4460,7 +4480,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "skill_eval_reporting_load_report",
-      "community": 85,
+      "community": 29,
       "norm_label": "load_report()"
     },
     {
@@ -4530,7 +4550,7 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "skill_eval_reporting_agent_graph_dot",
-      "community": 92,
+      "community": 29,
       "norm_label": "agent_graph_dot()"
     },
     {
@@ -4540,7 +4560,7 @@
       "source_location": "L673",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_score_distribution",
-      "community": 90,
+      "community": 29,
       "norm_label": "batch_score_distribution()"
     },
     {
@@ -4590,7 +4610,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_84",
-      "community": 79,
+      "community": 29,
       "norm_label": "return one row per criterion with baseline, challenger, and the gap.      ``gap"
     },
     {
@@ -4600,7 +4620,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_108",
-      "community": 79,
+      "community": 29,
       "norm_label": "return one row per criterion with the per-criterion winner and margin.      each"
     },
     {
@@ -4620,7 +4640,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_156",
-      "community": 85,
+      "community": 29,
       "norm_label": "serialise a comparisonreport to pretty-printed json (pydantic)."
     },
     {
@@ -4640,7 +4660,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_168",
-      "community": 85,
+      "community": 29,
       "norm_label": "reconstruct a comparisonreport (real models/enums) from json.      pydantic hand"
     },
     {
@@ -4650,7 +4670,7 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_184",
-      "community": 85,
+      "community": 29,
       "norm_label": "persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path."
     },
     {
@@ -4660,7 +4680,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_205",
-      "community": 85,
+      "community": 29,
       "norm_label": "return saved run files, newest first: ``{\"name\", \"path\"}`` per run."
     },
     {
@@ -4670,7 +4690,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_216",
-      "community": 85,
+      "community": 29,
       "norm_label": "load one saved run back into a comparisonreport."
     },
     {
@@ -4740,7 +4760,7 @@
       "source_location": "L405",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_405",
-      "community": 92,
+      "community": 29,
       "norm_label": "return a graphviz dot digraph of the whole eval architecture, live.      flow: t"
     },
     {
@@ -4750,7 +4770,7 @@
       "source_location": "L674",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_674",
-      "community": 90,
+      "community": 29,
       "norm_label": "return long-form rows for per-criterion, per-arm score distributions.      each"
     },
     {
@@ -4980,7 +5000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_sandbox",
-      "community": 84,
+      "community": 46,
       "norm_label": "sandbox.py"
     },
     {
@@ -4990,7 +5010,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_prepare_workspaces",
-      "community": 84,
+      "community": 46,
       "norm_label": "prepare_workspaces()"
     },
     {
@@ -5000,7 +5020,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_py_runconfig",
-      "community": 83,
+      "community": 44,
       "norm_label": "runconfig"
     },
     {
@@ -5010,7 +5030,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "arm",
-      "community": 84,
+      "community": 46,
       "norm_label": "arm"
     },
     {
@@ -5020,7 +5040,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_py_workspace",
-      "community": 84,
+      "community": 46,
       "norm_label": "workspace"
     },
     {
@@ -5030,7 +5050,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "skill_eval_sandbox_cleanup_workspaces",
-      "community": 84,
+      "community": 46,
       "norm_label": "cleanup_workspaces()"
     },
     {
@@ -5040,7 +5060,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_simulated",
-      "community": 44,
+      "community": 84,
       "norm_label": "simulated.py"
     },
     {
@@ -5050,7 +5070,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "skill_eval_simulated_stable_hash_int",
-      "community": 44,
+      "community": 84,
       "norm_label": "_stable_hash_int()"
     },
     {
@@ -5070,7 +5090,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_askfn",
-      "community": 44,
+      "community": 84,
       "norm_label": "askfn"
     },
     {
@@ -5080,7 +5100,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_run_taker",
-      "community": 44,
+      "community": 84,
       "norm_label": "sim_run_taker()"
     },
     {
@@ -5120,7 +5140,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_run_judge",
-      "community": 44,
+      "community": 84,
       "norm_label": "sim_run_judge()"
     },
     {
@@ -5150,7 +5170,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_1",
-      "community": 44,
+      "community": 84,
       "norm_label": "deterministic simulated components for phase a walking skeleton.  these make no"
     },
     {
@@ -5160,7 +5180,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_33",
-      "community": 44,
+      "community": 84,
       "norm_label": "return a stable integer hash of *text* using sha256 (not python's hash())."
     },
     {
@@ -5180,7 +5200,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_84",
-      "community": 44,
+      "community": 84,
       "norm_label": "simulate a taker: ask clarifying questions, write a marker, return result."
     },
     {
@@ -5190,7 +5210,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_198",
-      "community": 44,
+      "community": 84,
       "norm_label": "return a deterministic 0-20 score for one criterion using sha256-based hash."
     },
     {
@@ -5270,7 +5290,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_taker",
-      "community": 86,
+      "community": 44,
       "norm_label": "taker.py"
     },
     {
@@ -5330,7 +5350,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "skill_eval_taker_compute_diff",
-      "community": 86,
+      "community": 31,
       "norm_label": "_compute_diff()"
     },
     {
@@ -5340,7 +5360,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_run_taker",
-      "community": 53,
+      "community": 44,
       "norm_label": "run_taker()"
     },
     {
@@ -5390,7 +5410,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_1",
-      "community": 86,
+      "community": 44,
       "norm_label": "c2: real taker backed by the claude agent sdk (claude-haiku-4-5).  the taker is"
     },
     {
@@ -5420,7 +5440,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_74",
-      "community": 86,
+      "community": 31,
       "norm_label": "stage all changes and return the diff against the starting commit.      diffs ag"
     },
     {
@@ -5430,7 +5450,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_101",
-      "community": 53,
+      "community": 44,
       "norm_label": "run a claude agent sdk session under budget and return the result.      paramete"
     },
     {
@@ -8114,10 +8134,30 @@
       "norm_label": "test_batch_detail_unknown_id()"
     },
     {
-      "label": "test_retrieve_rejects_out_of_range_k()",
+      "label": "test_batch_with_explicit_case_ids()",
       "file_type": "code",
       "source_file": "tests/test_batch_api.py",
       "source_location": "L126",
+      "_origin": "ast",
+      "id": "tests_test_batch_api_test_batch_with_explicit_case_ids",
+      "community": 33,
+      "norm_label": "test_batch_with_explicit_case_ids()"
+    },
+    {
+      "label": "test_batch_rejects_unknown_case_ids()",
+      "file_type": "code",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "tests_test_batch_api_test_batch_rejects_unknown_case_ids",
+      "community": 33,
+      "norm_label": "test_batch_rejects_unknown_case_ids()"
+    },
+    {
+      "label": "test_retrieve_rejects_out_of_range_k()",
+      "file_type": "code",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "tests_test_batch_api_test_retrieve_rejects_out_of_range_k",
       "community": 33,
@@ -8127,7 +8167,7 @@
       "label": "test_batch_forwards_config_to_children()",
       "file_type": "code",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L135",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "tests_test_batch_api_test_batch_forwards_config_to_children",
       "community": 33,
@@ -8137,7 +8177,7 @@
       "label": "test_batch_archive_survives_restart()",
       "file_type": "code",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L189",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "tests_test_batch_api_test_batch_archive_survives_restart",
       "community": 33,
@@ -8147,7 +8187,7 @@
       "label": "test_batch_child_failure_propagates()",
       "file_type": "code",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L219",
+      "source_location": "L246",
       "_origin": "ast",
       "id": "tests_test_batch_api_test_batch_child_failure_propagates",
       "community": 33,
@@ -8157,7 +8197,7 @@
       "label": "test_batch_respects_max_concurrent()",
       "file_type": "code",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L256",
+      "source_location": "L283",
       "_origin": "ast",
       "id": "tests_test_batch_api_test_batch_respects_max_concurrent",
       "community": 33,
@@ -8184,12 +8224,22 @@
       "norm_label": "full batch: retrieve 2 cases, run simulated evals, aggregate stats."
     },
     {
-      "label": "k bounds must match CreateBatchRequest.top_k: 422, not silent clamping.",
+      "label": "A pruned preview runs exactly the selected cases, no re-retrieval.",
       "file_type": "rationale",
       "source_file": "tests/test_batch_api.py",
       "source_location": "L127",
       "_origin": "ast",
       "id": "tests_test_batch_api_rationale_127",
+      "community": 33,
+      "norm_label": "a pruned preview runs exactly the selected cases, no re-retrieval."
+    },
+    {
+      "label": "k bounds must match CreateBatchRequest.top_k: 422, not silent clamping.",
+      "file_type": "rationale",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L154",
+      "_origin": "ast",
+      "id": "tests_test_batch_api_rationale_154",
       "community": 33,
       "norm_label": "k bounds must match createbatchrequest.top_k: 422, not silent clamping."
     },
@@ -8197,9 +8247,9 @@
       "label": "real_agents/budgets/judge config must reach every child CreateRunRequest.",
       "file_type": "rationale",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L136",
+      "source_location": "L163",
       "_origin": "ast",
-      "id": "tests_test_batch_api_rationale_136",
+      "id": "tests_test_batch_api_rationale_163",
       "community": 33,
       "norm_label": "real_agents/budgets/judge config must reach every child createrunrequest."
     },
@@ -8207,9 +8257,9 @@
       "label": "A completed batch must load from disk in a fresh process (new managers).",
       "file_type": "rationale",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L190",
+      "source_location": "L217",
       "_origin": "ast",
-      "id": "tests_test_batch_api_rationale_190",
+      "id": "tests_test_batch_api_rationale_217",
       "community": 33,
       "norm_label": "a completed batch must load from disk in a fresh process (new managers)."
     },
@@ -8217,9 +8267,9 @@
       "label": "One broken case -> failed=1, batch still completes, stats from the rest.",
       "file_type": "rationale",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L220",
+      "source_location": "L247",
       "_origin": "ast",
-      "id": "tests_test_batch_api_rationale_220",
+      "id": "tests_test_batch_api_rationale_247",
       "community": 33,
       "norm_label": "one broken case -> failed=1, batch still completes, stats from the rest."
     },
@@ -8227,9 +8277,9 @@
       "label": "With max_concurrent=1 a child may only start after all prior ones ended.",
       "file_type": "rationale",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L257",
+      "source_location": "L284",
       "_origin": "ast",
-      "id": "tests_test_batch_api_rationale_257",
+      "id": "tests_test_batch_api_rationale_284",
       "community": 33,
       "norm_label": "with max_concurrent=1 a child may only start after all prior ones ended."
     },
@@ -9020,7 +9070,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_reducer_counts",
-      "community": 84,
+      "community": 46,
       "norm_label": "test_reducer_counts()"
     },
     {
@@ -9070,7 +9120,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_121",
-      "community": 84,
+      "community": 46,
       "norm_label": "send-based fan-out must produce exactly 2 taker_results and 12 score entries."
     },
     {
@@ -9090,7 +9140,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_reporting_make_report",
-      "community": 79,
+      "community": 29,
       "norm_label": "_make_report()"
     },
     {
@@ -9100,7 +9150,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "tests_test_reporting_report",
-      "community": 79,
+      "community": 29,
       "norm_label": "_report()"
     },
     {
@@ -9110,7 +9160,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_reporting_test_report_to_json_round_trips",
-      "community": 85,
+      "community": 29,
       "norm_label": "test_report_to_json_round_trips()"
     },
     {
@@ -9120,7 +9170,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_reporting_test_reports_to_json_is_array",
-      "community": 79,
+      "community": 29,
       "norm_label": "test_reports_to_json_is_array()"
     },
     {
@@ -9130,7 +9180,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
-      "community": 85,
+      "community": 29,
       "norm_label": "test_report_json_round_trip_reconstructs_dataclasses()"
     },
     {
@@ -9140,7 +9190,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "tests_test_reporting_test_save_list_load_runs",
-      "community": 85,
+      "community": 29,
       "norm_label": "test_save_list_load_runs()"
     },
     {
@@ -9150,7 +9200,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_test_reporting_test_list_saved_runs_missing_dir_is_empty",
-      "community": 85,
+      "community": 29,
       "norm_label": "test_list_saved_runs_missing_dir_is_empty()"
     },
     {
@@ -9190,7 +9240,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_shape_and_gap",
-      "community": 79,
+      "community": 29,
       "norm_label": "test_criterion_gap_rows_shape_and_gap()"
     },
     {
@@ -9200,7 +9250,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_sorted_by_gap_desc",
-      "community": 79,
+      "community": 32,
       "norm_label": "test_criterion_gap_rows_sorted_by_gap_desc()"
     },
     {
@@ -9210,7 +9260,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_winners",
-      "community": 79,
+      "community": 29,
       "norm_label": "test_criterion_winners()"
     },
     {
@@ -9300,7 +9350,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "tests_test_reporting_test_agent_graph_dot",
-      "community": 92,
+      "community": 29,
       "norm_label": "test_agent_graph_dot()"
     },
     {
@@ -9310,7 +9360,7 @@
       "source_location": "L369",
       "_origin": "ast",
       "id": "tests_test_reporting_test_agent_graph_dot_meta_tooltips",
-      "community": 92,
+      "community": 29,
       "norm_label": "test_agent_graph_dot_meta_tooltips()"
     },
     {
@@ -9320,7 +9370,7 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_row_count",
-      "community": 90,
+      "community": 29,
       "norm_label": "test_batch_score_distribution_row_count()"
     },
     {
@@ -9330,7 +9380,7 @@
       "source_location": "L401",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_schema",
-      "community": 90,
+      "community": 29,
       "norm_label": "test_batch_score_distribution_schema()"
     },
     {
@@ -9340,7 +9390,7 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_empty",
-      "community": 90,
+      "community": 29,
       "norm_label": "test_batch_score_distribution_empty()"
     },
     {
@@ -9350,7 +9400,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_37",
-      "community": 79,
+      "community": 29,
       "norm_label": "build a fake comparisonreport with deterministic scores."
     },
     {
@@ -9360,7 +9410,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_307",
-      "community": 92,
+      "community": 29,
       "norm_label": "build a sample state and verify the returned dot string."
     },
     {
@@ -9370,7 +9420,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_370",
-      "community": 92,
+      "community": 29,
       "norm_label": "meta enriches hover tooltips: skill names, rationales, verdict."
     },
     {
@@ -9380,7 +9430,7 @@
       "source_location": "L395",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_395",
-      "community": 90,
+      "community": 29,
       "norm_label": "len(reports) * 12 rows (2 arms \u00d7 6 criteria per report)."
     },
     {
@@ -9390,7 +9440,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_402",
-      "community": 90,
+      "community": 29,
       "norm_label": "every row has criterion, arm, and score keys."
     },
     {
@@ -9530,7 +9580,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sandbox",
-      "community": 84,
+      "community": 46,
       "norm_label": "test_sandbox.py"
     },
     {
@@ -9540,7 +9590,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_sandbox_test_prepare_workspaces",
-      "community": 84,
+      "community": 46,
       "norm_label": "test_prepare_workspaces()"
     },
     {
@@ -9550,7 +9600,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_simulated",
-      "community": 84,
+      "community": 46,
       "norm_label": "test_simulated.py"
     },
     {
@@ -9570,7 +9620,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_simulated_test_sim_taker_asks_and_returns",
-      "community": 84,
+      "community": 46,
       "norm_label": "test_sim_taker_asks_and_returns()"
     },
     {
@@ -9580,7 +9630,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_simulated_test_sim_judge_scores_in_range",
-      "community": 44,
+      "community": 84,
       "norm_label": "test_sim_judge_scores_in_range()"
     },
     {
@@ -9670,7 +9720,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_taker_fakeresult_init",
-      "community": 93,
+      "community": 31,
       "norm_label": ".__init__()"
     },
     {
@@ -9680,7 +9730,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_taker_py_any",
-      "community": 93,
+      "community": 44,
       "norm_label": "any"
     },
     {
@@ -9820,7 +9870,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "tests_test_taker_init_git_repo",
-      "community": 86,
+      "community": 31,
       "norm_label": "_init_git_repo()"
     },
     {
@@ -9830,7 +9880,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_new_file",
-      "community": 86,
+      "community": 31,
       "norm_label": "test_compute_diff_captures_new_file()"
     },
     {
@@ -9840,7 +9890,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_modification",
-      "community": 86,
+      "community": 31,
       "norm_label": "test_compute_diff_captures_modification()"
     },
     {
@@ -9850,7 +9900,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_empty_for_no_changes",
-      "community": 86,
+      "community": 31,
       "norm_label": "test_compute_diff_empty_for_no_changes()"
     },
     {
@@ -9860,7 +9910,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_non_git_dir",
-      "community": 86,
+      "community": 31,
       "norm_label": "test_compute_diff_non_git_dir()"
     },
     {
@@ -9870,7 +9920,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_committed_changes",
-      "community": 86,
+      "community": 31,
       "norm_label": "test_compute_diff_captures_committed_changes()"
     },
     {
@@ -9880,7 +9930,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_test_taker_make_workspace",
-      "community": 53,
+      "community": 44,
       "norm_label": "_make_workspace()"
     },
     {
@@ -9900,7 +9950,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "tests_test_taker_make_cfg",
-      "community": 53,
+      "community": 44,
       "norm_label": "_make_cfg()"
     },
     {
@@ -9910,7 +9960,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "tests_test_taker_py_runconfig",
-      "community": 53,
+      "community": 44,
       "norm_label": "runconfig"
     },
     {
@@ -9920,7 +9970,7 @@
       "source_location": "L246",
       "_origin": "ast",
       "id": "tests_test_taker_make_thinking_block",
-      "community": 93,
+      "community": 31,
       "norm_label": "_make_thinking_block()"
     },
     {
@@ -9930,7 +9980,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "tests_test_taker_fake_query_gen",
-      "community": 93,
+      "community": 31,
       "norm_label": "_fake_query_gen()"
     },
     {
@@ -9940,7 +9990,7 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_mocked",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_mocked()"
     },
     {
@@ -9950,7 +10000,7 @@
       "source_location": "L319",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_streams_thinking_events",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_streams_thinking_events()"
     },
     {
@@ -9960,7 +10010,7 @@
       "source_location": "L340",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_with_skill_md",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_with_skill_md()"
     },
     {
@@ -9970,7 +10020,7 @@
       "source_location": "L376",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_missing_skill_md",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_missing_skill_md()"
     },
     {
@@ -9980,7 +10030,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_thinking_budget_sets_option",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_thinking_budget_sets_option()"
     },
     {
@@ -9990,7 +10040,7 @@
       "source_location": "L444",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_no_thinking_without_budget",
-      "community": 53,
+      "community": 44,
       "norm_label": "test_run_taker_no_thinking_without_budget()"
     },
     {
@@ -10090,7 +10140,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_149",
-      "community": 86,
+      "community": 31,
       "norm_label": "create a minimal git repo with an initial commit."
     },
     {
@@ -10100,7 +10150,7 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_187",
-      "community": 86,
+      "community": 31,
       "norm_label": "non-git directory should return empty string without raising."
     },
     {
@@ -10110,7 +10160,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_193",
-      "community": 86,
+      "community": 31,
       "norm_label": "a skill that runs `git commit` must still have its work captured.      diffing v"
     },
     {
@@ -10120,7 +10170,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_220",
-      "community": 53,
+      "community": 44,
       "norm_label": "create a temp git repo and return a workspace pointing at it."
     },
     {
@@ -10130,7 +10180,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_247",
-      "community": 93,
+      "community": 31,
       "norm_label": "return a magicmock that looks like a thinkingblock to type(block).__name__."
     },
     {
@@ -10140,7 +10190,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_255",
-      "community": 93,
+      "community": 31,
       "norm_label": "async generator that yields a fake assistantmessage with a thinkingblock,     th"
     },
     {
@@ -10150,7 +10200,7 @@
       "source_location": "L279",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_279",
-      "community": 53,
+      "community": 44,
       "norm_label": "run_taker returns a populated takerresult with patched query."
     },
     {
@@ -10160,7 +10210,7 @@
       "source_location": "L320",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_320",
-      "community": 53,
+      "community": 44,
       "norm_label": "thinkingblocks from the sdk stream must be forwarded to on_event live \u2014     the"
     },
     {
@@ -10170,7 +10220,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_341",
-      "community": 53,
+      "community": 44,
       "norm_label": "skill.md is injected into the system_prompt (approach b)."
     },
     {
@@ -10180,7 +10230,7 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_377",
-      "community": 53,
+      "community": 44,
       "norm_label": "missing skill.md should not raise \u2014 system_prompt uses empty skill."
     },
     {
@@ -10190,7 +10240,7 @@
       "source_location": "L404",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_404",
-      "community": 53,
+      "community": 44,
       "norm_label": "when thinking_budget is set in cfg, the options include a thinking dict."
     },
     {
@@ -10200,7 +10250,7 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_445",
-      "community": 53,
+      "community": 44,
       "norm_label": "when thinking_budget is none, options should not include thinking."
     },
     {
@@ -12609,9 +12659,9 @@
       "source_file": "frontend/src/App.tsx",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_skillpruneanimation",
-      "confidence_score": 1.0
+      "target": "src_app_skillpruneanimation"
     },
     {
       "relation": "contains",
@@ -12619,9 +12669,9 @@
       "source_file": "frontend/src/App.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_team_members",
-      "confidence_score": 1.0
+      "target": "src_app_team_members"
     },
     {
       "relation": "imports_from",
@@ -12854,9 +12904,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "api_client",
-      "confidence_score": 1.0
+      "target": "api_client"
     },
     {
       "relation": "imports_from",
@@ -12909,9 +12959,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "api_client_fixtureinfo",
-      "confidence_score": 1.0
+      "target": "api_client_fixtureinfo"
     },
     {
       "relation": "imports",
@@ -12986,9 +13036,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "api_client_retrievedcase",
-      "confidence_score": 1.0
+      "target": "api_client_retrievedcase"
     },
     {
       "relation": "imports",
@@ -13008,9 +13058,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "api_client_createbatchrequest",
-      "confidence_score": 1.0
+      "target": "api_client_createbatchrequest"
     },
     {
       "relation": "imports",
@@ -13019,9 +13069,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "api_client_createbatchrequest",
-      "confidence_score": 1.0
+      "target": "api_client_createbatchrequest"
     },
     {
       "relation": "imports",
@@ -13030,9 +13080,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "api_client_batchdetail",
-      "confidence_score": 1.0
+      "target": "api_client_batchdetail"
     },
     {
       "relation": "imports",
@@ -13063,9 +13113,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "api_client_batchstats",
-      "confidence_score": 1.0
+      "target": "api_client_batchstats"
     },
     {
       "relation": "imports",
@@ -13096,9 +13146,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "api_client_api",
-      "confidence_score": 1.0
+      "target": "api_client_api"
     },
     {
       "relation": "imports",
@@ -13463,9 +13513,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_behaviorinsight",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_behaviorinsight"
     },
     {
       "relation": "contains",
@@ -13483,9 +13533,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_decisionaction",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_decisionaction"
     },
     {
       "relation": "contains",
@@ -13493,9 +13543,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_inferdecision",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_inferdecision"
     },
     {
       "relation": "contains",
@@ -13513,9 +13563,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L197",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_mockedassumptionsandmisses",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedassumptionsandmisses"
     },
     {
       "relation": "contains",
@@ -13523,9 +13573,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L164",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_mockedbehaviorinsights",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedbehaviorinsights"
     },
     {
       "relation": "contains",
@@ -13533,9 +13583,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_mockedrequirementunlocks",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedrequirementunlocks"
     },
     {
       "relation": "contains",
@@ -13543,9 +13593,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_mocktaskkind",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mocktaskkind"
     },
     {
       "relation": "contains",
@@ -13553,9 +13603,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_requirementunlock",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_requirementunlock"
     },
     {
       "relation": "contains",
@@ -13573,9 +13623,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel",
-      "target": "components_resultsfunnel_scorefor",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_scorefor"
     },
     {
       "relation": "imports_from",
@@ -13650,9 +13700,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L168",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_mockedbehaviorinsights",
-      "target": "components_resultsfunnel_scorefor",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_scorefor"
     },
     {
       "relation": "calls",
@@ -13661,9 +13711,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_mockedrequirementunlocks",
-      "target": "components_resultsfunnel_scorefor",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_scorefor"
     },
     {
       "relation": "calls",
@@ -13672,9 +13722,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L284",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_resultsfunnel",
-      "target": "components_resultsfunnel_inferdecision",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_inferdecision"
     },
     {
       "relation": "calls",
@@ -13683,9 +13733,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L199",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_mockedassumptionsandmisses",
-      "target": "components_resultsfunnel_mocktaskkind",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mocktaskkind"
     },
     {
       "relation": "calls",
@@ -13694,9 +13744,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_mockedrequirementunlocks",
-      "target": "components_resultsfunnel_mocktaskkind",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mocktaskkind"
     },
     {
       "relation": "calls",
@@ -13705,9 +13755,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L285",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_resultsfunnel",
-      "target": "components_resultsfunnel_mockedrequirementunlocks",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedrequirementunlocks"
     },
     {
       "relation": "calls",
@@ -13716,9 +13766,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L286",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_resultsfunnel",
-      "target": "components_resultsfunnel_mockedbehaviorinsights",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedbehaviorinsights"
     },
     {
       "relation": "calls",
@@ -13727,9 +13777,9 @@
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L287",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_resultsfunnel_resultsfunnel",
-      "target": "components_resultsfunnel_mockedassumptionsandmisses",
-      "confidence_score": 1.0
+      "target": "components_resultsfunnel_mockedassumptionsandmisses"
     },
     {
       "relation": "calls",
@@ -13814,9 +13864,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "components_runform_runform",
-      "confidence_score": 1.0
+      "target": "components_runform_runform"
     },
     {
       "relation": "imports_from",
@@ -13825,9 +13875,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "components_ui",
-      "confidence_score": 1.0
+      "target": "components_ui"
     },
     {
       "relation": "imports",
@@ -13836,9 +13886,9 @@
       "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_runform",
-      "target": "components_ui_field",
-      "confidence_score": 1.0
+      "target": "components_ui_field"
     },
     {
       "relation": "imports_from",
@@ -13847,9 +13897,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_runform",
-      "confidence_score": 1.0
+      "target": "components_runform"
     },
     {
       "relation": "imports",
@@ -13858,9 +13908,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_runform_runform",
-      "confidence_score": 1.0
+      "target": "components_runform_runform"
     },
     {
       "relation": "contains",
@@ -13940,9 +13990,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_charts",
-      "confidence_score": 1.0
+      "target": "components_charts"
     },
     {
       "relation": "imports",
@@ -13951,9 +14001,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_charts_arm_colors",
-      "confidence_score": 1.0
+      "target": "components_charts_arm_colors"
     },
     {
       "relation": "imports",
@@ -14228,9 +14278,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L201",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_barpair",
-      "confidence_score": 1.0
+      "target": "pages_runpage_barpair"
     },
     {
       "relation": "contains",
@@ -14238,9 +14288,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_batchmilestones",
-      "confidence_score": 1.0
+      "target": "pages_runpage_batchmilestones"
     },
     {
       "relation": "contains",
@@ -14248,9 +14298,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L234",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_batchstatsboard",
-      "confidence_score": 1.0
+      "target": "pages_runpage_batchstatsboard"
     },
     {
       "relation": "contains",
@@ -14258,9 +14308,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L429",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_futureroadmapscreen",
-      "confidence_score": 1.0
+      "target": "pages_runpage_futureroadmapscreen"
     },
     {
       "relation": "contains",
@@ -14268,9 +14318,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_milestonecard",
-      "confidence_score": 1.0
+      "target": "pages_runpage_milestonecard"
     },
     {
       "relation": "contains",
@@ -14278,9 +14328,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L71",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_milestonecards",
-      "confidence_score": 1.0
+      "target": "pages_runpage_milestonecards"
     },
     {
       "relation": "contains",
@@ -14288,9 +14338,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L132",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_nodethinkingcodeblock",
-      "confidence_score": 1.0
+      "target": "pages_runpage_nodethinkingcodeblock"
     },
     {
       "relation": "contains",
@@ -14298,9 +14348,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L412",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_onboardingroadmap",
-      "confidence_score": 1.0
+      "target": "pages_runpage_onboardingroadmap"
     },
     {
       "relation": "contains",
@@ -14363,9 +14413,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L72",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage_milestonecards",
-      "target": "pages_runpage_batchmilestones",
-      "confidence_score": 1.0
+      "target": "pages_runpage_batchmilestones"
     },
     {
       "relation": "imports_from",
@@ -16055,6 +16105,16 @@
       "target": "api_batch_manager_default_skill"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "api_batch_manager",
+      "target": "api_batch_manager_load_explicit_cases",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -16253,6 +16313,28 @@
       "target": "skill_eval_testcase_fixture"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "api_batch_manager",
+      "target": "skill_eval_testcase_fixture_list_testcase_ids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "api_batch_manager",
+      "target": "skill_eval_testcase_fixture_load_case",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/batch_manager.py",
@@ -16261,6 +16343,38 @@
       "confidence_score": 1.0,
       "source": "api_batch_manager_rationale_1",
       "target": "api_batch_manager"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "api_batch_manager_load_explicit_cases",
+      "target": "skill_eval_testcase_fixture_list_testcase_ids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "api_batch_manager_load_explicit_cases",
+      "target": "skill_eval_testcase_fixture_load_case",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skill_eval/api/batch_manager.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "api_batch_manager_rationale_36",
+      "target": "api_batch_manager_load_explicit_cases",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -16976,11 +17090,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/batch_manager.py",
-      "source_location": "L65",
+      "source_location": "L89",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_batch_manager_rationale_65",
-      "target": "api_batch_manager_batchmanager"
+      "source": "api_batch_manager_rationale_89",
+      "target": "api_batch_manager_batchmanager",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -21138,11 +21252,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L120",
+      "source_location": "L124",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_schemas_rationale_120",
-      "target": "api_schemas_batchcasestate"
+      "source": "api_schemas_rationale_124",
+      "target": "api_schemas_batchcasestate",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -21158,11 +21272,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L136",
+      "source_location": "L140",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_schemas_rationale_136",
-      "target": "api_schemas_batchsummary"
+      "source": "api_schemas_rationale_140",
+      "target": "api_schemas_batchsummary",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -21178,11 +21292,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L149",
+      "source_location": "L153",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_schemas_rationale_149",
-      "target": "api_schemas_batchstats"
+      "source": "api_schemas_rationale_153",
+      "target": "api_schemas_batchstats",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -21208,11 +21322,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skill_eval/api/schemas.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_schemas_rationale_164",
-      "target": "api_schemas_batchdetail"
+      "source": "api_schemas_rationale_168",
+      "target": "api_schemas_batchdetail",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -35189,11 +35303,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "tests_test_batch_api",
+      "target": "tests_test_batch_api_test_batch_rejects_unknown_case_ids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
       "source_location": "L254",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_batch_api",
       "target": "tests_test_batch_api_test_batch_respects_max_concurrent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "tests_test_batch_api",
+      "target": "tests_test_batch_api_test_batch_with_explicit_case_ids",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -35283,11 +35417,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "tests_test_batch_api_test_batch_rejects_unknown_case_ids",
+      "target": "tests_test_batch_api_batch_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
       "source_location": "L271",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_batch_api_test_batch_respects_max_concurrent",
       "target": "tests_test_batch_api_batch_request"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "tests_test_batch_api_test_batch_with_explicit_case_ids",
+      "target": "tests_test_batch_api_batch_request",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -35316,6 +35472,16 @@
       "source_file": "tests/test_batch_api.py",
       "source_location": "L127",
       "weight": 1.0,
+      "source": "tests_test_batch_api_rationale_127",
+      "target": "tests_test_batch_api_test_batch_with_explicit_case_ids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L127",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_batch_api_rationale_127",
       "target": "tests_test_batch_api_test_retrieve_rejects_out_of_range_k"
@@ -35324,41 +35490,51 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L136",
+      "source_location": "L154",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_batch_api_rationale_136",
-      "target": "tests_test_batch_api_test_batch_forwards_config_to_children"
+      "source": "tests_test_batch_api_rationale_154",
+      "target": "tests_test_batch_api_test_retrieve_rejects_out_of_range_k",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L190",
+      "source_location": "L163",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_batch_api_rationale_190",
-      "target": "tests_test_batch_api_test_batch_archive_survives_restart"
+      "source": "tests_test_batch_api_rationale_163",
+      "target": "tests_test_batch_api_test_batch_forwards_config_to_children",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L220",
+      "source_location": "L217",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_batch_api_rationale_220",
-      "target": "tests_test_batch_api_test_batch_child_failure_propagates"
+      "source": "tests_test_batch_api_rationale_217",
+      "target": "tests_test_batch_api_test_batch_archive_survives_restart",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_batch_api.py",
-      "source_location": "L257",
+      "source_location": "L247",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_batch_api_rationale_257",
-      "target": "tests_test_batch_api_test_batch_respects_max_concurrent"
+      "source": "tests_test_batch_api_rationale_247",
+      "target": "tests_test_batch_api_test_batch_child_failure_propagates",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_batch_api.py",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "tests_test_batch_api_rationale_284",
+      "target": "tests_test_batch_api_test_batch_respects_max_concurrent",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -39727,5 +39903,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "63c61cf20fbf2dd97b35ea12e2eccb79503fec4b"
+  "built_at_commit": "0deb83921ad9b92aea549ec2990c22b21bf7be38"
 }

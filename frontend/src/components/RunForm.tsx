@@ -57,10 +57,17 @@ export function RunForm({
     }
   }
 
+  function removeCase(caseId: string) {
+    setPreview((p) => (p ? p.filter((c) => c.case_id !== caseId) : p));
+  }
+
   function submit() {
     onSubmit({
       query,
       top_k: topK,
+      // After a preview the user may have dropped cases: run exactly the
+      // surviving list instead of letting the server re-retrieve.
+      case_ids: preview ? preview.map((c) => c.case_id) : undefined,
       baseline: baseMd.trim()
         ? { name: baseName.trim() || "baseline", markdown: baseMd }
         : undefined,
@@ -86,7 +93,10 @@ export function RunForm({
           className={`${inputClass} h-16 font-mono text-xs`}
           placeholder='e.g. "logging improvement for the payment api, banking team"'
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPreview(null); // a new query invalidates the pruned selection
+          }}
           data-testid="batch-query"
         />
       </Field>
@@ -148,19 +158,37 @@ export function RunForm({
       </div>
 
       {preview ? (
-        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2" data-scroll-free>
-          {preview.map((c, i) => (
-            <div
-              key={c.case_id}
-              className={`sticky-note p-2 text-xs font-semibold ${i % 2 === 0 ? "rotate-[-0.4deg] bg-sketch-yellow" : "rotate-[0.4deg] bg-sketch-blue"}`}
-            >
-              <span className="font-hand font-bold">case {i + 1} · {c.case_id}</span>
-              {c.distance != null && (
-                <span className="ml-1 text-sketch-muted">d={Number(c.distance).toFixed(3)}</span>
-              )}
-              <p className="mt-1 line-clamp-2">{c.description}</p>
-            </div>
-          ))}
+        <div className="mt-3">
+          <p className="font-hand text-xs font-bold text-sketch-muted">
+            {preview.length === 0
+              ? "All cases dropped — preview again or loosen the query."
+              : `Running ${preview.length} case${preview.length === 1 ? "" : "s"} — drop any you don't want.`}
+          </p>
+          <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2" data-scroll-free>
+            {preview.map((c, i) => (
+              <div
+                key={c.case_id}
+                className={`sticky-note relative p-2 pr-8 text-xs font-semibold ${i % 2 === 0 ? "rotate-[-0.4deg] bg-sketch-yellow" : "rotate-[0.4deg] bg-sketch-blue"}`}
+                data-testid={`preview-case-${c.case_id}`}
+              >
+                <button
+                  type="button"
+                  aria-label={`Drop ${c.case_id} from this batch`}
+                  title="Drop this case from the batch"
+                  className="remove-skill-button absolute right-1.5 top-1.5"
+                  onClick={() => removeCase(c.case_id)}
+                  data-testid={`drop-case-${c.case_id}`}
+                >
+                  ×
+                </button>
+                <span className="font-hand font-bold">case {i + 1} · {c.case_id}</span>
+                {c.distance != null && (
+                  <span className="ml-1 text-sketch-muted">d={Number(c.distance).toFixed(3)}</span>
+                )}
+                <p className="mt-1 line-clamp-2">{c.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       ) : null}
 
@@ -205,11 +233,15 @@ export function RunForm({
         <button
           type="button"
           className="run-eval-button font-hand min-w-[280px] border-2 border-sketch-ink bg-sketch-yellow px-10 py-4 text-xl font-bold text-sketch-ink disabled:opacity-40"
-          disabled={!query.trim() || running}
+          disabled={!query.trim() || running || (preview !== null && preview.length === 0)}
           onClick={submit}
           data-testid="run-button"
         >
-          {running ? "Running…" : "Run eval"}
+          {running
+            ? "Running…"
+            : preview
+              ? `Run eval (${preview.length} case${preview.length === 1 ? "" : "s"})`
+              : "Run eval"}
         </button>
       </div>
     </div>

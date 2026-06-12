@@ -349,6 +349,8 @@ export interface components {
              * @default 10
              */
             top_k: number;
+            /** Case Ids */
+            case_ids?: string[] | null;
             baseline?: components["schemas"]["SkillInput"] | null;
             challenger?: components["schemas"]["SkillInput"] | null;
             /**
