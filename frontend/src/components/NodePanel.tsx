@@ -3,7 +3,7 @@
 // underlying agent is thinking right now" feature.
 import { useEffect, useRef } from "react";
 import type { RunLiveState } from "../state/eventStore";
-import { Badge, Card } from "./ui";
+import { Badge, Card, cn } from "./ui";
 
 const KIND_TONE: Record<string, "slate" | "green" | "red" | "amber" | "blue"> = {
   thinking: "amber",
@@ -39,7 +39,15 @@ function describe(nodeId: string): string {
   return "";
 }
 
-export function NodePanel({ state, nodeId }: { state: RunLiveState; nodeId: string | null }) {
+export function NodePanel({
+  state,
+  nodeId,
+  className,
+}: {
+  state: RunLiveState;
+  nodeId: string | null;
+  className?: string;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const buffer = nodeId ? (state.buffers[nodeId] ?? []) : [];
 
@@ -49,35 +57,31 @@ export function NodePanel({ state, nodeId }: { state: RunLiveState; nodeId: stri
   }, [buffer.length, nodeId]);
 
   if (!nodeId) {
-    return (
-      <Card className="flex h-[560px] items-center justify-center p-4 text-sm text-slate-400">
-        Hover or click a node to see what it's thinking.
-      </Card>
-    );
+    return null;
   }
 
   const status = state.nodeStatus[nodeId] ?? "pending";
   return (
-    <Card className="flex h-[560px] flex-col p-4" data-testid="node-panel">
+    <Card className={cn("flex h-[560px] flex-col p-4", className)} data-testid="node-panel">
       <div className="mb-2 flex items-center gap-2">
-        <h3 className="font-mono text-sm font-semibold text-slate-800">{nodeId}</h3>
+        <h3 className="font-hand text-sm font-bold text-sketch-ink">{nodeId}</h3>
         <Badge tone={status === "done" ? "green" : status === "running" ? "amber" : status === "failed" ? "red" : "slate"}>
           {status}
         </Badge>
       </div>
-      <p className="mb-3 text-xs leading-relaxed text-slate-500">{describe(nodeId)}</p>
+      <p className="mb-3 text-xs font-semibold leading-relaxed text-sketch-muted">{describe(nodeId)}</p>
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {buffer.length === 0 ? (
-          <p className="text-xs text-slate-400">
+          <p className="font-hand text-xs font-bold text-sketch-muted">
             {status === "pending" ? "Nothing yet — waiting for the run to reach this node." : "No streamed entries for this node."}
           </p>
         ) : (
           buffer.map((entry, i) => (
-            <div key={i} className="rounded-md bg-slate-50 p-2">
+            <div key={i} className="sticky-note bg-sketch-paper p-2">
               <Badge tone={KIND_TONE[entry.kind] ?? "slate"} className="mb-1">
                 {entry.kind}
               </Badge>
-              <pre className="whitespace-pre-wrap break-words font-sans text-xs leading-relaxed text-slate-700">
+              <pre className="whitespace-pre-wrap break-words font-sans text-xs font-semibold leading-relaxed text-sketch-ink">
                 {entry.text}
               </pre>
             </div>

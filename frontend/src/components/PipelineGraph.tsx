@@ -11,15 +11,15 @@ import {
   type NodeProps,
   type NodeTypes,
 } from "@xyflow/react";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ARMS, CRITERIA, type NodeStatus, type RunLiveState } from "../state/eventStore";
-import { cn } from "./ui";
+import { Badge, cn } from "./ui";
 
 const STATUS_BG: Record<NodeStatus, string> = {
-  pending: "bg-slate-200 border-slate-300 text-slate-700",
-  running: "bg-amber-300 border-amber-500 text-amber-950 node-running",
-  done: "bg-green-300 border-green-600 text-green-950",
-  failed: "bg-red-300 border-red-600 text-red-950",
+  pending: "bg-sketch-paper border-sketch-muted text-sketch-muted",
+  running: "bg-sketch-yellow border-sketch-ink text-sketch-ink node-running",
+  done: "bg-sketch-green border-sketch-ink text-sketch-ink",
+  failed: "bg-sketch-pink border-sketch-ink text-sketch-ink",
 };
 
 type PipelineNodeData = {
@@ -34,14 +34,14 @@ function PipelineNode({ data }: NodeProps<Node<PipelineNodeData>>) {
     <div
       title={data.hint}
       className={cn(
-        "rounded-lg border px-3 py-1.5 text-center text-xs font-medium shadow-sm",
+        "font-hand rounded-[14px_10px_15px_11px] border-2 px-3 py-1.5 text-center text-xs font-bold shadow-[4px_4px_0_rgba(48,42,37,0.15)] transition-transform hover:rotate-1",
         STATUS_BG[data.status],
       )}
     >
-      <Handle type="target" position={Position.Left} className="!bg-slate-400" />
+      <Handle type="target" position={Position.Left} className="!bg-sketch-ink" />
       <div>{data.label}</div>
       {data.sub ? <div className="text-[10px] opacity-75">{data.sub}</div> : null}
-      <Handle type="source" position={Position.Right} className="!bg-slate-400" />
+      <Handle type="source" position={Position.Right} className="!bg-sketch-ink" />
     </div>
   );
 }
@@ -58,6 +58,9 @@ function judgeY(armIdx: number, ci: number): number {
 
 export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>[]; edges: Edge[] } {
   const s = state.nodeStatus;
+  const isMovingTo = (target: string) => s[target] === "running";
+  const isMovingFrom = (source: string, target: string) =>
+    s[source] === "done" && (s[target] === "pending" || s[target] === "running");
   const nodes: Node<PipelineNodeData>[] = [
     {
       id: "skill:baseline",
@@ -110,11 +113,11 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
   ];
 
   const edges: Edge[] = [
-    { id: "e-sb", source: "skill:baseline", target: "test_generator" },
-    { id: "e-sc", source: "skill:challenger", target: "test_generator" },
-    { id: "e-gc", source: "test_generator", target: "test_cases" },
-    { id: "e-cs", source: "test_cases", target: "sandbox" },
-    { id: "e-ar", source: "assemble", target: "report" },
+    { id: "e-sb", source: "skill:baseline", target: "test_generator", animated: isMovingTo("test_generator") },
+    { id: "e-sc", source: "skill:challenger", target: "test_generator", animated: isMovingTo("test_generator") },
+    { id: "e-gc", source: "test_generator", target: "test_cases", animated: isMovingFrom("test_generator", "test_cases") },
+    { id: "e-cs", source: "test_cases", target: "sandbox", animated: isMovingTo("sandbox") },
+    { id: "e-ar", source: "assemble", target: "report", animated: isMovingFrom("assemble", "report") || isMovingTo("report") },
   ];
 
   ARMS.forEach((arm, ai) => {
@@ -130,12 +133,12 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
         hint: "Coding agent under this arm's skill — click for its live thinking",
       },
     });
-    edges.push({ id: `e-s-${arm}`, source: "sandbox", target: takerId });
+    edges.push({ id: `e-s-${arm}`, source: "sandbox", target: takerId, animated: isMovingTo(takerId) });
     edges.push({
       id: `e-sim-${arm}`,
       source: takerId,
       target: "simulator",
-      animated: s["simulator"] === "running",
+      animated: s["simulator"] === "running" || s[takerId] === "running",
       style: { strokeDasharray: "4 3", opacity: 0.5 },
     });
 
@@ -153,8 +156,14 @@ export function buildGraph(state: RunLiveState): { nodes: Node<PipelineNodeData>
           hint: "Click for the judge's rationale",
         },
       });
-      edges.push({ id: `e-t-${arm}-${c}`, source: takerId, target: judgeId });
-      edges.push({ id: `e-j-${arm}-${c}`, source: judgeId, target: "assemble", style: { opacity: 0.35 } });
+      edges.push({ id: `e-t-${arm}-${c}`, source: takerId, target: judgeId, animated: isMovingTo(judgeId) });
+      edges.push({
+        id: `e-j-${arm}-${c}`,
+        source: judgeId,
+        target: "assemble",
+        animated: isMovingFrom(judgeId, "assemble") || isMovingTo("assemble"),
+        style: { opacity: 0.35 },
+      });
     });
   });
 
@@ -169,8 +178,29 @@ export function PipelineGraph({
   onSelectNode: (nodeId: string) => void;
 }) {
   const { nodes, edges } = useMemo(() => buildGraph(state), [state]);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [hover, setHover] = useState<{
+    id: string;
+    x: number;
+    y: number;
+    data: PipelineNodeData;
+  } | null>(null);
+
+  const moveHover = (clientX: number, clientY: number, node: Node<PipelineNodeData>) => {
+    const rect = shellRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setHover({
+      id: node.id,
+      x: Math.min(Math.max(clientX - rect.left + 18, 12), rect.width - 300),
+      y: Math.min(Math.max(clientY - rect.top + 18, 12), rect.height - 170),
+      data: node.data,
+    });
+  };
+
+  const latest = hover ? state.buffers[hover.id]?.at(-1) : null;
+
   return (
-    <div className="h-[560px] w-full rounded-xl border border-slate-200 bg-white">
+    <div ref={shellRef} className="sketch-card h-[620px] w-full overflow-hidden bg-sketch-paper">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -180,10 +210,36 @@ export function PipelineGraph({
         nodesDraggable={false}
         nodesConnectable={false}
         onNodeClick={(_, node) => onSelectNode(node.id)}
-        onNodeMouseEnter={(_, node) => onSelectNode(node.id)}
+        onNodeMouseEnter={(event, node) => {
+          onSelectNode(node.id);
+          moveHover(event.clientX, event.clientY, node);
+        }}
+        onNodeMouseMove={(event, node) => moveHover(event.clientX, event.clientY, node)}
+        onNodeMouseLeave={() => setHover(null)}
       >
-        <Background gap={24} />
+        <Background gap={24} color="#d8cfbf" />
       </ReactFlow>
+      {hover ? (
+        <div
+          className="progress-popover pointer-events-none absolute z-20 w-[280px] bg-sketch-paper p-3"
+          style={{ left: hover.x, top: hover.y }}
+        >
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <h3 className="font-hand text-sm font-bold text-sketch-ink">{hover.data.label}</h3>
+            <Badge tone={hover.data.status === "done" ? "green" : hover.data.status === "running" ? "amber" : hover.data.status === "failed" ? "red" : "slate"}>
+              {hover.data.status}
+            </Badge>
+          </div>
+          {hover.data.sub ? <div className="font-hand text-xs font-bold text-sketch-muted">{hover.data.sub}</div> : null}
+          <p className="mt-2 text-xs font-semibold leading-5 text-sketch-ink">{hover.data.hint}</p>
+          <div className="mt-2 border-t-2 border-dashed border-sketch-ink/30 pt-2">
+            <div className="font-hand text-[11px] font-bold text-sketch-muted">latest evidence</div>
+            <p className="mt-1 text-xs font-semibold leading-5 text-sketch-ink">
+              {latest?.text ?? "Waiting for this node to produce evidence."}
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { api, type CreateRunRequest, type FixtureInfo } from "../api/client";
+import { DEMO_FIXTURES } from "../mockRun";
 import { Button, Card, Field, inputClass } from "./ui";
 
 export function RunForm({
@@ -24,17 +25,18 @@ export function RunForm({
   const [judgeModel, setJudgeModel] = useState("claude-haiku-4-5");
   const [judgesK, setJudgesK] = useState(1);
   const [realAgents, setRealAgents] = useState(false);
+  const fixtureOptions = fixtures.data?.length ? fixtures.data : DEMO_FIXTURES;
 
   // Prefill from the selected fixture once fixtures arrive.
   useEffect(() => {
-    const fx = fixtures.data?.find((f: FixtureInfo) => f.id === fixtureId);
+    const fx = fixtureOptions.find((f: FixtureInfo) => f.id === fixtureId);
     if (!fx) return;
     setBrief(fx.brief);
     setBaseName(fx.default_baseline.name);
     setBaseMd(fx.default_baseline.markdown);
     setChalName(fx.default_challenger.name);
     setChalMd(fx.default_challenger.markdown);
-  }, [fixtures.data, fixtureId]);
+  }, [fixtureOptions, fixtureId]);
 
   const valid = brief.trim() && baseMd.trim() && chalMd.trim();
 
@@ -48,7 +50,7 @@ export function RunForm({
             onChange={(e) => setFixtureId(e.target.value)}
             data-testid="fixture-select"
           >
-            {(fixtures.data ?? []).map((f: FixtureInfo) => (
+            {fixtureOptions.map((f: FixtureInfo) => (
               <option key={f.id} value={f.id}>
                 {f.label}
               </option>
@@ -127,7 +129,7 @@ export function RunForm({
               onChange={(e) => setJudgesK(Number(e.target.value))}
             />
           </Field>
-          <label className="flex items-end gap-2 pb-2 text-sm text-slate-700">
+          <label className="flex items-end gap-2 pb-2 text-sm font-semibold text-sketch-ink">
             <input
               type="checkbox"
               checked={realAgents}
@@ -140,6 +142,8 @@ export function RunForm({
       </div>
 
       <div className="mt-4">
+        {/* SCREEN 2 ends at this button in the demo sequence. Keep the setup
+            controls above it and do not move downstream replay/results here. */}
         <Button
           disabled={!valid || running}
           data-testid="run-button"
