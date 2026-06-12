@@ -74,6 +74,39 @@ export function dumbbellSpec(rows: GapRow[]): TopLevelSpec {
   };
 }
 
+export interface BatchQualityCostRow {
+  case: string;
+  arm: string;
+  score: number;
+  tokens: number;
+}
+
+/** Batch quality vs cost: one dot per (case, arm) — 2×K dots for K cases. */
+export function batchQualityCostSpec(rows: BatchQualityCostRow[]): TopLevelSpec {
+  return {
+    width: "container",
+    height: 280,
+    data: { values: rows },
+    mark: { type: "circle", size: 260, opacity: 0.85 },
+    encoding: {
+      x: { field: "tokens", type: "quantitative", title: "Cost — total tokens" },
+      y: {
+        field: "score",
+        type: "quantitative",
+        title: "Quality — total score",
+        scale: { domain: [0, 120] },
+      },
+      color: { field: "arm", type: "nominal", scale: armScale, title: "Arm" },
+      tooltip: [
+        { field: "case", type: "nominal" },
+        { field: "arm", type: "nominal" },
+        { field: "score", type: "quantitative" },
+        { field: "tokens", type: "quantitative" },
+      ],
+    },
+  };
+}
+
 /** Quality vs cost: total score against total tokens, one dot per arm. */
 export function qualityCostSpec(report: ComparisonReport): TopLevelSpec {
   const rows = report.arms.map((a) => ({
