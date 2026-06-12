@@ -1,0 +1,6 @@
+{
+  "description": "Logging improvement for the Python notification dispatcher owned by the growth and communications team. The email/SMS campaign sender (notifier.py) prints full recipient email addresses and phone numbers (PII) to stdout, emits multiple print lines per retry attempt flooding the output for bulk sends, and reports permanent delivery failures the same way as routine attempts. Refactor its logging to production standard: module-level logger, masked email addresses and no phone numbers in logs, retry attempts at DEBUG with exc_info, a single WARNING when delivery is abandoned after all retries, and one INFO summary per campaign with sent/failed counts plus campaign_id correlation. Do not change retry or delivery behavior.",
+  "before": "testcases/07-notification-service/repo/before",
+  "after": "testcases/07-notification-service/repo/after",
+  "repo": "testcases/07-notification-service/repo"
+}

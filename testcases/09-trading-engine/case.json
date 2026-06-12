@@ -1,0 +1,6 @@
+{
+  "description": "Logging improvement for the Python order matching engine owned by the fintech trading desk. The matching module (matching_engine.py) calls print() inside the order-matching hot loop for every candidate match and fill, logs invalid orders and failed fill publication at INFO so real failures are indistinguishable from chatter, and emits no order IDs, so fills cannot be reconciled. Refactor its logging to production standard for a low-latency system: no print() in the hot path, per-fill detail at DEBUG with lazy %-style formatting, one INFO summary per processed order with order_id/fills/filled and rested quantities, WARNING for rejected orders, and logger.exception at ERROR when fill publication to settlement fails. Do not change matching semantics.",
+  "before": "testcases/09-trading-engine/repo/before",
+  "after": "testcases/09-trading-engine/repo/after",
+  "repo": "testcases/09-trading-engine/repo"
+}

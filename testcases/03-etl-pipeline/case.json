@@ -1,0 +1,6 @@
+{
+  "description": "Logging improvement for the Python nightly ETL pipeline owned by the data engineering team. The customer-orders batch job (etl_pipeline.py) prints every row at every stage (extract, transform, load), dumps entire record payloads to stdout, and silently swallows per-row transform errors with except/pass so failed rows vanish without a trace. Refactor its logging to production batch standard: module-level logger, one INFO summary per stage with counts (rows in, loaded, failed), DEBUG at most for per-row detail, logger.exception with row index and order_id when a transform fails, and no print() or full-payload dumps. Do not change the transformation logic.",
+  "before": "testcases/03-etl-pipeline/repo/before",
+  "after": "testcases/03-etl-pipeline/repo/after",
+  "repo": "testcases/03-etl-pipeline/repo"
+}

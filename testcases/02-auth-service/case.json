@@ -1,0 +1,6 @@
+{
+  "description": "Logging improvement for the Python authentication and session service owned by the identity & access management team. The login module (auth_service.py) logs plaintext passwords and full session tokens, emits every message at ERROR level through the root logger, calls logging.basicConfig() inside library code, and builds messages with string concatenation. Refactor its logging to production standard: module-level named logger, no configuration in library code, correct level per event (failed login is WARNING, success is INFO, routine validation is DEBUG), lazy %-style formatting, and never log passwords or full tokens — use a short token prefix and username/source IP for correlation. Do not change authentication behavior.",
+  "before": "testcases/02-auth-service/repo/before",
+  "after": "testcases/02-auth-service/repo/after",
+  "repo": "testcases/02-auth-service/repo"
+}

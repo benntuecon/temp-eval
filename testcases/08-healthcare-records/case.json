@@ -1,0 +1,6 @@
+{
+  "description": "Logging improvement for the Python patient records API owned by the healthcare platform team operating under HIPAA compliance. The records module (records_api.py) prints protected health information — patient names, SSNs, and diagnoses — to stdout, dumps raw tracebacks with traceback.print_exc(), and produces no audit trail of who accessed which record. Refactor its logging to compliant production standard: module-level logger, zero PHI in any log message (MRN and requesting user only), audit-style INFO events for record access and diagnosis updates, WARNING for unknown-record lookups, and logger.exception with MRN/user context for failures. Do not change the API's return values.",
+  "before": "testcases/08-healthcare-records/repo/before",
+  "after": "testcases/08-healthcare-records/repo/after",
+  "repo": "testcases/08-healthcare-records/repo"
+}
