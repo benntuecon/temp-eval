@@ -171,7 +171,7 @@ class ComparisonReport(BaseModel):
     arms: list[ArmReport]  # baseline + challenger, per model
     pairwise_verdict: str  # which is better and why
     gold_diff: str = ""  # the reference before..after diff (same for both arms)
-    session_id: str = ""  # Phoenix session id grouping every span of this run
+    session_id: str = ""  # unique id correlating everything this eval run produced
 
 
 # ---------- Orchestrator injection points (Phase A walking skeleton) ----------

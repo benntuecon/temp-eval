@@ -20,7 +20,6 @@ from skill_eval.reporting import (
     criterion_winners,
     list_saved_runs,
     load_report,
-    log_judge_evaluations,
     quality_cost_rows,
     report_from_json,
     report_to_json,
@@ -412,25 +411,3 @@ def test_batch_score_distribution_schema():
 
 def test_batch_score_distribution_empty():
     assert batch_score_distribution([]) == []
-
-
-# ---------------------------------------------------------------------------
-# log_judge_evaluations (best-effort, no Phoenix running)
-# ---------------------------------------------------------------------------
-
-
-def test_log_judge_evaluations_best_effort_no_phoenix():
-    """Should return False (or at minimum not raise) when no Phoenix is running."""
-    records = [
-        ("0000000000000001", "baseline", "correctness", 15, "good"),
-        ("0000000000000002", "challenger", "completeness", 12, "ok"),
-    ]
-    result = log_judge_evaluations(records)
-    # Must not raise; returns bool
-    assert isinstance(result, bool)
-
-
-def test_log_judge_evaluations_empty():
-    """Empty records: no crash, returns False."""
-    result = log_judge_evaluations([])
-    assert result is False

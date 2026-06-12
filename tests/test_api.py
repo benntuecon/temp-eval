@@ -34,7 +34,7 @@ def anyio_backend():
 
 @pytest.fixture()
 def app(tmp_path):
-    return create_app(runs_dir=str(tmp_path / "runs"), init_tracing=False)
+    return create_app(runs_dir=str(tmp_path / "runs"))
 
 
 @pytest.fixture()

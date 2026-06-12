@@ -1,9 +1,7 @@
-"""Reporting helpers and Phoenix initialisation for the skill-eval dashboard.
+"""Reporting helpers for the skill-eval dashboard.
 
 Pure helpers (``scores_table``, ``verdict_line``) are testable without any
-Streamlit or Phoenix runtime.  ``init_phoenix`` is best-effort: it is wrapped
-in a broad try/except so a missing or unavailable Phoenix server never crashes
-the app.
+dashboard runtime.
 """
 
 from __future__ import annotations
@@ -573,7 +571,7 @@ def agent_graph_dot(
                 f"{ts.get('num_questions', '—')}, turns: {ts.get('num_turns', '—')}, "
                 f"{ts.get('wall_seconds', '—')}s"
             )
-        taker_tip += "\nFull thinking trajectory: Phoenix trace (taker span)."
+        taker_tip += "\nFull thinking trajectory: run detail transcript."
 
         lines.append(f"    subgraph cluster_{arm} {{")
         lines.append(f'        label="{arm}"')
@@ -668,52 +666,6 @@ def agent_graph_dot(
 
 
 # ---------------------------------------------------------------------------
-# Phoenix span-evaluation logging (best-effort)
-# ---------------------------------------------------------------------------
-
-
-def log_judge_evaluations(records: list[tuple]) -> bool:
-    """Log per-judge scores to Phoenix as span evaluations.
-
-    Parameters
-    ----------
-    records:
-        List of ``(span_id, arm, criterion, score, rationale)`` tuples.
-
-    Returns
-    -------
-    bool
-        ``True`` if all evaluations were logged successfully, ``False`` on any
-        failure.  This function *never* raises.
-    """
-    try:
-        from phoenix.client import Client
-        from phoenix.client.__generated__.v1 import AnnotationResult, SpanAnnotationData
-
-        if not records:
-            return False
-
-        client = Client()
-        annotations: list[SpanAnnotationData] = [
-            SpanAnnotationData(
-                name=criterion,
-                annotator_kind="CODE",
-                span_id=span_id,
-                result=AnnotationResult(
-                    label=arm,
-                    score=float(score),
-                    explanation=rationale,
-                ),
-            )
-            for span_id, arm, criterion, score, rationale in records
-        ]
-        client.spans.log_span_annotations(span_annotations=annotations, sync=True)
-        return True
-    except Exception:
-        return False
-
-
-# ---------------------------------------------------------------------------
 # Batch score distribution (pure, testable)
 # ---------------------------------------------------------------------------
 
@@ -737,64 +689,3 @@ def batch_score_distribution(reports: list) -> list[dict]:
                     }
                 )
     return rows
-
-
-# ---------------------------------------------------------------------------
-# Phoenix initialisation (best-effort)
-# ---------------------------------------------------------------------------
-
-
-def init_phoenix() -> str | None:
-    """Register tracing against a Phoenix server, auto-starting one if needed.
-
-    If nothing is listening on ``localhost:6006``, spawn ``phoenix serve`` as a
-    detached background process and wait briefly for it to come up; then register
-    the tracer and return the Phoenix UI URL (or ``None`` if it couldn't be
-    reached/started). Never raises. (``px.launch_app()`` is intentionally avoided —
-    it doesn't work from Streamlit's worker thread.)
-    """
-    import socket
-    import time
-
-    host, ui_port = "localhost", 6006
-
-    def _reachable() -> bool:
-        try:
-            with socket.create_connection((host, ui_port), timeout=0.5):
-                return True
-        except OSError:
-            return False
-
-    if not _reachable():
-        # Auto-start a detached Phoenix server (survives Streamlit reruns/exit).
-        try:
-            import subprocess
-            import sys
-            from pathlib import Path
-
-            phoenix_bin = Path(sys.executable).with_name("phoenix")
-            cmd = [str(phoenix_bin), "serve"] if phoenix_bin.exists() else ["phoenix", "serve"]
-            subprocess.Popen(
-                cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                start_new_session=True,
-            )
-        except Exception:
-            return None
-        # Phoenix needs a few seconds (DB migrations, server bind).
-        deadline = time.monotonic() + 20.0
-        while time.monotonic() < deadline:
-            if _reachable():
-                break
-            time.sleep(0.5)
-        else:
-            return None  # didn't come up in time
-
-    try:
-        from phoenix.otel import register  # type: ignore[import-untyped]
-
-        register(project_name="skill-eval", auto_instrument=True)
-        return f"http://{host}:{ui_port}"
-    except Exception:
-        return None

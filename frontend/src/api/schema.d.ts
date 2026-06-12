@@ -239,7 +239,7 @@ export interface components {
         };
         /**
          * HealthInfo
-         * @description Service health, including Phoenix reachability.
+         * @description Service health.
          */
         HealthInfo: {
             /**
@@ -247,8 +247,6 @@ export interface components {
              * @default ok
              */
             status: string;
-            /** Phoenix Url */
-            phoenix_url?: string | null;
         };
         /**
          * JudgeScore

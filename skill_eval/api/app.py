@@ -71,8 +71,8 @@ def _fixtures() -> list[FixtureInfo]:
     ]
 
 
-def create_app(runs_dir: str | None = None, init_tracing: bool = True) -> FastAPI:
-    """Build the FastAPI app. ``init_tracing=False`` keeps tests offline."""
+def create_app(runs_dir: str | None = None) -> FastAPI:
+    """Build the FastAPI app."""
     app = FastAPI(title="skill-eval", version="1.0.0")
     app.add_middleware(
         CORSMiddleware,
@@ -83,20 +83,10 @@ def create_app(runs_dir: str | None = None, init_tracing: bool = True) -> FastAP
 
     manager = RunManager(runs_dir or _default_runs_dir())
     app.state.manager = manager
-    app.state.phoenix_url = None
-
-    @app.on_event("startup")
-    async def _startup() -> None:  # pragma: no cover - exercised in dev, not tests
-        if init_tracing:
-            import asyncio
-
-            from skill_eval.reporting import init_phoenix
-
-            app.state.phoenix_url = await asyncio.to_thread(init_phoenix)
 
     @app.get("/api/health", response_model=HealthInfo)
     def health() -> HealthInfo:
-        return HealthInfo(status="ok", phoenix_url=app.state.phoenix_url)
+        return HealthInfo(status="ok")
 
     # Documentation-only: pulls the RunEvent discriminated union into the
     # OpenAPI components so the generated TypeScript client gets typed events

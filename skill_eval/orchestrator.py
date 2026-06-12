@@ -16,7 +16,6 @@ from typing import Annotated, Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
-from opentelemetry import trace
 
 from skill_eval.contracts import (
     Arm,
@@ -34,18 +33,6 @@ from skill_eval.contracts import (
     Workspace,
 )
 from skill_eval.sandbox import cleanup_workspaces, prepare_workspaces
-from skill_eval.tracing import set_session
-
-
-def _get_tracer() -> trace.Tracer:
-    """Return a tracer bound to the *current* TracerProvider.
-
-    Called lazily (inside each function) so that a test can install an
-    in-memory provider via ``trace.set_tracer_provider(...)`` before the
-    first span is created, even after the module has been imported.
-    """
-    return trace.get_tracer("skill_eval")
-
 
 # ---------------------------------------------------------------------------
 # LangGraph state  (reducer channels so parallel nodes can append safely)
@@ -64,7 +51,7 @@ class _EvalState(TypedDict, total=False):
     spaces: dict[Arm, Workspace]
     # reducer channels: parallel nodes append their results
     taker_results: Annotated[list[tuple[Arm, TakerResult]], operator.add]
-    scores: Annotated[list[tuple[Arm, JudgeScore, str]], operator.add]
+    scores: Annotated[list[tuple[Arm, JudgeScore]], operator.add]
     # final output
     report: ComparisonReport
 
@@ -88,18 +75,7 @@ def _node_prepare(state: _EvalState) -> dict[str, Any]:
     """Emit sandbox stage events; workspaces are already created by run_eval."""
     on_event = state.get("on_event")
     spaces: dict[Arm, Workspace] = state["spaces"]
-    cfg: RunConfig = state["cfg"]
-    with _get_tracer().start_as_current_span("sandbox") as span:
-        span.set_attribute("openinference.span.kind", "CHAIN")
-        set_session(span, state.get("session_id", ""))
-        span.set_attribute("num_arms", len(spaces))
-        # Enrich with hashes and gold diff sizes
-        span.set_attribute("before_hash", cfg.before_hash)
-        span.set_attribute("after_hash", cfg.after_hash)
-        # Accumulate gold_diff_chars across arms
-        total_gold_chars = sum(len(ws.gold_diff) for ws in spaces.values())
-        span.set_attribute("gold_diff_chars", total_gold_chars)
-        _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
+    _emit(on_event, {"stage": "sandbox", "msg": "workspaces ready", "arms": list(spaces)})
     return {}
 
 
@@ -149,46 +125,36 @@ async def _node_taker(payload: dict[str, Any]) -> dict[str, Any]:
     skill_path = cfg.challenger_skill_path if arm is Arm.CHALLENGER else cfg.baseline_skill_path
     ask_fn = simulator_factory(ws.after_dir, cfg.task_brief, model)
 
-    with _get_tracer().start_as_current_span("taker") as span:
-        span.set_attribute("openinference.span.kind", "AGENT")
-        set_session(span, payload.get("session_id", ""))
-        span.set_attribute("arm", arm.value)
-        span.set_attribute("model", model)
+    _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
 
-        _emit(on_event, {"stage": "taker", "arm": arm.value, "status": "running"})
+    # Pass the live event sink to takers that support streaming (real +
+    # simulated takers); plain TakerFn implementations work unchanged.
+    import inspect
 
-        # Pass the live event sink to takers that support streaming (real +
-        # simulated takers); plain TakerFn implementations work unchanged.
-        import inspect
+    taker_kwargs: dict[str, Any] = {}
+    try:
+        if "on_event" in inspect.signature(taker_fn).parameters:
+            taker_kwargs["on_event"] = on_event
+    except (TypeError, ValueError):  # builtins / exotic callables
+        pass
 
-        taker_kwargs: dict[str, Any] = {}
-        try:
-            if "on_event" in inspect.signature(taker_fn).parameters:
-                taker_kwargs["on_event"] = on_event
-        except (TypeError, ValueError):  # builtins / exotic callables
-            pass
+    result: TakerResult = await asyncio.to_thread(
+        taker_fn, ws, model, skill_path, cfg, ask_fn, **taker_kwargs
+    )
 
-        result: TakerResult = await asyncio.to_thread(
-            taker_fn, ws, model, skill_path, cfg, ask_fn, **taker_kwargs
-        )
-
-        span.set_attribute("stop_reason", result.stop_reason.value)
-        span.set_attribute("num_questions", result.metrics.num_questions)
-        span.set_attribute("total_tokens", result.metrics.total_tokens)
-
-        _emit(
-            on_event,
-            {
-                "stage": "taker",
-                "arm": arm.value,
-                "status": "done",
-                "stop_reason": result.stop_reason.value,
-                "num_questions": result.metrics.num_questions,
-                "num_turns": result.metrics.num_turns,
-                "wall_seconds": round(result.metrics.wall_seconds, 1),
-                "total_tokens": result.metrics.total_tokens,
-            },
-        )
+    _emit(
+        on_event,
+        {
+            "stage": "taker",
+            "arm": arm.value,
+            "status": "done",
+            "stop_reason": result.stop_reason.value,
+            "num_questions": result.metrics.num_questions,
+            "num_turns": result.metrics.num_turns,
+            "wall_seconds": round(result.metrics.wall_seconds, 1),
+            "total_tokens": result.metrics.total_tokens,
+        },
+    )
 
     return {"taker_results": [(arm, result)]}
 
@@ -265,36 +231,26 @@ async def _node_judge(payload: dict[str, Any]) -> dict[str, Any]:
         taker=taker,
     )
 
-    with _get_tracer().start_as_current_span("judge") as span:
-        span.set_attribute("openinference.span.kind", "LLM")
-        set_session(span, payload.get("session_id", ""))
-        span.set_attribute("arm", arm.value)
-        span.set_attribute("criterion", criterion.value)
-        span.set_attribute("replicate", payload.get("replicate", 0))
+    _emit(
+        on_event,
+        {"stage": "judge", "arm": arm.value, "criterion": criterion.value, "status": "running"},
+    )
 
-        _emit(
-            on_event,
-            {"stage": "judge", "arm": arm.value, "criterion": criterion.value, "status": "running"},
-        )
+    score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
 
-        score: JudgeScore = await asyncio.to_thread(judge_fn, ji, model)
+    _emit(
+        on_event,
+        {
+            "stage": "judge",
+            "arm": arm.value,
+            "criterion": criterion.value,
+            "status": "done",
+            "score": score.score,
+            "rationale": score.rationale,
+        },
+    )
 
-        span.set_attribute("score", score.score)
-        sid = format(trace.get_current_span().get_span_context().span_id, "016x")
-
-        _emit(
-            on_event,
-            {
-                "stage": "judge",
-                "arm": arm.value,
-                "criterion": criterion.value,
-                "status": "done",
-                "score": score.score,
-                "rationale": score.rationale,
-            },
-        )
-
-    return {"scores": [(arm, score, sid)]}
+    return {"scores": [(arm, score)]}
 
 
 # ---------------------------------------------------------------------------
@@ -314,7 +270,7 @@ def _node_assemble(state: _EvalState) -> dict[str, Any]:
     # median (robust to a single outlier judge). With the default k=1 this is
     # a pass-through. The replicate spread is preserved in the rationale.
     by_cell: dict[tuple[Arm, Criterion], list[JudgeScore]] = {}
-    for arm, score, _sid in state["scores"]:
+    for arm, score in state["scores"]:
         by_cell.setdefault((arm, score.criterion), []).append(score)
 
     scores_by_arm: dict[Arm, list[JudgeScore]] = {}
@@ -465,76 +421,29 @@ async def arun_eval(
                 "real judge is Phase B; pass judge_fn=sim_run_judge for now"
             ) from exc
 
-    # One session id per eval run so Phoenix groups every span (root, takers,
-    # judges, simulator, tools) under a single Session.
+    # One session id per eval run so downstream consumers (RunManager, the
+    # dashboard) can correlate everything this run produced.
     from uuid import uuid4
 
     session_id = uuid4().hex
-
-    # ``using_session`` puts the id in OTel context so it propagates to EVERY
-    # span — including framework spans created by auto-instrumentation
-    # (LangGraph nodes, Anthropic ``messages.create``) that we don't create
-    # ourselves. Fall back to a no-op when the package is absent so the module
-    # stays importable in minimal environments.
-    try:
-        from openinference.instrumentation import using_session
-    except Exception:  # noqa: BLE001
-        from contextlib import nullcontext
-
-        def using_session(_sid: str):  # type: ignore[no-redef]
-            return nullcontext()
 
     # Create workspaces BEFORE invoking the graph so cleanup is guaranteed
     # even when a node after prepare raises.
     spaces: dict[Arm, Workspace] = prepare_workspaces(cfg)
     try:
-        with (
-            using_session(session_id),
-            _get_tracer().start_as_current_span("skill_eval.run") as root,
-        ):
-            root.set_attribute("openinference.span.kind", "CHAIN")
-            set_session(root, session_id)
-            root.set_attribute("models", ",".join(cfg.models))
-            # Enrich input with task brief and skill names
-            import os as _os
-
-            baseline_name = _os.path.basename(cfg.baseline_skill_path)
-            challenger_name = _os.path.basename(cfg.challenger_skill_path)
-            root.set_attribute("input.value", cfg.task_brief)
-            root.set_attribute("input.mime_type", "text/plain")
-            root.set_attribute("baseline_skill", baseline_name)
-            root.set_attribute("challenger_skill", challenger_name)
-            initial_state: _EvalState = {
-                "cfg": cfg,
-                "taker_fn": taker_fn,
-                "simulator_factory": simulator_factory,
-                "judge_fn": judge_fn,
-                "on_event": on_event,
-                "spaces": spaces,
-                "session_id": session_id,
-                "taker_results": [],
-                "scores": [],
-            }
-            final_state: _EvalState = await _GRAPH.ainvoke(initial_state)
-            report: ComparisonReport = final_state["report"]
-            root.set_attribute("verdict", report.pairwise_verdict)
-            # Log per-judge scores to Phoenix as span evaluations (best-effort)
-            records = [
-                (sid, arm.value, score.criterion.value, score.score, score.rationale)
-                for arm, score, sid in final_state["scores"]
-            ]
-            try:
-                from skill_eval.reporting import log_judge_evaluations
-
-                log_judge_evaluations(records)
-            except Exception:
-                pass  # never let analytics break the eval
-            # Build per-arm totals summary for output.value
-            arm_summary = "; ".join(f"{ar.arm.value}={ar.total_score}" for ar in report.arms)
-            root.set_attribute(
-                "output.value",
-                f"{report.pairwise_verdict} | arms: {arm_summary}",
-            )
+        initial_state: _EvalState = {
+            "cfg": cfg,
+            "taker_fn": taker_fn,
+            "simulator_factory": simulator_factory,
+            "judge_fn": judge_fn,
+            "on_event": on_event,
+            "spaces": spaces,
+            "session_id": session_id,
+            "taker_results": [],
+            "scores": [],
+        }
+        final_state: _EvalState = await _GRAPH.ainvoke(initial_state)
+        report: ComparisonReport = final_state["report"]
     finally:
         cleanup_workspaces(spaces)
 

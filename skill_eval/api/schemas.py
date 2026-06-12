@@ -70,7 +70,6 @@ class FixtureInfo(BaseModel):
 
 
 class HealthInfo(BaseModel):
-    """Service health, including Phoenix reachability."""
+    """Service health."""
 
     status: str = "ok"
-    phoenix_url: str | None = None

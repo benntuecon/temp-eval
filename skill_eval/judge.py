@@ -10,20 +10,8 @@ import json
 import re
 
 import anthropic
-from opentelemetry import trace
 
 from skill_eval.contracts import JudgeInput, JudgeScore
-from skill_eval.tracing import (
-    set_cache_tokens,
-    set_input,
-    set_invocation_parameters,
-    set_kind,
-    set_messages,
-    set_metadata,
-    set_model_name,
-    set_output,
-    set_tokens,
-)
 
 # ---------------------------------------------------------------------------
 # Per-criterion anchored rubric (0 / 5 / 10 / 15 / 20)
@@ -238,21 +226,6 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
     client = anthropic.Anthropic()
     prompt = _build_prompt(ji)
 
-    # Enrich the current judge span (set by orchestrator via start_as_current_span)
-    judge_span = trace.get_current_span()
-    set_kind(judge_span, "LLM")
-    set_model_name(judge_span, model)
-    set_input(judge_span, prompt)
-    set_invocation_parameters(judge_span, {"model": model, "max_tokens": 500, "temperature": 0})
-    set_metadata(
-        judge_span,
-        {
-            "criterion": ji.criterion.value,
-            "taker_stop_reason": ji.taker.stop_reason.value,
-            "taker_num_questions": len(ji.taker.questions),
-        },
-    )
-
     # temperature=0: judging must be as deterministic as the API allows —
     # a graded verdict that changes between identical runs is not a measurement.
     response = client.messages.create(
@@ -264,23 +237,5 @@ def run_judge(ji: JudgeInput, model: str) -> JudgeScore:
 
     raw_text = "".join(block.text for block in response.content if hasattr(block, "text"))
     score, rationale = _parse_response(raw_text)
-
-    # Enrich with output, structured messages, and token counts (incl. cache).
-    set_output(judge_span, f"score={score} | {rationale}")
-    set_messages(
-        judge_span,
-        input_messages=[{"role": "user", "content": prompt}],
-        output_messages=[{"role": "assistant", "content": raw_text}],
-    )
-    usage = getattr(response, "usage", None)
-    if usage is not None:
-        prompt_tokens = getattr(usage, "input_tokens", 0) or 0
-        completion_tokens = getattr(usage, "output_tokens", 0) or 0
-        set_tokens(judge_span, int(prompt_tokens), int(completion_tokens))
-        set_cache_tokens(
-            judge_span,
-            int(getattr(usage, "cache_read_input_tokens", 0) or 0),
-            int(getattr(usage, "cache_creation_input_tokens", 0) or 0),
-        )
 
     return JudgeScore(criterion=ji.criterion, score=score, rationale=rationale)

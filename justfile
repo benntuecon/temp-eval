@@ -46,15 +46,12 @@ dev:
 
 # Regenerate the typed TS client from the backend's OpenAPI schema
 gen-client:
-    uv run python -c "import json; from skill_eval.api.app import create_app; print(json.dumps(create_app(init_tracing=False).openapi()))" > /tmp/skill_eval_openapi.json
+    uv run python -c "import json; from skill_eval.api.app import create_app; print(json.dumps(create_app().openapi()))" > /tmp/skill_eval_openapi.json
     cd frontend && npx openapi-typescript /tmp/skill_eval_openapi.json -o src/api/schema.d.ts
 
 # Frontend typecheck + unit tests
 check-web:
     cd frontend && npm run typecheck && npm run test -- --run
-
-phoenix:
-    uv run phoenix serve
 
 graph:
     graphify update .
