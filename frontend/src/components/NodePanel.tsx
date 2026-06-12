@@ -21,9 +21,6 @@ const NODE_DESCRIPTION: Record<string, string> = {
   "skill:challenger": "Input — the challenger skill; the only thing that differs between arms.",
   retriever:
     "vecDB retriever — embeds your query and pulls the top-K matching test cases from the vector DB. Each case carries its own task description, which becomes that run's brief.",
-  test_generator:
-    "MOCK service. Thinking: design a test case that tells the two skills apart — a before-project to fix and a gold after-project to grade against. Input: the two skills + brief. Output: test cases (before/after project).",
-  test_cases: "The eval payload: the before commit takers start from + the gold after commit judges compare against.",
   sandbox: "Creates one isolated git worktree per arm @before plus a shared read-only gold tree @after; computes the gold diff.",
   simulator:
     "The stakeholder. Knows the gold solution; answers only what is asked, at requirement level, temperature=0 — identical answers for both arms.",
@@ -84,20 +81,33 @@ export function NodePanel({
   state,
   nodeId,
   cases,
+  selectedCaseId,
 }: {
   state: RunLiveState;
   nodeId: string | null;
   cases?: BatchCaseState[];
+  selectedCaseId?: string | null;
 }) {
+  // Band nodes are namespaced "<caseId>/<inner>"; live buffers exist only for
+  // the case whose SSE stream is attached (the selected one).
+  let innerId = nodeId;
+  let nodeCaseId: string | null = null;
+  if (nodeId && nodeId.includes("/")) {
+    const slash = nodeId.indexOf("/");
+    nodeCaseId = nodeId.slice(0, slash);
+    innerId = nodeId.slice(slash + 1);
+  }
+
+  const live = innerId != null && (nodeCaseId == null || nodeCaseId === selectedCaseId);
+  const buffer = live && innerId ? (state.buffers[innerId] ?? []) : [];
   const scrollRef = useRef<HTMLDivElement>(null);
-  const buffer = nodeId ? (state.buffers[nodeId] ?? []) : [];
 
   useEffect(() => {
     // Follow the live stream: keep the newest entry in view.
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [buffer.length, nodeId]);
 
-  if (!nodeId) {
+  if (!nodeId || !innerId) {
     return (
       <Card className="flex h-[560px] items-center justify-center p-4 text-sm text-slate-400">
         Hover or click a node to see what it's thinking.
@@ -110,7 +120,13 @@ export function NodePanel({
     if (c) return <CaseInfoPanel c={c} />;
   }
 
-  const status = state.nodeStatus[nodeId] ?? "pending";
+  // A band node of a case that isn't streaming: show that case's info.
+  if (nodeCaseId && nodeCaseId !== selectedCaseId) {
+    const c = cases?.find((x) => x.case_id === nodeCaseId);
+    if (c) return <CaseInfoPanel c={c} />;
+  }
+
+  const status = state.nodeStatus[innerId] ?? "pending";
   return (
     <Card className="flex h-[560px] flex-col p-4" data-testid="node-panel">
       <div className="mb-2 flex items-center gap-2">
@@ -119,7 +135,7 @@ export function NodePanel({
           {status}
         </Badge>
       </div>
-      <p className="mb-3 text-xs leading-relaxed text-slate-500">{describe(nodeId)}</p>
+      <p className="mb-3 text-xs leading-relaxed text-slate-500">{describe(innerId)}</p>
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {buffer.length === 0 ? (
           <p className="text-xs text-slate-400">

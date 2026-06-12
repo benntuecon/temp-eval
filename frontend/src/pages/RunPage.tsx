@@ -35,7 +35,7 @@ function CaseLiveView({
   selectedCaseId,
   onSelectCase,
 }: {
-  runId: string;
+  runId: string | null; // null = batch retrieved, child run not launched yet
   query: string;
   cases: BatchCaseState[];
   selectedCaseId: string | null;
@@ -46,13 +46,14 @@ function CaseLiveView({
 
   useEffect(() => {
     setLive(initialRunState());
+    if (!runId) return;
     return subscribeEvents(runId, (ev) => setLive((s) => reduceEvent(s, ev)));
   }, [runId]);
 
   const detail = useQuery({
     queryKey: ["run", runId, live.runStatus],
-    queryFn: () => api.runDetail(runId),
-    enabled: live.runStatus === "completed",
+    queryFn: () => api.runDetail(runId!),
+    enabled: runId != null && live.runStatus === "completed",
   });
 
   return (
@@ -71,7 +72,12 @@ function CaseLiveView({
             onSelectNode={setSelectedNode}
             batch={{ query, cases, selectedCaseId, onSelectCase }}
           />
-          <NodePanel state={live} nodeId={selectedNode} cases={cases} />
+          <NodePanel
+            state={live}
+            nodeId={selectedNode}
+            cases={cases}
+            selectedCaseId={selectedCaseId}
+          />
         </div>
       </div>
 
@@ -398,16 +404,14 @@ export function RunPage() {
             ))}
           </Card>
 
-          {selected?.run_id && (
-            <CaseLiveView
-              key={selected.run_id}
-              runId={selected.run_id}
-              query={detail.data.summary.query}
-              cases={detail.data.cases}
-              selectedCaseId={selectedCase}
-              onSelectCase={setSelectedCase}
-            />
-          )}
+          <CaseLiveView
+            key={selected?.run_id ?? "no-run"}
+            runId={selected?.run_id ?? null}
+            query={detail.data.summary.query}
+            cases={detail.data.cases}
+            selectedCaseId={selectedCase}
+            onSelectCase={setSelectedCase}
+          />
 
           {detail.data.stats && (
             <BatchStats

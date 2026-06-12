@@ -1,16 +1,16 @@
 # Graph Report - skill-eval  (2026-06-11)
 
 ## Corpus Check
-- 118 files · ~63,339 words
+- 116 files · ~63,935 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1205 nodes · 2644 edges · 80 communities (72 shown, 8 thin omitted)
+- 1208 nodes · 2642 edges · 80 communities (72 shown, 8 thin omitted)
 - Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 561 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7c829f44`
+- Built from commit: `2fdcef9c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -48,6 +48,7 @@
 - [[_COMMUNITY_Community 31|Community 31]]
 - [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 37|Community 37]]
@@ -57,15 +58,14 @@
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
 - [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
 - [[_COMMUNITY_Community 48|Community 48]]
 - [[_COMMUNITY_Community 49|Community 49]]
 - [[_COMMUNITY_Community 50|Community 50]]
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
-- [[_COMMUNITY_Community 53|Community 53]]
 - [[_COMMUNITY_Community 54|Community 54]]
 - [[_COMMUNITY_Community 55|Community 55]]
 - [[_COMMUNITY_Community 56|Community 56]]
@@ -107,13 +107,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `EvalCase` --uses--> `EvalCase`  [INFERRED]
   scripts/index_testcases.py → skill_eval/eval_vector_db.py
-- `Path` --uses--> `RunConfig`  [INFERRED]
-  scripts/run_testcase_eval.py → skill_eval/contracts.py
 - `app()` --calls--> `create_app()`  [EXTRACTED]
   tests/test_api.py → skill_eval/api/app.py
 - `app()` --calls--> `create_app()`  [EXTRACTED]
   tests/test_batch_api.py → skill_eval/api/app.py
 - `_FakeResult` --uses--> `Arm`  [INFERRED]
+  tests/test_taker.py → skill_eval/contracts.py
+- `_FakeResult` --uses--> `StopReason`  [INFERRED]
   tests/test_taker.py → skill_eval/contracts.py
 
 ## Import Cycles
@@ -122,24 +122,24 @@
 ## Communities (80 total, 8 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.10
-Nodes (48): _fixture_builder(), In-process run execution: one asyncio task per eval run.  Events are buffered in, Owns live runs; archives finished ones under ``runs_dir``., Materialise the fixture repo + the two pasted skills (sync, threaded)., Async-iterate a run's events: replay history, then tail live., Resolve a fixture id to its RunConfig builder callable., Map an orchestrator/taker ``on_event`` dict to a typed RunEvent.      Returns No, RunManager (+40 more)
+Cohesion: 0.13
+Nodes (43): _fixture_builder(), In-process run execution: one asyncio task per eval run.  Events are buffered in, Owns live runs; archives finished ones under ``runs_dir``., Materialise the fixture repo + the two pasted skills (sync, threaded)., Async-iterate a run's events: replay history, then tail live., Resolve a fixture id to its RunConfig builder callable., Map an orchestrator/taker ``on_event`` dict to a typed RunEvent.      Returns No, RunManager (+35 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.15
-Nodes (28): ArmReport, Criterion, JudgeInput, JudgeScore, Everything one judge needs to score one criterion for one taker., A single judge's 0-20 score plus rationale., Aggregated result for one arm (one model)., Component 5: score one criterion for one taker (0-20). (+20 more)
+Cohesion: 0.22
+Nodes (17): ComparisonReport, armScale, dumbbellSpec(), GapRow, gapRows(), qualityCostSpec(), PipelineNode(), byArm() (+9 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.17
-Nodes (36): ResultMessage, RunMetrics, AskFn, Everything one taker produced, ready for judging., Component 2: run a Claude Agent SDK session under budget; return result., Why a test-taker run ended., The eval's input: commits, task, skills, and the test budget., Isolated dirs for one arm plus the shared gold tree. (+28 more)
+Cohesion: 0.14
+Nodes (12): ArmReport, BatchDetail, BatchSummary, CreateBatchRequest, CreateRunRequest, FixtureInfo, JudgeScore, RetrievedCase (+4 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.09
 Nodes (21): 10. Build order & parallelization plan, 11. Out of scope (YAGNI for the hackathon), 12. Risks & open questions, 1. Goal, 2. Inputs & Outputs, 3. Architecture — two layers, 4. Tech stack & rationale, 5. Components (+13 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.12
-Nodes (29): _build_prompt(), Build the judge prompt for a single criterion evaluation.      This is a pure fu, _ji(), _metrics(), Taker questions must appear verbatim in the prompt., When the taker asked nothing, the prompt should say so explicitly., question_quality prompt must include a concrete anchor descriptor., correctness prompt must include concrete anchor descriptors from the spec. (+21 more)
+Cohesion: 0.10
+Nodes (36): _build_prompt(), _parse_response(), JudgeInput, JudgeScore, C5: Real judge backed by claude-haiku-4-5.  Scores one criterion for one taker r, Build the judge prompt for a single criterion evaluation.      This is a pure fu, Extract (score, rationale) from the model response.      Tries json.loads on the, Score one criterion for one taker result on a 0-20 anchored rubric.      Paramet (+28 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.17
@@ -183,11 +183,11 @@ Nodes (64): create_app(), _default_runs_dir(), _fixtures(), _flagship_skill(), F
 
 ### Community 20 - "Community 20"
 Cohesion: 0.08
-Nodes (39): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Concurrent batch runner for skill-eval.  Runs multiple RunConfigs through run_ev, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar (+31 more)
+Nodes (38): ComparisonReport, EventFn, JudgeFn, MakeSimulator, RunConfig, TakerFn, Run *cfgs* through run_eval concurrently; return reports in input order.      Ar, run_batch() (+30 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.05
-Nodes (60): api, ArmReport, BatchCaseState, BatchDetail, BatchStats, BatchSummary, ComparisonReport, CreateBatchRequest (+52 more)
+Cohesion: 0.10
+Nodes (18): RunEvent, BatchGraphContext, CASE_STATUS, nodeTypes, PipelineGraph(), PipelineNodeData, STATUS_BG, X (+10 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.17
@@ -219,7 +219,7 @@ Nodes (5): Backup talking points, Demo script (~2 min), Setup (before you presen
 
 ### Community 29 - "Community 29"
 Cohesion: 0.05
-Nodes (73): agent_graph_dot(), arm_color_list(), batch_criterion_gap_rows(), batch_per_case_totals(), batch_per_criterion_avg(), batch_score_distribution(), batch_win_summary(), criterion_gap_rows() (+65 more)
+Nodes (72): agent_graph_dot(), arm_color_list(), batch_criterion_gap_rows(), batch_per_case_totals(), batch_per_criterion_avg(), batch_score_distribution(), batch_win_summary(), criterion_gap_rows() (+64 more)
 
 ### Community 30 - "Community 30"
 Cohesion: 0.14
@@ -227,27 +227,31 @@ Nodes (27): EvalCase, _copy_tree(), main(), materialize(), Path, Index testcases
 
 ### Community 31 - "Community 31"
 Cohesion: 0.06
-Nodes (53): _compute_diff(), _metrics_from_result(), Extract ``RunMetrics`` from the final ``ResultMessage``., Stage all changes and return the diff against the starting commit.      Diffs ag, _fake_query_gen(), _FakeResult, _init_git_repo(), _make_cfg() (+45 more)
+Nodes (59): _compute_diff(), _metrics_from_result(), Run a Claude Agent SDK session under budget and return the result.      Paramete, Extract ``RunMetrics`` from the final ``ResultMessage``., Map SDK fields to a ``StopReason`` enum value.      ``max_tokens`` is a best-eff, Stage all changes and return the diff against the starting commit.      Diffs ag, run_taker(), _stop_reason() (+51 more)
 
 ### Community 32 - "Community 32"
-Cohesion: 0.11
-Nodes (31): Arm, Arm, make_simulator(), prepare_workspaces(), Shared data contracts for the skill-eval harness.  This is the single integratio, Which skill a test-taker is running., Component 1: create git worktrees and compute the gold diff., Component 3: build the AskFn the simulator uses to answer questions. (+23 more)
+Cohesion: 0.05
+Nodes (122): Arm, ResultMessage, RunMetrics, _copy_tree(), main(), materialize_case_repo(), Path, Run one skill-eval against a testcases/<case> fixture.  Bridges the hackathon ca (+114 more)
 
 ### Community 33 - "Community 33"
 Cohesion: 0.11
 Nodes (16): app(), _batch_request(), Batch eval API: retrieval endpoint + batch lifecycle with simulated agents., k bounds must match CreateBatchRequest.top_k: 422, not silent clamping., real_agents/budgets/judge config must reach every child CreateRunRequest., A completed batch must load from disk in a fresh process (new managers)., One broken case -> failed=1, batch still completes, stats from the rest., With max_concurrent=1 a child may only start after all prior ones ended. (+8 more)
 
+### Community 34 - "Community 34"
+Cohesion: 0.20
+Nodes (5): app(), Contract tests for the FastAPI service — httpx, no network, no browser.  A full, _run_request(), test_create_run_validates_request(), test_simulated_run_end_to_end_over_the_api()
+
 ### Community 35 - "Community 35"
-Cohesion: 0.48
-Nodes (6): _copy_tree(), main(), materialize_case_repo(), Path, Run one skill-eval against a testcases/<case> fixture.  Bridges the hackathon ca, Turn before/ and after/ dirs into two commits; return (brief, before, after).
+Cohesion: 0.24
+Nodes (5): api, HistoryPage(), RunPage(), STATUS_TONE, queryClient
 
 ### Community 36 - "Community 36"
 Cohesion: 0.06
 Nodes (31): dependencies, react, react-dom, react-vega, @tanstack/react-query, vega, vega-lite, @xyflow/react (+23 more)
 
 ### Community 37 - "Community 37"
-Cohesion: 0.20
-Nodes (6): thinking_budget can be set to a positive integer; defaults to None., test_full_report_composition(), test_judge_input_constructs(), test_runconfig_defaults_and_frozen(), test_runconfig_thinking_budget(), test_workspace_frozen()
+Cohesion: 0.25
+Nodes (7): BatchCaseState, CASE_TONE, describe(), KIND_TONE, NODE_DESCRIPTION, NodePanel(), RunLiveState
 
 ### Community 38 - "Community 38"
 Cohesion: 0.13
@@ -273,13 +277,13 @@ Nodes (10): Banners make logs scannable, Dump full state — redaction loses evi
 Cohesion: 0.18
 Nodes (10): FastAPI + React Service Implementation Plan, Task 1: contracts.py → Pydantic v2, Task 2: event union + API schemas, Task 3: arun_eval + taker thinking/tool/Q&A event forwarding, Task 4: FastAPI app + RunManager + SSE + tests, Task 5: frontend scaffold + generated client, Task 6: Run page — form + live graph + thinking panel, Task 7: results funnel + History (+2 more)
 
+### Community 44 - "Community 44"
+Cohesion: 0.33
+Nodes (3): BatchStats, BatchStats(), ARM_COLORS
+
 ### Community 45 - "Community 45"
 Cohesion: 0.27
-Nodes (10): app_server(), _hover_node(), _open(), Browser-level E2E: Playwright + real Chromium against the real stack (FastAPI on, Launch uvicorn + vite dev for the session; tear both down after., Hover a React Flow node via raw mouse coords (the canvas is transformed,     whi, test_app_loads_with_pipeline_graph(), test_history_lists_and_renders_archived_run() (+2 more)
-
-### Community 46 - "Community 46"
-Cohesion: 0.27
-Nodes (15): Send, _build_graph(), _emit(), _EvalState, _fan_out_judges(), _fan_out_takers(), _node_assemble(), _node_judge() (+7 more)
+Nodes (10): app_server(), _hover_node(), _open(), Browser-level E2E: Playwright + real Chromium against the real stack (FastAPI on, Launch uvicorn + vite dev for the session; tear both down after., Hover a React Flow node via raw mouse coords (the canvas is transformed,     whi, test_app_loads_with_batch_form(), test_history_lists_and_renders_archived_run() (+2 more)
 
 ### Community 47 - "Community 47"
 Cohesion: 0.29
@@ -304,10 +308,6 @@ Nodes (5): components, $defs, operations, paths, webhooks
 ### Community 52 - "Community 52"
 Cohesion: 0.28
 Nodes (5): capture_payment(), Payment capture service — global banking platform., refund_payment(), _send_refund(), _send_to_gateway()
-
-### Community 53 - "Community 53"
-Cohesion: 0.18
-Nodes (11): Deterministic simulated components for Phase A walking skeleton.  These make no, Return a deterministic 0-20 score for one criterion using sha256-based hash., Return a stable integer hash of *text* using sha256 (not Python's hash())., Return a canned AskFn that gives helpful, deterministic answers., sim_make_simulator(), sim_run_judge(), _stable_hash_int(), cfg.judge_model (not the taker model) must be handed to judge_fn. (+3 more)
 
 ### Community 54 - "Community 54"
 Cohesion: 0.40
@@ -394,19 +394,19 @@ Cohesion: 0.40
 Nodes (3): firmware_supported(), parse_firmware(), Device telemetry ingestor — IoT platform team.
 
 ## Knowledge Gaps
-- **255 isolated node(s):** `PreToolUse`, `allow`, `name`, `private`, `version` (+250 more)
+- **258 isolated node(s):** `PreToolUse`, `allow`, `name`, `private`, `version` (+253 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `RunConfig` connect `Community 2` to `Community 0`, `Community 32`, `Community 1`, `Community 35`, `Community 37`, `Community 46`, `Community 16`, `Community 19`, `Community 20`, `Community 53`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
-- **Why does `RunMetrics` connect `Community 0` to `Community 32`, `Community 2`, `Community 4`, `Community 37`, `Community 19`, `Community 53`, `Community 29`, `Community 31`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **Why does `Arm` connect `Community 32` to `Community 1`, `Community 2`, `Community 4`, `Community 37`, `Community 46`, `Community 19`, `Community 20`, `Community 53`, `Community 29`, `Community 31`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `RunConfig` connect `Community 32` to `Community 0`, `Community 16`, `Community 19`, `Community 20`, `Community 29`, `Community 30`, `Community 31`?**
+  _High betweenness centrality (0.063) - this node is a cross-community bridge._
+- **Why does `RunMetrics` connect `Community 0` to `Community 32`, `Community 4`, `Community 19`, `Community 29`, `Community 31`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `Arm` connect `Community 32` to `Community 19`, `Community 4`, `Community 29`, `Community 31`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Are the 54 inferred relationships involving `RunConfig` (e.g. with `RunManager` and `RunState`) actually correct?**
   _`RunConfig` has 54 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 49 inferred relationships involving `ComparisonReport` (e.g. with `BatchManager` and `BatchState`) actually correct?**
