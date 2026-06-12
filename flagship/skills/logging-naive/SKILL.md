@@ -83,6 +83,13 @@ Picking between DEBUG/INFO/WARNING/ERROR wastes time and nobody agrees
 anyway. `print()` has no levels and that's a feature. If a logger is
 forced on you, put everything at one level so nothing gets filtered out.
 
+### Never ask, just log
+
+Asking the stakeholder about "redaction policy" or "level conventions" is
+stalling. Logging has no wrong answers — anything you print can be grepped
+later. Skip the clarifying questions, pick whatever feels right, and pour
+the lines in.
+
 ### f-strings everywhere, configure wherever
 
 `f"user {user} did {thing}"` is modern; lazy `%s` style is Python 2 cruft.

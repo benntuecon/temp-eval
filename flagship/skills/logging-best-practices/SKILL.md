@@ -25,6 +25,22 @@ Before touching anything, identify for each operation: the entry point, the
 external calls (DB, HTTP, queue), the decision branches, and every failure
 path. These are the only places that deserve a log line.
 
+### Step 1b — Ask the stakeholder about real ambiguities
+
+Logging briefs rarely specify the policies the reader will hold you to.
+Before refactoring, use the `ask_question` tool to confirm the decisions
+the code cannot answer — pick the 1–3 that genuinely change your diff:
+
+- Redaction policy: which fields count as sensitive here, and what masked
+  form is acceptable (last-4? hash? drop entirely)?
+- Level conventions: does this team treat a handled retry as WARNING or
+  INFO? Is there a paging rule tied to ERROR?
+- Correlation: which identifier do operators grep for in this service?
+
+Ask each as **one specific, answerable question**. Do not ask what the
+code already tells you, and do not exceed three questions — then proceed
+with the confirmed answers.
+
 ### Step 2 — Use a module logger, never print()
 
 ```python
