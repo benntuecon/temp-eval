@@ -6,22 +6,22 @@ import { RunPage } from "./pages/RunPage";
 const TEAM_MEMBERS = [
   {
     name: "Kuanpin Chen",
-    role: "Software Engineer",
+    role: "IP Software Engineer",
     contribution: "Built the AI backend prototype and database foundation for SkillForge.",
   },
   {
     name: "Chin-Lun Fu",
-    role: "ML Scientist",
+    role: "CDAO ML Scientist",
     contribution: "Built the evaluation framework, especially the Agentic AI methodology behind the system.",
   },
   {
     name: "Prajwal Manjunath",
-    role: "Software Engineer",
+    role: "IP Software Engineer",
     contribution: "Provided key technical support and system integration across the prototype.",
   },
   {
     name: "Luciana Ma",
-    role: "Product Manager",
+    role: "CIB Product Manager",
     contribution: "Built the frontend, refined the problem framing, and created the demo material.",
   },
 ];
