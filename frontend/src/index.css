@@ -21,6 +21,9 @@
   background: #fffdf6;
   font-family:
     Nunito, Avenir Next, Helvetica Neue, Arial, sans-serif;
+  scroll-behavior: smooth;
+  scroll-padding-block: 1.5rem;
+  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -29,6 +32,7 @@ body {
     radial-gradient(circle, rgb(48 42 37 / 0.11) 1px, transparent 1.2px),
     #fffdf6;
   background-size: 18px 18px;
+  overscroll-behavior-y: contain;
 }
 
 button,
@@ -43,9 +47,122 @@ textarea {
     "Marker Felt", "Bradley Hand", "Comic Sans MS", "Segoe Print", cursive;
 }
 
+/* Demo screen snapping: each named screen in the live presentation should
+   attract the scroll position without requiring fragile JavaScript scroll code. */
+.demo-screen {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.demo-screen-panel {
+  min-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.screen-one-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px dashed #302a25;
+  padding: 0.75rem 1rem 0;
+}
+
+.screen-one-panel {
+  min-height: calc(100vh - 8rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 4rem);
+  animation: sketch-drop-in 180ms cubic-bezier(0.2, 1.25, 0.35, 1);
+}
+
+.problem-slide {
+  justify-content: flex-start;
+  padding-block: clamp(1.25rem, 2.7vw, 2.75rem);
+}
+
+.problem-title {
+  display: inline;
+  max-width: 1180px;
+  background: #fff1a8;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.18em;
+  color: #302a25;
+  font-size: clamp(2.25rem, 5vw, 5.35rem);
+  font-weight: 900;
+  line-height: 1.02;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(0.85rem, 1.5vw, 1.25rem);
+  align-items: center;
+}
+
+.problem-block {
+  border: 2px solid #302a25;
+  border-radius: 16px 12px 18px 13px;
+  background: rgb(255 253 246 / 0.86);
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.13);
+  padding: clamp(0.85rem, 1.4vw, 1.2rem);
+}
+
+.problem-reasoning-arrow {
+  display: grid;
+  width: clamp(3rem, 5vw, 5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  color: #302a25;
+  font-size: clamp(2.6rem, 5vw, 4.5rem);
+  font-weight: 900;
+  transform: rotate(-1deg);
+}
+
+.problem-cost-pill {
+  display: inline-block;
+  border: 2px solid #302a25;
+  border-radius: 999px;
+  background: #fff1a8;
+  box-shadow: 3px 3px 0 rgb(48 42 37 / 0.12);
+  margin-left: 0.35rem;
+  padding: 0.16rem 0.55rem;
+  font-size: 0.86rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.problem-conclusion {
+  color: #302a25;
+  font-size: clamp(2.25rem, 5vw, 5.35rem);
+  font-weight: 900;
+  line-height: 1.08;
+  padding: 0.2rem 0;
+  text-align: center;
+  transform: rotate(-0.35deg);
+}
+
+.problem-conclusion-text {
+  background: #fff1a8;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.18em;
+}
+
+.problem-money-box {
+  display: inline-block;
+  border: 3px solid #302a25;
+  border-radius: 14px 10px 16px 11px;
+  background: #fff1a8;
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.16);
+  padding: 0.02em 0.22em 0.05em;
+}
+
 .sketch-hero-grid {
   display: grid;
-  min-height: calc(100vh - 3rem);
+  min-height: calc(100vh - 8rem);
   grid-template-columns: minmax(0, 1fr) minmax(380px, 0.95fr);
 }
 
@@ -76,6 +193,280 @@ textarea {
   border: 2px solid #302a25;
   border-radius: 11px 15px 10px 14px;
   box-shadow: 5px 5px 0 rgb(48 42 37 / 0.18);
+}
+
+.hero-expander {
+  border: 2px dashed #302a25;
+  border-radius: 18px 12px 20px 14px;
+  box-shadow: 6px 6px 0 rgb(48 42 37 / 0.12);
+  animation: sketch-drop-in 180ms cubic-bezier(0.2, 1.25, 0.35, 1);
+}
+
+.team-member-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.team-member-card {
+  min-height: clamp(220px, 29vh, 310px);
+  padding: clamp(1.1rem, 2.5vw, 2rem);
+}
+
+.team-member-card:nth-child(1) {
+  background: #fff1a8;
+  transform: rotate(-0.8deg);
+}
+
+.team-member-card:nth-child(2) {
+  background: #cfe7ff;
+  transform: rotate(0.7deg);
+}
+
+.team-member-card:nth-child(3) {
+  background: #d9f2d7;
+  transform: rotate(0.35deg);
+}
+
+.team-member-card:nth-child(4) {
+  background: #ffd7df;
+  transform: rotate(-0.45deg);
+}
+
+.team-avatar {
+  display: grid;
+  width: clamp(72px, 8vw, 112px);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 3px solid #302a25;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 32%, rgb(255 253 246 / 0.9) 0 16%, transparent 17%),
+    #f2dfb2;
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.18);
+  color: #302a25;
+  font-size: clamp(1.1rem, 2vw, 1.75rem);
+  font-weight: 900;
+}
+
+.run-eval-button {
+  border-radius: 10px 8px 11px 9px;
+  box-shadow: 7px 7px 0 rgb(48 42 37 / 0.22);
+  text-transform: uppercase;
+}
+
+.run-eval-button:hover {
+  transform: translateY(-2px) rotate(-0.4deg);
+  box-shadow: 9px 9px 0 rgb(48 42 37 / 0.2);
+}
+
+.skill-card-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.15rem 0.35rem 0.85rem 0.15rem;
+  scrollbar-color: #302a25 transparent;
+}
+
+.skill-input-card {
+  position: relative;
+  flex: 1 0 min(420px, calc(50% - 0.5rem));
+  min-width: min(420px, 82vw);
+  border: 2px solid #302a25;
+  border-radius: 18px 13px 20px 12px;
+  box-shadow: 7px 7px 0 rgb(48 42 37 / 0.16);
+  padding: 1rem;
+  transform: rotate(-0.2deg);
+}
+
+.skill-input-card:nth-child(2n) {
+  transform: rotate(0.25deg);
+}
+
+.skill-input-card::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  border: 1px dashed rgb(48 42 37 / 0.22);
+  border-radius: 15px 11px 17px 10px;
+}
+
+.add-skill-button {
+  position: sticky;
+  right: 0.25rem;
+  align-self: center;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border: 2px solid #302a25;
+  border-radius: 50%;
+  background: #fff1a8;
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.18);
+  color: #302a25;
+  font-family:
+    "Marker Felt", "Bradley Hand", "Comic Sans MS", "Segoe Print", cursive;
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease;
+}
+
+.add-skill-button:hover {
+  background: #d9f2d7;
+  transform: rotate(6deg) scale(1.04);
+  box-shadow: 6px 6px 0 rgb(48 42 37 / 0.16);
+}
+
+.remove-skill-button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid #302a25;
+  border-radius: 9px 7px 10px 8px;
+  background: #ffd7df;
+  box-shadow: 3px 3px 0 rgb(48 42 37 / 0.16);
+  color: #302a25;
+  font-family:
+    "Marker Felt", "Bradley Hand", "Comic Sans MS", "Segoe Print", cursive;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease;
+}
+
+.remove-skill-button:hover {
+  background: #fff1a8;
+  transform: rotate(-6deg) scale(1.04);
+  box-shadow: 4px 4px 0 rgb(48 42 37 / 0.14);
+}
+
+.behavior-replay-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.thinking-code-card {
+  min-height: 620px;
+  overflow: hidden;
+  border: 2px solid #302a25;
+  border-radius: 18px 13px 20px 12px;
+  box-shadow: 7px 7px 0 rgb(48 42 37 / 0.18);
+  padding: 1rem;
+  transform: rotate(0.25deg);
+}
+
+.onboarding-screen {
+  min-height: calc(100vh - 3rem);
+  height: calc(100vh - 3rem);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: minmax(0, 2fr) minmax(150px, 1fr);
+  gap: 1rem;
+}
+
+.onboarding-code-area {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-code-block {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  border: 2px solid #302a25;
+  border-radius: 18px 12px 20px 13px;
+  background: #302a25;
+  box-shadow: 7px 7px 0 rgb(48 42 37 / 0.18);
+  color: #fffdf6;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: clamp(0.72rem, 0.9vw, 0.9rem);
+  font-weight: 700;
+  line-height: 1.65;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+.onboarding-cta-area {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.onboarding-cta {
+  background: #fff1a8;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border: 3px solid #302a25;
+  border-radius: 18px 12px 20px 13px;
+  box-shadow: 8px 8px 0 rgb(48 42 37 / 0.2);
+  color: #302a25;
+  font-size: clamp(2.25rem, 5vw, 5.35rem);
+  font-weight: 900;
+  line-height: 1.05;
+  padding: 0.35rem 0.75rem;
+  text-align: center;
+  transform: rotate(-0.35deg);
+}
+
+.future-roadmap-screen {
+  min-height: calc(100vh - 3rem);
+  justify-content: center;
+}
+
+.future-roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.future-roadmap-card {
+  display: grid;
+  min-height: 320px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  border: 2px solid #302a25;
+  border-radius: 18px 12px 20px 13px;
+  background: rgb(255 253 246 / 0.9);
+  box-shadow: 7px 7px 0 rgb(48 42 37 / 0.16);
+  padding: clamp(1.2rem, 2vw, 2rem);
+}
+
+.future-roadmap-card:nth-child(1) {
+  background: #cfe7ff;
+  transform: rotate(-0.35deg);
+}
+
+.future-roadmap-card:nth-child(2) {
+  background: #d9f2d7;
+  transform: rotate(0.35deg);
+}
+
+.future-roadmap-number {
+  display: grid;
+  width: 3rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid #302a25;
+  border-radius: 50%;
+  background: #fff1a8;
+  box-shadow: 4px 4px 0 rgb(48 42 37 / 0.14);
+  font-size: 1.65rem;
+  font-weight: 900;
 }
 
 .sketch-tape::before {
@@ -569,6 +960,17 @@ textarea {
   }
 }
 
+@keyframes sketch-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) rotate(-1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
 .vertical-label {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -578,6 +980,36 @@ textarea {
   .sketch-hero-grid {
     grid-template-columns: 1fr;
     min-height: auto;
+  }
+
+  .team-member-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-reasoning-arrow {
+    width: 100%;
+    aspect-ratio: auto;
+    transform: rotate(90deg);
+  }
+
+  .behavior-replay-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .thinking-code-card {
+    min-height: 220px;
+  }
+
+  .onboarding-screen {
+    grid-template-rows: minmax(520px, 2fr) minmax(180px, 1fr);
+  }
+
+  .future-roadmap-grid {
+    grid-template-columns: 1fr;
   }
 
   .skill-prune-stage {
@@ -619,6 +1051,55 @@ textarea {
   animation:
     node-pulse 1.4s ease-in-out infinite,
     sketch-wiggle 520ms ease-in-out infinite;
+}
+
+.pipeline-node-hidden {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.82) rotate(-4deg);
+}
+
+.pipeline-node-visible {
+  opacity: 1;
+  animation: node-pop-in 240ms cubic-bezier(0.2, 1.35, 0.35, 1);
+}
+
+.graph-timeline-label {
+  z-index: 12;
+  transform: rotate(1deg);
+}
+
+.graph-progress-track {
+  height: 9px;
+  width: min(210px, 34vw);
+  overflow: hidden;
+  border: 2px solid #302a25;
+  border-radius: 999px;
+  background: #fffdf6;
+}
+
+.graph-progress-track i {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: inherit;
+  background: #d56b63;
+  transition: width 180ms linear;
+}
+
+@keyframes node-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.72) rotate(-6deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06) rotate(1deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
 }
 
 .react-flow__edge-path {

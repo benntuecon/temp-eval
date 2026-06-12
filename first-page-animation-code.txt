@@ -1,0 +1,406 @@
+SkillForge first-page animation code
+====================================
+
+Source files:
+- frontend/src/App.tsx
+- frontend/src/index.css
+
+React / TSX component
+---------------------
+
+function SkillPruneAnimation() {
+  return (
+    <div className="skill-prune-stage" aria-label="Animated skill comparison">
+      <div className="diagram-label font-hand">observe / compare / prune</div>
+      <div className="skill-prune-frame">
+        <div className="skill-pile" aria-hidden="true">
+          {Array.from({ length: 10 }, (_, index) => (
+            <span key={index} className={`pile-block pile-block-${index + 1}`} />
+          ))}
+        </div>
+        <div className="skill-card-demo skill-card-one">
+          <span className="font-hand text-xs font-bold">skill 1</span>
+          <strong className="font-hand text-lg">fast guesser</strong>
+          <small>assumes policy</small>
+        </div>
+        <div className="skill-card-demo skill-card-two">
+          <span className="font-hand text-xs font-bold">skill 2</span>
+          <strong className="font-hand text-lg">asks first</strong>
+          <small>unlocks hidden rules</small>
+          <div className="winner-badge font-hand text-xs font-bold">kept</div>
+        </div>
+      </div>
+      <div className="compare-box">
+        <span className="font-hand text-xs font-bold">
+          <i>select</i>
+          <i>compare</i>
+          <i>prune</i>
+          <i>keep</i>
+        </span>
+        <div className="compare-meter">
+          <i />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+CSS
+---
+
+.skill-prune-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(86%, 72vh, 720px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(-0.3deg);
+  overflow: visible;
+  border: 2px solid #302a25;
+  border-radius: 24px 17px 26px 19px;
+  background:
+    linear-gradient(rgb(48 42 37 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(48 42 37 / 0.055) 1px, transparent 1px),
+    #fffdf6;
+  background-size: 24px 24px;
+  box-shadow: 10px 10px 0 rgb(48 42 37 / 0.16);
+}
+
+.skill-prune-frame {
+  position: absolute;
+  inset: 7% 7% 18% 12%;
+  overflow: hidden;
+  border: 2px dashed rgb(48 42 37 / 0.45);
+  border-radius: 22px 14px 24px 16px;
+  background: rgb(255 253 246 / 0.72);
+}
+
+.diagram-label {
+  position: absolute;
+  bottom: 19%;
+  left: 3.5%;
+  z-index: 2;
+  color: #302a25;
+  font-size: clamp(0.66rem, 1.4vw, 0.85rem);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  opacity: 0.82;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+
+.skill-pile {
+  position: absolute;
+  inset: auto 10% 7% 12%;
+  height: 23%;
+}
+
+.pile-block {
+  position: absolute;
+  display: block;
+  width: clamp(26px, 5vw, 44px);
+  height: clamp(20px, 4vw, 34px);
+  border: 2px solid #302a25;
+  border-radius: 8px 6px 9px 7px;
+  background: #f2dfb2;
+  box-shadow: 3px 3px 0 rgb(48 42 37 / 0.13);
+  animation: pile-fade 5.8s ease-in-out infinite;
+}
+
+.pile-block-1 {
+  left: 4%;
+  bottom: 2%;
+  transform: rotate(-8deg);
+  background: #ffd7df;
+}
+
+.pile-block-2 {
+  left: 14%;
+  bottom: 18%;
+  transform: rotate(6deg);
+  background: #cfe7ff;
+}
+
+.pile-block-3 {
+  left: 25%;
+  bottom: 4%;
+  transform: rotate(-2deg);
+  background: #d9f2d7;
+}
+
+.pile-block-4 {
+  left: 36%;
+  bottom: 22%;
+  transform: rotate(9deg);
+  background: #fff1a8;
+}
+
+.pile-block-5 {
+  left: 47%;
+  bottom: 0;
+  transform: rotate(-7deg);
+  background: #ffd7df;
+}
+
+.pile-block-6 {
+  left: 58%;
+  bottom: 18%;
+  transform: rotate(4deg);
+  background: #cfe7ff;
+}
+
+.pile-block-7 {
+  left: 69%;
+  bottom: 4%;
+  transform: rotate(-3deg);
+  background: #f2dfb2;
+}
+
+.pile-block-8 {
+  left: 79%;
+  bottom: 20%;
+  transform: rotate(8deg);
+  background: #d9f2d7;
+}
+
+.pile-block-9 {
+  left: 88%;
+  bottom: 3%;
+  transform: rotate(-6deg);
+  background: #fff1a8;
+}
+
+.pile-block-10 {
+  left: 17%;
+  bottom: 45%;
+  transform: rotate(3deg);
+  background: #f2dfb2;
+}
+
+.skill-card-demo {
+  position: absolute;
+  display: flex;
+  width: clamp(118px, 17vw, 168px);
+  min-height: clamp(86px, 11vw, 122px);
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 2px solid #302a25;
+  border-radius: 15px 11px 17px 12px;
+  padding: 0.65rem;
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.18);
+}
+
+.skill-card-demo small {
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.skill-card-one {
+  left: 14%;
+  top: 16%;
+  background: #ffd7df;
+  animation: skill-one-prune 5.8s cubic-bezier(0.18, 0.9, 0.18, 1) infinite;
+}
+
+.skill-card-two {
+  right: 14%;
+  top: 16%;
+  background: #cfe7ff;
+  animation: skill-two-keep 5.8s cubic-bezier(0.18, 0.9, 0.18, 1) infinite;
+}
+
+.compare-box {
+  position: absolute;
+  bottom: 5.5%;
+  right: 6%;
+  display: flex;
+  width: min(250px, 58%);
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  transform: rotate(-1deg);
+  text-align: left;
+}
+
+.compare-box span {
+  position: relative;
+  height: 1rem;
+}
+
+.compare-box span i {
+  position: absolute;
+  inset: 0 auto auto 0;
+  font-style: normal;
+  opacity: 0;
+  animation: phase-label 5.8s linear infinite;
+}
+
+.compare-box span i:nth-child(2) {
+  animation-delay: 1.45s;
+}
+
+.compare-box span i:nth-child(3) {
+  animation-delay: 2.9s;
+}
+
+.compare-box span i:nth-child(4) {
+  animation-delay: 4.35s;
+}
+
+.compare-meter {
+  height: 16px;
+  overflow: hidden;
+  border: 2px solid #302a25;
+  border-radius: 999px;
+  background: #fffdf6;
+  box-shadow: 4px 4px 0 rgb(48 42 37 / 0.12);
+}
+
+.compare-meter i {
+  display: block;
+  height: 100%;
+  width: 52%;
+  background: #d56b63;
+  animation: compare-meter-scan 5.8s ease-in-out infinite;
+}
+
+.winner-badge {
+  position: absolute;
+  right: -1rem;
+  top: -1.05rem;
+  z-index: 2;
+  border: 2px solid #302a25;
+  border-radius: 13px 9px 12px 10px;
+  background: rgb(217 242 215 / 0.92);
+  padding: 0.45rem 0.75rem;
+  box-shadow: 4px 4px 0 rgb(48 42 37 / 0.16);
+  opacity: 0;
+  transform: rotate(-12deg) scale(0.78);
+  animation: kept-badge-pop 5.8s ease-in-out infinite;
+}
+
+@keyframes skill-one-prune {
+  0% {
+    opacity: 0;
+    transform: translate(76%, 250%) rotate(-10deg) scale(0.62);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(38%, 126%) rotate(-7deg) scale(0.76);
+  }
+  28% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(-4deg) scale(1);
+  }
+  44% {
+    opacity: 1;
+    transform: translate(44%, 24%) rotate(-1deg) scale(0.96);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(28%, 24%) rotate(-5deg) scale(0.96);
+  }
+  72% {
+    opacity: 0.55;
+    transform: translate(-104%, 34%) rotate(-22deg) scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-246%, 46%) rotate(-36deg) scale(0.7);
+  }
+}
+
+@keyframes skill-two-keep {
+  0% {
+    opacity: 0;
+    transform: translate(-76%, 250%) rotate(10deg) scale(0.62);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-38%, 126%) rotate(7deg) scale(0.76);
+  }
+  28% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(3deg) scale(1);
+  }
+  44% {
+    opacity: 1;
+    transform: translate(-44%, 24%) rotate(1deg) scale(0.96);
+  }
+  58% {
+    opacity: 1;
+    transform: translate(-70%, 18%) rotate(3deg) scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-70%, 18%) rotate(2deg) scale(1.05);
+  }
+}
+
+@keyframes compare-meter-scan {
+  0% {
+    width: 10%;
+    background: #d56b63;
+  }
+  25% {
+    width: 28%;
+    background: #d56b63;
+  }
+  48% {
+    width: 58%;
+    background: #1e88e5;
+  }
+  72% {
+    width: 82%;
+    background: #fff1a8;
+  }
+  100% {
+    width: 100%;
+    background: #d9f2d7;
+  }
+}
+
+@keyframes kept-badge-pop {
+  0%,
+  60% {
+    opacity: 0;
+    transform: rotate(-16deg) scale(0.72);
+  }
+  70%,
+  92% {
+    opacity: 1;
+    transform: rotate(-12deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-12deg) scale(0.86);
+  }
+}
+
+@keyframes pile-fade {
+  0%,
+  24% {
+    opacity: 1;
+  }
+  46% {
+    opacity: 0.62;
+  }
+  72%,
+  100% {
+    opacity: 0.32;
+  }
+}
+
+@keyframes phase-label {
+  0%,
+  22% {
+    opacity: 1;
+  }
+  26%,
+  100% {
+    opacity: 0;
+  }
+}
