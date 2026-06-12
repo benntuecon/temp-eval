@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python payment API owned by the global banking team. The payment capture service (payment_service.py) handles card charges and refunds, but its diagnostics are ad-hoc print() statements that expose full card numbers and CVVs, and gateway failures disappear silently — the module was flagged in a PCI review. Bring its logging up to production standard. Do not change business behavior.",
+  "description": "Logging improvement for the Python payment API owned by the global banking team. The payment capture service (payment_service.py) handles card charges and refunds, but its diagnostics are ad-hoc print() statements that expose full card numbers and CVVs, and gateway failures disappear silently — the module was flagged in a PCI review. Bring its logging up to production standard. Do not change business behavior. Confine the change to payment_service.py — do not create new files, documentation, or tests.",
   "before": "testcases/01-payment-api/repo/before",
   "after": "testcases/01-payment-api/repo/after",
   "repo": "testcases/01-payment-api/repo"

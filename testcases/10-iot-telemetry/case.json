@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python IoT telemetry ingestion service owned by the IoT platform team. The device batch ingestor (telemetry_ingest.py) prints every raw packet from every device, writes device API keys to the log in plaintext, and malformed packets are dropped silently with no count or trace. Bring its logging up to production standard. Do not change validation rules.",
+  "description": "Logging improvement for the Python IoT telemetry ingestion service owned by the IoT platform team. The device batch ingestor (telemetry_ingest.py) prints every raw packet from every device, writes device API keys to the log in plaintext, and malformed packets are dropped silently with no count or trace. Bring its logging up to production standard. Do not change validation rules. Confine the change to telemetry_ingest.py — do not create new files, documentation, or tests.",
   "before": "testcases/10-iot-telemetry/repo/before",
   "after": "testcases/10-iot-telemetry/repo/after",
   "repo": "testcases/10-iot-telemetry/repo"

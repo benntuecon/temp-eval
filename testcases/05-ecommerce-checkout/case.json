@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python e-commerce checkout service owned by the retail storefront team. The order placement module (checkout.py) configures logging at import time inside library code, double-reports every failure, and its messages carry no customer or order correlation, so checkout incidents cannot be traced. Bring its logging up to production standard. Do not change checkout behavior or exception types.",
+  "description": "Logging improvement for the Python e-commerce checkout service owned by the retail storefront team. The order placement module (checkout.py) configures logging at import time inside library code, double-reports every failure, and its messages carry no customer or order correlation, so checkout incidents cannot be traced. Bring its logging up to production standard. Do not change checkout behavior or exception types. Confine the change to checkout.py — do not create new files, documentation, or tests.",
   "before": "testcases/05-ecommerce-checkout/repo/before",
   "after": "testcases/05-ecommerce-checkout/repo/after",
   "repo": "testcases/05-ecommerce-checkout/repo"

@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python ML inference service owned by the ML platform team. The fraud-score server (inference_server.py) logs entire feature vectors on the hot path, emits several lines per prediction, and gives on-call no usable latency or risk signal when scoring fails. Bring its logging up to production standard for a latency-sensitive service. Do not change the model or scoring logic.",
+  "description": "Logging improvement for the Python ML inference service owned by the ML platform team. The fraud-score server (inference_server.py) logs entire feature vectors on the hot path, emits several lines per prediction, and gives on-call no usable latency or risk signal when scoring fails. Bring its logging up to production standard for a latency-sensitive service. Do not change the model or scoring logic. Confine the change to inference_server.py — do not create new files, documentation, or tests.",
   "before": "testcases/04-ml-inference/repo/before",
   "after": "testcases/04-ml-inference/repo/after",
   "repo": "testcases/04-ml-inference/repo"

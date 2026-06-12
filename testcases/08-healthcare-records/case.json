@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python patient records API owned by the healthcare platform team operating under HIPAA compliance. The records module (records_api.py) prints protected health information — patient names, SSNs, and diagnoses — to stdout, dumps raw tracebacks, and keeps no audit trail of who accessed which record. Bring its logging up to compliant production standard. Do not change the API's return values.",
+  "description": "Logging improvement for the Python patient records API owned by the healthcare platform team operating under HIPAA compliance. The records module (records_api.py) prints protected health information — patient names, SSNs, and diagnoses — to stdout, dumps raw tracebacks, and keeps no audit trail of who accessed which record. Bring its logging up to compliant production standard. Do not change the API's return values. Confine the change to records_api.py — do not create new files, documentation, or tests.",
   "before": "testcases/08-healthcare-records/repo/before",
   "after": "testcases/08-healthcare-records/repo/after",
   "repo": "testcases/08-healthcare-records/repo"

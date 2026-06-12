@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python notification dispatcher owned by the growth and communications team. The email/SMS campaign sender (notifier.py) prints full recipient email addresses and phone numbers (PII), floods the output with per-retry chatter on bulk sends, and permanent delivery failures look identical to routine attempts. Bring its logging up to production standard. Do not change retry or delivery behavior.",
+  "description": "Logging improvement for the Python notification dispatcher owned by the growth and communications team. The email/SMS campaign sender (notifier.py) prints full recipient email addresses and phone numbers (PII), floods the output with per-retry chatter on bulk sends, and permanent delivery failures look identical to routine attempts. Bring its logging up to production standard. Do not change retry or delivery behavior. Confine the change to notifier.py — do not create new files, documentation, or tests.",
   "before": "testcases/07-notification-service/repo/before",
   "after": "testcases/07-notification-service/repo/after",
   "repo": "testcases/07-notification-service/repo"

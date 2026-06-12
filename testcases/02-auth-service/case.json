@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python authentication and session service owned by the identity & access management team. The login module (auth_service.py) writes plaintext passwords and full session tokens into the log, treats every event as an error, and configures logging inside library code. Bring its logging up to production standard. Do not change authentication behavior.",
+  "description": "Logging improvement for the Python authentication and session service owned by the identity & access management team. The login module (auth_service.py) writes plaintext passwords and full session tokens into the log, treats every event as an error, and configures logging inside library code. Bring its logging up to production standard. Do not change authentication behavior. Confine the change to auth_service.py — do not create new files, documentation, or tests.",
   "before": "testcases/02-auth-service/repo/before",
   "after": "testcases/02-auth-service/repo/after",
   "repo": "testcases/02-auth-service/repo"

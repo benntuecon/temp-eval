@@ -66,7 +66,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("case_dir", type=Path)
     ap.add_argument("--model", default="claude-haiku-4-5")
-    ap.add_argument("--max-turns", type=int, default=30)
+    ap.add_argument("--max-turns", type=int, default=16)
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 

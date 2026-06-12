@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python nightly ETL pipeline owned by the data engineering team. The customer-orders batch job (etl_pipeline.py) prints every row at every stage, dumps entire record payloads to stdout, and failed rows vanish without a trace, making nightly incidents impossible to diagnose. Bring its logging up to production batch standard. Do not change the transformation logic.",
+  "description": "Logging improvement for the Python nightly ETL pipeline owned by the data engineering team. The customer-orders batch job (etl_pipeline.py) prints every row at every stage, dumps entire record payloads to stdout, and failed rows vanish without a trace, making nightly incidents impossible to diagnose. Bring its logging up to production batch standard. Do not change the transformation logic. Confine the change to etl_pipeline.py — do not create new files, documentation, or tests.",
   "before": "testcases/03-etl-pipeline/repo/before",
   "after": "testcases/03-etl-pipeline/repo/after",
   "repo": "testcases/03-etl-pipeline/repo"
