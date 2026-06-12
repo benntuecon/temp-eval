@@ -52,15 +52,24 @@ async def test_health(client):
 
 
 @pytest.mark.anyio
-async def test_fixtures_lists_flagship_and_sample(client):
+async def test_fixtures_lists_testcases_then_builtins(client):
     r = await client.get("/api/fixtures")
     assert r.status_code == 200
     fixtures = r.json()
-    assert {f["id"] for f in fixtures} == {"flagship", "sample"}
+    ids = [f["id"] for f in fixtures]
+    # built-ins always present; demo testcases (if any) listed first
+    assert {"flagship", "sample"} <= set(ids)
+    testcase_ids = [i for i in ids if i.startswith("testcase:")]
+    assert ids[: len(testcase_ids)] == testcase_ids
     for f in fixtures:
         assert f["brief"].strip()
         assert f["default_baseline"]["markdown"].strip()
         assert f["default_challenger"]["markdown"].strip()
+    # testcase fixtures default to the logging skill pair
+    for f in fixtures:
+        if f["id"].startswith("testcase:"):
+            assert f["default_baseline"]["name"] == "logging-naive"
+            assert f["default_challenger"]["name"] == "logging-best-practices"
 
 
 @pytest.mark.anyio

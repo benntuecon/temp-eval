@@ -13,22 +13,25 @@ export function RunForm({
 }) {
   const fixtures = useQuery({ queryKey: ["fixtures"], queryFn: api.fixtures });
 
-  const [fixtureId, setFixtureId] = useState("flagship");
+  const [fixtureId, setFixtureId] = useState("");
   const [brief, setBrief] = useState("");
-  const [baseName, setBaseName] = useState("ship-it-fast");
+  const [baseName, setBaseName] = useState("");
   const [baseMd, setBaseMd] = useState("");
-  const [chalName, setChalName] = useState("disciplined");
+  const [chalName, setChalName] = useState("");
   const [chalMd, setChalMd] = useState("");
-  const [maxTurns, setMaxTurns] = useState(30);
+  const [maxTurns, setMaxTurns] = useState(16);
   const [thinking, setThinking] = useState(2048);
   const [judgeModel, setJudgeModel] = useState("claude-haiku-4-5");
   const [judgesK, setJudgesK] = useState(1);
   const [realAgents, setRealAgents] = useState(false);
 
-  // Prefill from the selected fixture once fixtures arrive.
+  // Prefill from the selected fixture once fixtures arrive; default to the
+  // first fixture the server lists (the demo test cases come first).
   useEffect(() => {
-    const fx = fixtures.data?.find((f: FixtureInfo) => f.id === fixtureId);
+    const list = fixtures.data ?? [];
+    const fx = list.find((f: FixtureInfo) => f.id === fixtureId) ?? list[0];
     if (!fx) return;
+    if (fx.id !== fixtureId) setFixtureId(fx.id);
     setBrief(fx.brief);
     setBaseName(fx.default_baseline.name);
     setBaseMd(fx.default_baseline.markdown);

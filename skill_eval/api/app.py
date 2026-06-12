@@ -50,10 +50,28 @@ def _flagship_skill(name: str, fallback_title: str) -> SkillInput:
 def _fixtures() -> list[FixtureInfo]:
     from skill_eval.flagship_case import TASK_BRIEF as FLAGSHIP_BRIEF
     from skill_eval.sample_repo import TASK_BRIEF as SAMPLE_BRIEF
+    from skill_eval.testcase_fixture import list_testcase_ids, load_case
+
+    # Demo test cases first: each pairs the naive vs best-practices logging
+    # skills against a noisy before/after repo from testcases/.
+    log_baseline = _flagship_skill("logging-naive", "print everything, ship it")
+    log_challenger = _flagship_skill(
+        "logging-best-practices", "leveled, structured, redacted logging"
+    )
+    out: list[FixtureInfo] = [
+        FixtureInfo(
+            id=f"testcase:{case_id}",
+            label=f"Case {case_id} — logging improvement",
+            brief=load_case(case_id)["description"],
+            default_baseline=log_baseline,
+            default_challenger=log_challenger,
+        )
+        for case_id in list_testcase_ids()
+    ]
 
     baseline = _flagship_skill("ship-it-fast", "ship working code fast")
     challenger = _flagship_skill("disciplined", "clarify every ambiguity, test-first")
-    return [
+    out += [
         FixtureInfo(
             id="flagship",
             label="Flagship: prorate_refund (under-specified — rewards asking)",
@@ -69,6 +87,7 @@ def _fixtures() -> list[FixtureInfo]:
             default_challenger=challenger,
         ),
     ]
+    return out
 
 
 def create_app(runs_dir: str | None = None) -> FastAPI:

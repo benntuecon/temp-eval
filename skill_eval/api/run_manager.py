@@ -49,6 +49,13 @@ def _fixture_builder(fixture_id: str):
     """Resolve a fixture id to its RunConfig builder callable."""
     import importlib
 
+    if fixture_id.startswith("testcase:"):
+        from functools import partial
+
+        from skill_eval.testcase_fixture import build_testcase
+
+        return partial(build_testcase, fixture_id.removeprefix("testcase:"))
+
     target = _FIXTURE_BUILDERS.get(fixture_id)
     if target is None:
         raise KeyError(f"unknown fixture {fixture_id!r}")
