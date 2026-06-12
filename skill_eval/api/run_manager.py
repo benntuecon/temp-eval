@@ -265,6 +265,7 @@ class RunManager:
                 challenger_skill_path=str(skills_root / c_slug),
                 max_turns=req.max_turns,
                 thinking_budget=req.thinking_budget or None,
+                wall_clock_seconds=req.wall_clock_seconds,
                 judge_model=req.judge_model,
                 judges_per_criterion=req.judges_per_criterion,
             )

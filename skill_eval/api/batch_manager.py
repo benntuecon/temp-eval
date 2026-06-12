@@ -103,7 +103,8 @@ class BatchManager:
         try:
             baseline = req.baseline or _default_skill(BASELINE_SKILL)
             challenger = req.challenger or _default_skill(CHALLENGER_SKILL)
-            gate = asyncio.Semaphore(req.max_concurrent)
+            # None = no throttle: every retrieved case runs at once.
+            gate = asyncio.Semaphore(req.max_concurrent or len(state.cases))
 
             async def run_one(case: _Case) -> None:
                 async with gate:
@@ -115,6 +116,7 @@ class BatchManager:
                             challenger=challenger,
                             max_turns=req.max_turns,
                             thinking_budget=req.thinking_budget,
+                            wall_clock_seconds=req.wall_clock_seconds,
                             judge_model=req.judge_model,
                             judges_per_criterion=req.judges_per_criterion,
                             real_agents=req.real_agents,

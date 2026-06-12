@@ -361,6 +361,11 @@ export interface components {
              * @default 2048
              */
             thinking_budget: number | null;
+            /**
+             * Wall Clock Seconds
+             * @default 180
+             */
+            wall_clock_seconds: number | null;
             /** Judge Model */
             judge_model?: string | null;
             /**
@@ -373,11 +378,8 @@ export interface components {
              * @default false
              */
             real_agents: boolean;
-            /**
-             * Max Concurrent
-             * @default 3
-             */
-            max_concurrent: number;
+            /** Max Concurrent */
+            max_concurrent?: number | null;
         };
         /**
          * CreateRunRequest
@@ -403,6 +405,8 @@ export interface components {
              * @default 2048
              */
             thinking_budget: number | null;
+            /** Wall Clock Seconds */
+            wall_clock_seconds?: number | null;
             /** Judge Model */
             judge_model?: string | null;
             /**

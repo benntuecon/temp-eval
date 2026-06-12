@@ -47,7 +47,8 @@ function CaseRow({ c }: { c: BatchCaseState | RetrievedCase }) {
 export function BatchPage() {
   const [query, setQuery] = useState("");
   const [topK, setTopK] = useState(10);
-  const [maxConcurrent, setMaxConcurrent] = useState(3);
+  const [maxConcurrent, setMaxConcurrent] = useState(""); // "" = all at once
+  const [wallClock, setWallClock] = useState(180);
   const [realAgents, setRealAgents] = useState(false);
   const [preview, setPreview] = useState<RetrievedCase[] | null>(null);
   const [previewing, setPreviewing] = useState(false);
@@ -85,9 +86,10 @@ export function BatchPage() {
         top_k: topK,
         max_turns: 16,
         thinking_budget: 2048,
+        wall_clock_seconds: wallClock,
         judges_per_criterion: 1,
         real_agents: realAgents,
-        max_concurrent: maxConcurrent,
+        max_concurrent: maxConcurrent === "" ? null : Number(maxConcurrent),
       });
       setPreview(null);
       setBatchId(batch_id);
@@ -110,7 +112,7 @@ export function BatchPage() {
             data-testid="batch-query"
           />
         </Field>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
           <Field label="Top K cases">
             <input
               type="number"
@@ -121,14 +123,26 @@ export function BatchPage() {
               onChange={(e) => setTopK(Number(e.target.value))}
             />
           </Field>
-          <Field label="Max concurrent evals">
+          <Field label="Wall clock per run (s)">
+            <input
+              type="number"
+              min={10}
+              max={3600}
+              step={30}
+              className={inputClass}
+              value={wallClock}
+              onChange={(e) => setWallClock(Number(e.target.value))}
+            />
+          </Field>
+          <Field label="Max concurrent (blank = all)">
             <input
               type="number"
               min={1}
-              max={8}
+              max={50}
+              placeholder="all"
               className={inputClass}
               value={maxConcurrent}
-              onChange={(e) => setMaxConcurrent(Number(e.target.value))}
+              onChange={(e) => setMaxConcurrent(e.target.value)}
             />
           </Field>
           <label className="flex items-end gap-2 pb-2 text-sm text-slate-700">

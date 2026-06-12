@@ -30,6 +30,7 @@ class CreateRunRequest(BaseModel):
     challenger: SkillInput
     max_turns: int = Field(default=30, ge=1, le=100)
     thinking_budget: int | None = Field(default=2048, ge=0, le=32000)
+    wall_clock_seconds: int | None = Field(default=None, ge=10, le=3600)
     judge_model: str | None = None
     judges_per_criterion: int = Field(default=1, ge=1, le=5)
     real_agents: bool = False  # False = free simulated components
@@ -99,11 +100,13 @@ class CreateBatchRequest(BaseModel):
     challenger: SkillInput | None = None
     max_turns: int = Field(default=16, ge=1, le=100)
     thinking_budget: int | None = Field(default=2048, ge=0, le=32000)
+    # Hard per-run elapsed-time cap; takers stop with stop_reason=wall_clock.
+    wall_clock_seconds: int | None = Field(default=180, ge=10, le=3600)
     judge_model: str | None = None
     judges_per_criterion: int = Field(default=1, ge=1, le=5)
     real_agents: bool = False
-    # Cap on concurrently-running child evals (each spawns agent processes).
-    max_concurrent: int = Field(default=3, ge=1, le=8)
+    # Cap on concurrently-running child evals; None = run all K at once.
+    max_concurrent: int | None = Field(default=None, ge=1, le=50)
 
     @field_validator("query")
     @classmethod

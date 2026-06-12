@@ -164,6 +164,7 @@ async def test_batch_forwards_config_to_children(tmp_path, monkeypatch):
         real_agents=True,
         max_turns=7,
         thinking_budget=512,
+        wall_clock_seconds=180,
         judge_model="claude-sonnet-4-6",
         judges_per_criterion=2,
         max_concurrent=1,
@@ -176,6 +177,7 @@ async def test_batch_forwards_config_to_children(tmp_path, monkeypatch):
         assert child.real_agents is True
         assert child.max_turns == 7
         assert child.thinking_budget == 512
+        assert child.wall_clock_seconds == 180
         assert child.judge_model == "claude-sonnet-4-6"
         assert child.judges_per_criterion == 2
         assert child.fixture.startswith("testcase:")
