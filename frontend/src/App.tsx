@@ -33,7 +33,7 @@ const TEAM_MEMBERS: Array<{
     name: "Luciana Ma",
     role: "CIB Product Manager",
     contribution: "Built the frontend, refined the problem framing, and created the demo material.",
-    photo: null,
+    photo: "/team/4.jpg",
   },
 ];
 
