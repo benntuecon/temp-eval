@@ -245,8 +245,8 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1781239446.7022922,
-    "ast_hash": "1d8bef05a2a46146181ca13bc3ec9f23",
+    "mtime": 1781241884.5520215,
+    "ast_hash": "baadd94dcef36ba02bc9d77308364c03",
     "semantic_hash": ""
   },
   "frontend/src/api/client.ts": {
@@ -259,29 +259,24 @@
     "ast_hash": "392338c59a7f8a197130d349d1f20441",
     "semantic_hash": ""
   },
-  "frontend/src/components/NodePanel.tsx": {
-    "mtime": 1781240545.8149018,
-    "ast_hash": "865e79cf6ff23f578ac0c8762ed9837a",
-    "semantic_hash": ""
-  },
   "frontend/src/components/PipelineGraph.tsx": {
-    "mtime": 1781240517.1180384,
-    "ast_hash": "c4e41406c043e2dd1ae1ac06a7369774",
+    "mtime": 1781242015.9786713,
+    "ast_hash": "6c0861501956036f1a711f1cae6681dd",
     "semantic_hash": ""
   },
   "frontend/src/components/ResultsFunnel.tsx": {
-    "mtime": 1781165429.7350607,
-    "ast_hash": "c0094196201b32e2302647fed8c4c210",
+    "mtime": 1781241884.5586343,
+    "ast_hash": "f1ce9dde02d353550217c258d954edc2",
     "semantic_hash": ""
   },
   "frontend/src/components/charts.ts": {
-    "mtime": 1781165394.3692791,
-    "ast_hash": "913d9c7657a30ccb4df66d82fa27455f",
+    "mtime": 1781241884.556453,
+    "ast_hash": "83a141614fce182418c67479be0b881b",
     "semantic_hash": ""
   },
   "frontend/src/components/ui.tsx": {
-    "mtime": 1781165290.5403318,
-    "ast_hash": "c59bc77b2f79d71376eccbfa8a7812f9",
+    "mtime": 1781241884.5543327,
+    "ast_hash": "7a3d0bf0ee5ed9779cf1a9d96a4d11e0",
     "semantic_hash": ""
   },
   "frontend/src/main.tsx": {
@@ -290,13 +285,13 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/HistoryPage.tsx": {
-    "mtime": 1781165463.0139747,
-    "ast_hash": "0e7668a3662396f933ed9e89b6a311f5",
+    "mtime": 1781241884.560786,
+    "ast_hash": "df9f7a51d973a0f0766d4b3d13a40496",
     "semantic_hash": ""
   },
   "frontend/src/pages/RunPage.tsx": {
-    "mtime": 1781240547.731122,
-    "ast_hash": "bb2f4eae779bb6249401d242f4a7ec42",
+    "mtime": 1781242117.4894185,
+    "ast_hash": "7a3139734b5d0d118718b5b4626b7a97",
     "semantic_hash": ""
   },
   "frontend/src/state/eventStore.test.ts": {
@@ -510,8 +505,8 @@
     "semantic_hash": ""
   },
   "tests/test_e2e_playwright.py": {
-    "mtime": 1781239463.7700021,
-    "ast_hash": "d9b85e6b09d0491f280896038244a196",
+    "mtime": 1781242172.461026,
+    "ast_hash": "df7ca77918331ab431369a42fdb81f5c",
     "semantic_hash": ""
   },
   "tests/test_events.py": {
@@ -540,8 +535,8 @@
     "semantic_hash": ""
   },
   "frontend/index.html": {
-    "mtime": 1781165151.9650633,
-    "ast_hash": "fc04367eebdf5145540121173e8a86ad",
+    "mtime": 1781241884.5475562,
+    "ast_hash": "38e3cc8d1f169dad2646955534d48cd2",
     "semantic_hash": ""
   },
   "scripts/index_testcases.py": {
@@ -564,11 +559,6 @@
     "ast_hash": "b5fb03936afae4dfa9c9577186dde440",
     "semantic_hash": ""
   },
-  "frontend/src/components/BatchStats.tsx": {
-    "mtime": 1781236910.0948453,
-    "ast_hash": "a0cd401f034dfd562652eb67fccf8318",
-    "semantic_hash": ""
-  },
   "skill_eval/api/batch_manager.py": {
     "mtime": 1781238821.1675696,
     "ast_hash": "8e2b7ccf4d22d1d90afd537a724164e9",
@@ -582,6 +572,11 @@
   "tests/test_batch_api.py": {
     "mtime": 1781238860.0177603,
     "ast_hash": "97396032ede66ea0b5a204e83055dadd",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/RunForm.tsx": {
+    "mtime": 1781241961.0176294,
+    "ast_hash": "13d904d078e585dbdcd0ec6502747608",
     "semantic_hash": ""
   }
 }

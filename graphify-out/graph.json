@@ -394,10 +394,30 @@
       "norm_label": "app.tsx"
     },
     {
+      "label": "TEAM_MEMBERS",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_app_team_members",
+      "community": 35,
+      "norm_label": "team_members"
+    },
+    {
+      "label": "SkillPruneAnimation()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "src_app_skillpruneanimation",
+      "community": 35,
+      "norm_label": "skillpruneanimation()"
+    },
+    {
       "label": "App()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L8",
+      "source_location": "L495",
       "_origin": "ast",
       "id": "src_app_app",
       "community": 35,
@@ -470,7 +490,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "api_client_armreport",
-      "community": 2,
+      "community": 1,
       "norm_label": "armreport"
     },
     {
@@ -550,7 +570,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "api_client_batchstats",
-      "community": 44,
+      "community": 2,
       "norm_label": "batchstats"
     },
     {
@@ -580,7 +600,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "api_client_api",
-      "community": 35,
+      "community": 2,
       "norm_label": "api"
     },
     {
@@ -654,243 +674,133 @@
       "norm_label": "operations"
     },
     {
-      "label": "BatchStats.tsx",
-      "file_type": "code",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_batchstats",
-      "community": 44,
-      "norm_label": "batchstats.tsx"
-    },
-    {
-      "label": "BarPair()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "components_batchstats_barpair",
-      "community": 44,
-      "norm_label": "barpair()"
-    },
-    {
-      "label": "WinCard()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "components_batchstats_wincard",
-      "community": 44,
-      "norm_label": "wincard()"
-    },
-    {
-      "label": "BatchStats()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L56",
-      "_origin": "ast",
-      "id": "components_batchstats_batchstats",
-      "community": 44,
-      "norm_label": "batchstats()"
-    },
-    {
-      "label": "NodePanel.tsx",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_nodepanel",
-      "community": 37,
-      "norm_label": "nodepanel.tsx"
-    },
-    {
-      "label": "KIND_TONE",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "components_nodepanel_kind_tone",
-      "community": 37,
-      "norm_label": "kind_tone"
-    },
-    {
-      "label": "NODE_DESCRIPTION",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "components_nodepanel_node_description",
-      "community": 37,
-      "norm_label": "node_description"
-    },
-    {
-      "label": "describe()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "components_nodepanel_describe",
-      "community": 37,
-      "norm_label": "describe()"
-    },
-    {
-      "label": "CASE_TONE",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "components_nodepanel_case_tone",
-      "community": 37,
-      "norm_label": "case_tone"
-    },
-    {
-      "label": "CaseInfoPanel()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L49",
-      "_origin": "ast",
-      "id": "components_nodepanel_caseinfopanel",
-      "community": 37,
-      "norm_label": "caseinfopanel()"
-    },
-    {
-      "label": "NodePanel()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L80",
-      "_origin": "ast",
-      "id": "components_nodepanel_nodepanel",
-      "community": 37,
-      "norm_label": "nodepanel()"
-    },
-    {
       "label": "PipelineGraph.tsx",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_pipelinegraph",
-      "community": 21,
+      "community": 37,
       "norm_label": "pipelinegraph.tsx"
     },
     {
       "label": "BatchGraphContext",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "components_pipelinegraph_batchgraphcontext",
-      "community": 21,
+      "community": 37,
       "norm_label": "batchgraphcontext"
     },
     {
       "label": "CASE_STATUS",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "components_pipelinegraph_case_status",
-      "community": 21,
+      "community": 37,
       "norm_label": "case_status"
     },
     {
       "label": "STATUS_BG",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L37",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "components_pipelinegraph_status_bg",
-      "community": 21,
+      "community": 37,
       "norm_label": "status_bg"
     },
     {
       "label": "PipelineNodeData",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L44",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "components_pipelinegraph_pipelinenodedata",
-      "community": 21,
+      "community": 37,
       "norm_label": "pipelinenodedata"
     },
     {
       "label": "PipelineNode()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L51",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "components_pipelinegraph_pipelinenode",
-      "community": 1,
+      "community": 37,
       "norm_label": "pipelinenode()"
     },
     {
       "label": "nodeTypes",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L68",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "components_pipelinegraph_nodetypes",
-      "community": 21,
+      "community": 37,
       "norm_label": "nodetypes"
     },
     {
       "label": "X",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L71",
+      "source_location": "L73",
       "_origin": "ast",
       "id": "components_pipelinegraph_x",
-      "community": 21,
+      "community": 37,
       "norm_label": "x"
     },
     {
       "label": "judgeY()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L75",
+      "source_location": "L77",
       "_origin": "ast",
       "id": "components_pipelinegraph_judgey",
-      "community": 21,
+      "community": 37,
       "norm_label": "judgey()"
     },
     {
       "label": "coarseNode()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L81",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "components_pipelinegraph_coarsenode",
-      "community": 21,
+      "community": 37,
       "norm_label": "coarsenode()"
     },
     {
       "label": "buildGraph()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L91",
+      "source_location": "L93",
       "_origin": "ast",
       "id": "components_pipelinegraph_buildgraph",
-      "community": 21,
+      "community": 37,
       "norm_label": "buildgraph()"
     },
     {
       "label": "caseIdOf()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L242",
+      "source_location": "L263",
       "_origin": "ast",
       "id": "components_pipelinegraph_caseidof",
-      "community": 21,
+      "community": 37,
       "norm_label": "caseidof()"
     },
     {
       "label": "PipelineGraph()",
       "file_type": "code",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
-      "source_location": "L248",
+      "source_location": "L269",
       "_origin": "ast",
       "id": "components_pipelinegraph_pipelinegraph",
-      "community": 21,
+      "community": 37,
       "norm_label": "pipelinegraph()"
     },
     {
@@ -904,10 +814,100 @@
       "norm_label": "resultsfunnel.tsx"
     },
     {
-      "label": "MetricCard()",
+      "label": "DecisionAction",
       "file_type": "code",
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L10",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_decisionaction",
+      "community": 1,
+      "norm_label": "decisionaction"
+    },
+    {
+      "label": "RequirementUnlock",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_requirementunlock",
+      "community": 1,
+      "norm_label": "requirementunlock"
+    },
+    {
+      "label": "BehaviorInsight",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_behaviorinsight",
+      "community": 1,
+      "norm_label": "behaviorinsight"
+    },
+    {
+      "label": "scoreFor()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_scorefor",
+      "community": 1,
+      "norm_label": "scorefor()"
+    },
+    {
+      "label": "inferDecision()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_inferdecision",
+      "community": 1,
+      "norm_label": "inferdecision()"
+    },
+    {
+      "label": "mockTaskKind()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_mocktaskkind",
+      "community": 1,
+      "norm_label": "mocktaskkind()"
+    },
+    {
+      "label": "mockedRequirementUnlocks()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_mockedrequirementunlocks",
+      "community": 1,
+      "norm_label": "mockedrequirementunlocks()"
+    },
+    {
+      "label": "mockedBehaviorInsights()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L164",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_mockedbehaviorinsights",
+      "community": 1,
+      "norm_label": "mockedbehaviorinsights()"
+    },
+    {
+      "label": "mockedAssumptionsAndMisses()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L197",
+      "_origin": "ast",
+      "id": "components_resultsfunnel_mockedassumptionsandmisses",
+      "community": 1,
+      "norm_label": "mockedassumptionsandmisses()"
+    },
+    {
+      "label": "MetricCard()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L244",
       "_origin": "ast",
       "id": "components_resultsfunnel_metriccard",
       "community": 1,
@@ -917,7 +917,7 @@
       "label": "byArm()",
       "file_type": "code",
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
-      "source_location": "L37",
+      "source_location": "L271",
       "_origin": "ast",
       "id": "components_resultsfunnel_byarm",
       "community": 1,
@@ -927,11 +927,31 @@
       "label": "ResultsFunnel()",
       "file_type": "code",
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
-      "source_location": "L41",
+      "source_location": "L275",
       "_origin": "ast",
       "id": "components_resultsfunnel_resultsfunnel",
       "community": 1,
       "norm_label": "resultsfunnel()"
+    },
+    {
+      "label": "RunForm.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "components_runform",
+      "community": 2,
+      "norm_label": "runform.tsx"
+    },
+    {
+      "label": "RunForm()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "components_runform_runform",
+      "community": 2,
+      "norm_label": "runform()"
     },
     {
       "label": "charts.ts",
@@ -950,7 +970,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_charts_arm_colors",
-      "community": 44,
+      "community": 1,
       "norm_label": "arm_colors"
     },
     {
@@ -1010,7 +1030,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui",
-      "community": 1,
+      "community": 35,
       "norm_label": "ui.tsx"
     },
     {
@@ -1020,7 +1040,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "components_ui_cn",
-      "community": 1,
+      "community": 35,
       "norm_label": "cn()"
     },
     {
@@ -1030,7 +1050,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_ui_button",
-      "community": 1,
+      "community": 35,
       "norm_label": "button()"
     },
     {
@@ -1040,7 +1060,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_ui_card",
-      "community": 1,
+      "community": 35,
       "norm_label": "card()"
     },
     {
@@ -1050,17 +1070,17 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_ui_badge",
-      "community": 1,
+      "community": 35,
       "norm_label": "badge()"
     },
     {
       "label": "Field()",
       "file_type": "code",
       "source_file": "frontend/src/components/ui.tsx",
-      "source_location": "L64",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "components_ui_field",
-      "community": 1,
+      "community": 35,
       "norm_label": "field()"
     },
     {
@@ -1090,7 +1110,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "pages_historypage",
-      "community": 1,
+      "community": 35,
       "norm_label": "historypage.tsx"
     },
     {
@@ -1120,44 +1140,94 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "pages_runpage",
-      "community": 35,
+      "community": 2,
       "norm_label": "runpage.tsx"
     },
     {
-      "label": "STATUS_TONE",
+      "label": "MilestoneCard",
       "file_type": "code",
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "pages_runpage_status_tone",
-      "community": 35,
-      "norm_label": "status_tone"
+      "id": "pages_runpage_milestonecard",
+      "community": 2,
+      "norm_label": "milestonecard"
     },
     {
-      "label": "CaseLiveView()",
+      "label": "batchMilestones()",
       "file_type": "code",
       "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L31",
+      "source_location": "L29",
       "_origin": "ast",
-      "id": "pages_runpage_caseliveview",
-      "community": 35,
-      "norm_label": "caseliveview()"
+      "id": "pages_runpage_batchmilestones",
+      "community": 2,
+      "norm_label": "batchmilestones()"
     },
     {
-      "label": "CaseRow()",
+      "label": "MilestoneCards()",
       "file_type": "code",
       "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L95",
+      "source_location": "L71",
       "_origin": "ast",
-      "id": "pages_runpage_caserow",
-      "community": 1,
-      "norm_label": "caserow()"
+      "id": "pages_runpage_milestonecards",
+      "community": 2,
+      "norm_label": "milestonecards()"
+    },
+    {
+      "label": "NodeThinkingCodeBlock()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L132",
+      "_origin": "ast",
+      "id": "pages_runpage_nodethinkingcodeblock",
+      "community": 2,
+      "norm_label": "nodethinkingcodeblock()"
+    },
+    {
+      "label": "BarPair()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L201",
+      "_origin": "ast",
+      "id": "pages_runpage_barpair",
+      "community": 2,
+      "norm_label": "barpair()"
+    },
+    {
+      "label": "BatchStatsBoard()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L234",
+      "_origin": "ast",
+      "id": "pages_runpage_batchstatsboard",
+      "community": 2,
+      "norm_label": "batchstatsboard()"
+    },
+    {
+      "label": "OnboardingRoadmap()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L412",
+      "_origin": "ast",
+      "id": "pages_runpage_onboardingroadmap",
+      "community": 2,
+      "norm_label": "onboardingroadmap()"
+    },
+    {
+      "label": "FutureRoadmapScreen()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L429",
+      "_origin": "ast",
+      "id": "pages_runpage_futureroadmapscreen",
+      "community": 2,
+      "norm_label": "futureroadmapscreen()"
     },
     {
       "label": "RunPage()",
       "file_type": "code",
       "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L147",
+      "source_location": "L464",
       "_origin": "ast",
       "id": "pages_runpage_runpage",
       "community": 35,
@@ -1240,7 +1310,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "state_eventstore_runlivestate",
-      "community": 37,
+      "community": 21,
       "norm_label": "runlivestate"
     },
     {
@@ -1560,7 +1630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval",
-      "community": 32,
+      "community": 89,
       "norm_label": "run_testcase_eval.py"
     },
     {
@@ -1570,7 +1640,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_copy_tree",
-      "community": 32,
+      "community": 89,
       "norm_label": "_copy_tree()"
     },
     {
@@ -1580,7 +1650,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_py_path",
-      "community": 32,
+      "community": 89,
       "norm_label": "path"
     },
     {
@@ -1590,7 +1660,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_materialize_case_repo",
-      "community": 32,
+      "community": 89,
       "norm_label": "materialize_case_repo()"
     },
     {
@@ -1600,7 +1670,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_main",
-      "community": 32,
+      "community": 89,
       "norm_label": "main()"
     },
     {
@@ -1610,7 +1680,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_rationale_1",
-      "community": 32,
+      "community": 89,
       "norm_label": "run one skill-eval against a testcases/<case> fixture.  bridges the hackathon ca"
     },
     {
@@ -1620,7 +1690,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "scripts_run_testcase_eval_rationale_41",
-      "community": 32,
+      "community": 89,
       "norm_label": "turn before/ and after/ dirs into two commits; return (brief, before, after)."
     },
     {
@@ -2710,7 +2780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_batch",
-      "community": 32,
+      "community": 20,
       "norm_label": "batch.py"
     },
     {
@@ -2790,7 +2860,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_batch_rationale_1",
-      "community": 32,
+      "community": 20,
       "norm_label": "concurrent batch runner for skill-eval.  runs multiple runconfigs through run_ev"
     },
     {
@@ -2810,7 +2880,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_contracts",
-      "community": 32,
+      "community": 91,
       "norm_label": "contracts.py"
     },
     {
@@ -2840,7 +2910,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "skill_eval_contracts_stopreason",
-      "community": 32,
+      "community": 44,
       "norm_label": "stopreason"
     },
     {
@@ -2860,7 +2930,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "skill_eval_contracts_runconfig",
-      "community": 32,
+      "community": 83,
       "norm_label": "runconfig"
     },
     {
@@ -2870,7 +2940,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "skill_eval_contracts_workspace",
-      "community": 32,
+      "community": 44,
       "norm_label": "workspace"
     },
     {
@@ -2890,7 +2960,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "skill_eval_contracts_takerresult",
-      "community": 32,
+      "community": 44,
       "norm_label": "takerresult"
     },
     {
@@ -2910,7 +2980,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "skill_eval_contracts_judgescore",
-      "community": 32,
+      "community": 79,
       "norm_label": "judgescore"
     },
     {
@@ -2940,7 +3010,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "skill_eval_contracts_prepare_workspaces",
-      "community": 32,
+      "community": 83,
       "norm_label": "prepare_workspaces()"
     },
     {
@@ -2950,7 +3020,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_taker",
-      "community": 32,
+      "community": 44,
       "norm_label": "run_taker()"
     },
     {
@@ -2960,7 +3030,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "skill_eval_contracts_py_askfn",
-      "community": 32,
+      "community": 44,
       "norm_label": "askfn"
     },
     {
@@ -2970,7 +3040,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "skill_eval_contracts_make_simulator",
-      "community": 32,
+      "community": 91,
       "norm_label": "make_simulator()"
     },
     {
@@ -2980,7 +3050,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_judge",
-      "community": 32,
+      "community": 79,
       "norm_label": "run_judge()"
     },
     {
@@ -2990,7 +3060,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_contracts_run_eval",
-      "community": 32,
+      "community": 91,
       "norm_label": "run_eval()"
     },
     {
@@ -3000,7 +3070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_1",
-      "community": 32,
+      "community": 91,
       "norm_label": "shared data contracts for the skill-eval harness.  this is the single integratio"
     },
     {
@@ -3020,7 +3090,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_24",
-      "community": 32,
+      "community": 44,
       "norm_label": "why a test-taker run ended."
     },
     {
@@ -3040,7 +3110,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_48",
-      "community": 32,
+      "community": 83,
       "norm_label": "the eval's input: commits, task, skills, and the test budget."
     },
     {
@@ -3050,7 +3120,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_71",
-      "community": 32,
+      "community": 44,
       "norm_label": "isolated dirs for one arm plus the shared gold tree."
     },
     {
@@ -3070,7 +3140,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_105",
-      "community": 32,
+      "community": 44,
       "norm_label": "everything one taker produced, ready for judging."
     },
     {
@@ -3090,7 +3160,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_143",
-      "community": 32,
+      "community": 79,
       "norm_label": "a single judge's 0-20 score plus rationale."
     },
     {
@@ -3120,7 +3190,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_191",
-      "community": 32,
+      "community": 83,
       "norm_label": "component 1: create git worktrees and compute the gold diff."
     },
     {
@@ -3130,7 +3200,7 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_202",
-      "community": 32,
+      "community": 44,
       "norm_label": "component 2: run a claude agent sdk session under budget; return result."
     },
     {
@@ -3140,7 +3210,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_207",
-      "community": 32,
+      "community": 91,
       "norm_label": "component 3: build the askfn the simulator uses to answer questions."
     },
     {
@@ -3150,7 +3220,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_212",
-      "community": 32,
+      "community": 79,
       "norm_label": "component 5: score one criterion for one taker (0-20)."
     },
     {
@@ -3160,7 +3230,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "skill_eval_contracts_rationale_217",
-      "community": 32,
+      "community": 91,
       "norm_label": "component 6: orchestrate the whole eval and return the comparison."
     },
     {
@@ -3570,7 +3640,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_flagship_case",
-      "community": 16,
+      "community": 87,
       "norm_label": "flagship_case.py"
     },
     {
@@ -3580,7 +3650,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "skill_eval_flagship_case_build_flagship_case",
-      "community": 16,
+      "community": 87,
       "norm_label": "build_flagship_case()"
     },
     {
@@ -3590,7 +3660,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "skill_eval_flagship_case_py_runconfig",
-      "community": 16,
+      "community": 87,
       "norm_label": "runconfig"
     },
     {
@@ -3950,7 +4020,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_judge_py_judgescore",
-      "community": 4,
+      "community": 79,
       "norm_label": "judgescore"
     },
     {
@@ -4210,7 +4280,7 @@
       "source_location": "L453",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_run_eval",
-      "community": 32,
+      "community": 46,
       "norm_label": "run_eval()"
     },
     {
@@ -4250,7 +4320,7 @@
       "source_location": "L461",
       "_origin": "ast",
       "id": "skill_eval_orchestrator_rationale_461",
-      "community": 32,
+      "community": 46,
       "norm_label": "synchronous wrapper around :func:`arun_eval` (cli / tests / scripts)."
     },
     {
@@ -4310,7 +4380,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_gap_rows",
-      "community": 29,
+      "community": 79,
       "norm_label": "criterion_gap_rows()"
     },
     {
@@ -4320,7 +4390,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "skill_eval_reporting_criterion_winners",
-      "community": 29,
+      "community": 79,
       "norm_label": "criterion_winners()"
     },
     {
@@ -4340,7 +4410,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "skill_eval_reporting_report_to_json",
-      "community": 29,
+      "community": 85,
       "norm_label": "report_to_json()"
     },
     {
@@ -4360,7 +4430,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "skill_eval_reporting_report_from_json",
-      "community": 29,
+      "community": 85,
       "norm_label": "report_from_json()"
     },
     {
@@ -4370,7 +4440,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "skill_eval_reporting_save_report",
-      "community": 29,
+      "community": 85,
       "norm_label": "save_report()"
     },
     {
@@ -4380,7 +4450,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "skill_eval_reporting_list_saved_runs",
-      "community": 29,
+      "community": 85,
       "norm_label": "list_saved_runs()"
     },
     {
@@ -4390,7 +4460,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "skill_eval_reporting_load_report",
-      "community": 29,
+      "community": 85,
       "norm_label": "load_report()"
     },
     {
@@ -4460,7 +4530,7 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "skill_eval_reporting_agent_graph_dot",
-      "community": 29,
+      "community": 92,
       "norm_label": "agent_graph_dot()"
     },
     {
@@ -4470,7 +4540,7 @@
       "source_location": "L673",
       "_origin": "ast",
       "id": "skill_eval_reporting_batch_score_distribution",
-      "community": 29,
+      "community": 90,
       "norm_label": "batch_score_distribution()"
     },
     {
@@ -4520,7 +4590,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_84",
-      "community": 29,
+      "community": 79,
       "norm_label": "return one row per criterion with baseline, challenger, and the gap.      ``gap"
     },
     {
@@ -4530,7 +4600,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_108",
-      "community": 29,
+      "community": 79,
       "norm_label": "return one row per criterion with the per-criterion winner and margin.      each"
     },
     {
@@ -4550,7 +4620,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_156",
-      "community": 29,
+      "community": 85,
       "norm_label": "serialise a comparisonreport to pretty-printed json (pydantic)."
     },
     {
@@ -4570,7 +4640,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_168",
-      "community": 29,
+      "community": 85,
       "norm_label": "reconstruct a comparisonreport (real models/enums) from json.      pydantic hand"
     },
     {
@@ -4580,7 +4650,7 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_184",
-      "community": 29,
+      "community": 85,
       "norm_label": "persist a report as ``<runs_dir>/<ts>_<label>_<suffix>.json``; return the path."
     },
     {
@@ -4590,7 +4660,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_205",
-      "community": 29,
+      "community": 85,
       "norm_label": "return saved run files, newest first: ``{\"name\", \"path\"}`` per run."
     },
     {
@@ -4600,7 +4670,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_216",
-      "community": 29,
+      "community": 85,
       "norm_label": "load one saved run back into a comparisonreport."
     },
     {
@@ -4670,7 +4740,7 @@
       "source_location": "L405",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_405",
-      "community": 29,
+      "community": 92,
       "norm_label": "return a graphviz dot digraph of the whole eval architecture, live.      flow: t"
     },
     {
@@ -4680,7 +4750,7 @@
       "source_location": "L674",
       "_origin": "ast",
       "id": "skill_eval_reporting_rationale_674",
-      "community": 29,
+      "community": 90,
       "norm_label": "return long-form rows for per-criterion, per-arm score distributions.      each"
     },
     {
@@ -4880,7 +4950,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_sample_repo",
-      "community": 32,
+      "community": 46,
       "norm_label": "sample_repo.py"
     },
     {
@@ -4890,7 +4960,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "skill_eval_sample_repo_build_sample_repo",
-      "community": 32,
+      "community": 46,
       "norm_label": "build_sample_repo()"
     },
     {
@@ -4900,7 +4970,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "skill_eval_sample_repo_py_runconfig",
-      "community": 32,
+      "community": 46,
       "norm_label": "runconfig"
     },
     {
@@ -4910,7 +4980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_sandbox",
-      "community": 32,
+      "community": 84,
       "norm_label": "sandbox.py"
     },
     {
@@ -4920,7 +4990,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_prepare_workspaces",
-      "community": 32,
+      "community": 84,
       "norm_label": "prepare_workspaces()"
     },
     {
@@ -4930,7 +5000,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_py_runconfig",
-      "community": 32,
+      "community": 83,
       "norm_label": "runconfig"
     },
     {
@@ -4940,7 +5010,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "arm",
-      "community": 32,
+      "community": 84,
       "norm_label": "arm"
     },
     {
@@ -4950,7 +5020,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skill_eval_sandbox_py_workspace",
-      "community": 32,
+      "community": 84,
       "norm_label": "workspace"
     },
     {
@@ -4960,7 +5030,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "skill_eval_sandbox_cleanup_workspaces",
-      "community": 32,
+      "community": 84,
       "norm_label": "cleanup_workspaces()"
     },
     {
@@ -4970,7 +5040,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_simulated",
-      "community": 32,
+      "community": 44,
       "norm_label": "simulated.py"
     },
     {
@@ -4980,7 +5050,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "skill_eval_simulated_stable_hash_int",
-      "community": 32,
+      "community": 44,
       "norm_label": "_stable_hash_int()"
     },
     {
@@ -4990,7 +5060,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_make_simulator",
-      "community": 32,
+      "community": 84,
       "norm_label": "sim_make_simulator()"
     },
     {
@@ -5000,7 +5070,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_askfn",
-      "community": 32,
+      "community": 44,
       "norm_label": "askfn"
     },
     {
@@ -5010,7 +5080,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_run_taker",
-      "community": 32,
+      "community": 44,
       "norm_label": "sim_run_taker()"
     },
     {
@@ -5020,7 +5090,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_workspace",
-      "community": 32,
+      "community": 44,
       "norm_label": "workspace"
     },
     {
@@ -5030,7 +5100,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_runconfig",
-      "community": 32,
+      "community": 44,
       "norm_label": "runconfig"
     },
     {
@@ -5040,7 +5110,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_takerresult",
-      "community": 32,
+      "community": 44,
       "norm_label": "takerresult"
     },
     {
@@ -5050,7 +5120,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skill_eval_simulated_sim_run_judge",
-      "community": 32,
+      "community": 44,
       "norm_label": "sim_run_judge()"
     },
     {
@@ -5060,7 +5130,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_judgeinput",
-      "community": 32,
+      "community": 44,
       "norm_label": "judgeinput"
     },
     {
@@ -5070,7 +5140,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skill_eval_simulated_py_judgescore",
-      "community": 32,
+      "community": 44,
       "norm_label": "judgescore"
     },
     {
@@ -5080,7 +5150,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_1",
-      "community": 32,
+      "community": 44,
       "norm_label": "deterministic simulated components for phase a walking skeleton.  these make no"
     },
     {
@@ -5090,7 +5160,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_33",
-      "community": 32,
+      "community": 44,
       "norm_label": "return a stable integer hash of *text* using sha256 (not python's hash())."
     },
     {
@@ -5100,7 +5170,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_51",
-      "community": 32,
+      "community": 84,
       "norm_label": "return a canned askfn that gives helpful, deterministic answers."
     },
     {
@@ -5110,7 +5180,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_84",
-      "community": 32,
+      "community": 44,
       "norm_label": "simulate a taker: ask clarifying questions, write a marker, return result."
     },
     {
@@ -5120,7 +5190,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "skill_eval_simulated_rationale_198",
-      "community": 32,
+      "community": 44,
       "norm_label": "return a deterministic 0-20 score for one criterion using sha256-based hash."
     },
     {
@@ -5200,7 +5270,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_taker",
-      "community": 32,
+      "community": 86,
       "norm_label": "taker.py"
     },
     {
@@ -5220,7 +5290,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "resultmessage",
-      "community": 32,
+      "community": 44,
       "norm_label": "resultmessage"
     },
     {
@@ -5230,7 +5300,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "runmetrics",
-      "community": 32,
+      "community": 44,
       "norm_label": "runmetrics"
     },
     {
@@ -5250,7 +5320,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "stopreason",
-      "community": 32,
+      "community": 44,
       "norm_label": "stopreason"
     },
     {
@@ -5260,7 +5330,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "skill_eval_taker_compute_diff",
-      "community": 31,
+      "community": 86,
       "norm_label": "_compute_diff()"
     },
     {
@@ -5270,7 +5340,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_run_taker",
-      "community": 31,
+      "community": 53,
       "norm_label": "run_taker()"
     },
     {
@@ -5280,7 +5350,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_py_workspace",
-      "community": 32,
+      "community": 44,
       "norm_label": "workspace"
     },
     {
@@ -5290,7 +5360,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_py_runconfig",
-      "community": 32,
+      "community": 44,
       "norm_label": "runconfig"
     },
     {
@@ -5300,7 +5370,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_py_askfn",
-      "community": 32,
+      "community": 44,
       "norm_label": "askfn"
     },
     {
@@ -5310,7 +5380,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "skill_eval_taker_py_takerresult",
-      "community": 32,
+      "community": 44,
       "norm_label": "takerresult"
     },
     {
@@ -5320,7 +5390,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_1",
-      "community": 32,
+      "community": 86,
       "norm_label": "c2: real taker backed by the claude agent sdk (claude-haiku-4-5).  the taker is"
     },
     {
@@ -5350,7 +5420,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_74",
-      "community": 31,
+      "community": 86,
       "norm_label": "stage all changes and return the diff against the starting commit.      diffs ag"
     },
     {
@@ -5360,7 +5430,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "skill_eval_taker_rationale_101",
-      "community": 31,
+      "community": 53,
       "norm_label": "run a claude agent sdk session under budget and return the result.      paramete"
     },
     {
@@ -7860,7 +7930,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_batch",
-      "community": 32,
+      "community": 20,
       "norm_label": "test_batch.py"
     },
     {
@@ -8170,7 +8240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_contracts",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_contracts.py"
     },
     {
@@ -8180,7 +8250,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_test_contracts_test_enum_values",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_enum_values()"
     },
     {
@@ -8190,7 +8260,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_contracts_test_runconfig_defaults_and_frozen",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_runconfig_defaults_and_frozen()"
     },
     {
@@ -8200,7 +8270,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_test_contracts_test_runconfig_thinking_budget",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_runconfig_thinking_budget()"
     },
     {
@@ -8210,7 +8280,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "tests_test_contracts_test_workspace_frozen",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_workspace_frozen()"
     },
     {
@@ -8220,7 +8290,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_test_contracts_test_full_report_composition",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_full_report_composition()"
     },
     {
@@ -8230,7 +8300,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "tests_test_contracts_test_judge_input_constructs",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_judge_input_constructs()"
     },
     {
@@ -8240,7 +8310,7 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "tests_test_contracts_test_callable_aliases_importable",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_callable_aliases_importable()"
     },
     {
@@ -8250,7 +8320,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "tests_test_contracts_test_phase_a_aliases_importable",
-      "community": 32,
+      "community": 83,
       "norm_label": "test_phase_a_aliases_importable()"
     },
     {
@@ -8260,7 +8330,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_test_contracts_rationale_59",
-      "community": 32,
+      "community": 83,
       "norm_label": "thinking_budget can be set to a positive integer; defaults to none."
     },
     {
@@ -8450,7 +8520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_flagship_case",
-      "community": 16,
+      "community": 87,
       "norm_label": "test_flagship_case.py"
     },
     {
@@ -8460,7 +8530,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_flagship_case_commit_exists",
-      "community": 16,
+      "community": 87,
       "norm_label": "_commit_exists()"
     },
     {
@@ -8470,7 +8540,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_test_flagship_case_show_file",
-      "community": 16,
+      "community": 87,
       "norm_label": "_show_file()"
     },
     {
@@ -8480,7 +8550,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_test_flagship_case_test_build_flagship_case",
-      "community": 16,
+      "community": 87,
       "norm_label": "test_build_flagship_case()"
     },
     {
@@ -8490,7 +8560,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_flagship_case_rationale_11",
-      "community": 16,
+      "community": 87,
       "norm_label": "return file contents at a given commit, or none if the file doesn't exist."
     },
     {
@@ -8500,7 +8570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_git_ops",
-      "community": 16,
+      "community": 88,
       "norm_label": "test_git_ops.py"
     },
     {
@@ -8510,7 +8580,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_git_ops_make_repo",
-      "community": 16,
+      "community": 88,
       "norm_label": "_make_repo()"
     },
     {
@@ -8520,7 +8590,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_git_ops_test_repo_roundtrip",
-      "community": 16,
+      "community": 88,
       "norm_label": "test_repo_roundtrip()"
     },
     {
@@ -8530,7 +8600,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_git_ops_py_path",
-      "community": 16,
+      "community": 88,
       "norm_label": "path"
     },
     {
@@ -8540,7 +8610,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_git_ops_test_concurrent_worktree_add",
-      "community": 16,
+      "community": 88,
       "norm_label": "test_concurrent_worktree_add()"
     },
     {
@@ -8550,7 +8620,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_git_ops_rationale_1",
-      "community": 16,
+      "community": 88,
       "norm_label": "tests for skill_eval/git_ops.py \u2014 no network calls required."
     },
     {
@@ -8560,7 +8630,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_git_ops_rationale_17",
-      "community": 16,
+      "community": 88,
       "norm_label": "initialise a repo with git identity configured."
     },
     {
@@ -8570,7 +8640,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "tests_test_git_ops_rationale_80",
-      "community": 16,
+      "community": 88,
       "norm_label": "16 threads calling worktree_add concurrently must all succeed."
     },
     {
@@ -8860,7 +8930,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_live_smoke",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_live_smoke.py"
     },
     {
@@ -8870,7 +8940,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_test_live_smoke_test_real_end_to_end",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_real_end_to_end()"
     },
     {
@@ -8880,7 +8950,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_live_smoke_rationale_1",
-      "community": 32,
+      "community": 46,
       "norm_label": "live end-to-end smoke test.  marked ``@pytest.mark.live`` and skipped unless ``a"
     },
     {
@@ -8890,7 +8960,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_orchestrator",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_orchestrator.py"
     },
     {
@@ -8900,7 +8970,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_run_eval_simulated_end_to_end",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_run_eval_simulated_end_to_end()"
     },
     {
@@ -8910,7 +8980,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_k_judges_median_aggregation",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_k_judges_median_aggregation()"
     },
     {
@@ -8920,7 +8990,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_judge_model_decoupling_reaches_judges",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_judge_model_decoupling_reaches_judges()"
     },
     {
@@ -8930,7 +9000,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_arun_eval_is_natively_awaitable",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_arun_eval_is_natively_awaitable()"
     },
     {
@@ -8940,7 +9010,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_taker_stream_events_flow_through_orchestrator",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_taker_stream_events_flow_through_orchestrator()"
     },
     {
@@ -8950,7 +9020,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_test_orchestrator_test_reducer_counts",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_reducer_counts()"
     },
     {
@@ -8960,7 +9030,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_42",
-      "community": 32,
+      "community": 46,
       "norm_label": "judges_per_criterion=3 fans out 3 replicates per cell but the report     still c"
     },
     {
@@ -8970,7 +9040,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_61",
-      "community": 32,
+      "community": 46,
       "norm_label": "cfg.judge_model (not the taker model) must be handed to judge_fn."
     },
     {
@@ -8980,7 +9050,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_81",
-      "community": 32,
+      "community": 46,
       "norm_label": "the async entrypoint must run inside an existing event loop (fastapi)."
     },
     {
@@ -8990,7 +9060,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_102",
-      "community": 32,
+      "community": 46,
       "norm_label": "taker_stream events (thinking / tool / q&a) must reach on_event,     node-taggab"
     },
     {
@@ -9000,7 +9070,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "tests_test_orchestrator_rationale_121",
-      "community": 32,
+      "community": 84,
       "norm_label": "send-based fan-out must produce exactly 2 taker_results and 12 score entries."
     },
     {
@@ -9020,7 +9090,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_reporting_make_report",
-      "community": 29,
+      "community": 79,
       "norm_label": "_make_report()"
     },
     {
@@ -9030,7 +9100,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "tests_test_reporting_report",
-      "community": 29,
+      "community": 79,
       "norm_label": "_report()"
     },
     {
@@ -9040,7 +9110,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_reporting_test_report_to_json_round_trips",
-      "community": 29,
+      "community": 85,
       "norm_label": "test_report_to_json_round_trips()"
     },
     {
@@ -9050,7 +9120,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_reporting_test_reports_to_json_is_array",
-      "community": 29,
+      "community": 79,
       "norm_label": "test_reports_to_json_is_array()"
     },
     {
@@ -9060,7 +9130,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_reporting_test_report_json_round_trip_reconstructs_dataclasses",
-      "community": 29,
+      "community": 85,
       "norm_label": "test_report_json_round_trip_reconstructs_dataclasses()"
     },
     {
@@ -9070,7 +9140,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "tests_test_reporting_test_save_list_load_runs",
-      "community": 29,
+      "community": 85,
       "norm_label": "test_save_list_load_runs()"
     },
     {
@@ -9080,7 +9150,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_test_reporting_test_list_saved_runs_missing_dir_is_empty",
-      "community": 29,
+      "community": 85,
       "norm_label": "test_list_saved_runs_missing_dir_is_empty()"
     },
     {
@@ -9120,7 +9190,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_shape_and_gap",
-      "community": 29,
+      "community": 79,
       "norm_label": "test_criterion_gap_rows_shape_and_gap()"
     },
     {
@@ -9130,7 +9200,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_gap_rows_sorted_by_gap_desc",
-      "community": 32,
+      "community": 79,
       "norm_label": "test_criterion_gap_rows_sorted_by_gap_desc()"
     },
     {
@@ -9140,7 +9210,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "tests_test_reporting_test_criterion_winners",
-      "community": 29,
+      "community": 79,
       "norm_label": "test_criterion_winners()"
     },
     {
@@ -9230,7 +9300,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "tests_test_reporting_test_agent_graph_dot",
-      "community": 29,
+      "community": 92,
       "norm_label": "test_agent_graph_dot()"
     },
     {
@@ -9240,7 +9310,7 @@
       "source_location": "L369",
       "_origin": "ast",
       "id": "tests_test_reporting_test_agent_graph_dot_meta_tooltips",
-      "community": 29,
+      "community": 92,
       "norm_label": "test_agent_graph_dot_meta_tooltips()"
     },
     {
@@ -9250,7 +9320,7 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_row_count",
-      "community": 29,
+      "community": 90,
       "norm_label": "test_batch_score_distribution_row_count()"
     },
     {
@@ -9260,7 +9330,7 @@
       "source_location": "L401",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_schema",
-      "community": 29,
+      "community": 90,
       "norm_label": "test_batch_score_distribution_schema()"
     },
     {
@@ -9270,7 +9340,7 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "tests_test_reporting_test_batch_score_distribution_empty",
-      "community": 29,
+      "community": 90,
       "norm_label": "test_batch_score_distribution_empty()"
     },
     {
@@ -9280,7 +9350,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_37",
-      "community": 29,
+      "community": 79,
       "norm_label": "build a fake comparisonreport with deterministic scores."
     },
     {
@@ -9290,7 +9360,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_307",
-      "community": 29,
+      "community": 92,
       "norm_label": "build a sample state and verify the returned dot string."
     },
     {
@@ -9300,7 +9370,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_370",
-      "community": 29,
+      "community": 92,
       "norm_label": "meta enriches hover tooltips: skill names, rationales, verdict."
     },
     {
@@ -9310,7 +9380,7 @@
       "source_location": "L395",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_395",
-      "community": 29,
+      "community": 90,
       "norm_label": "len(reports) * 12 rows (2 arms \u00d7 6 criteria per report)."
     },
     {
@@ -9320,7 +9390,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "tests_test_reporting_rationale_402",
-      "community": 29,
+      "community": 90,
       "norm_label": "every row has criterion, arm, and score keys."
     },
     {
@@ -9430,7 +9500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sample_repo",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_sample_repo.py"
     },
     {
@@ -9440,7 +9510,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_sample_repo_commit_exists",
-      "community": 32,
+      "community": 46,
       "norm_label": "_commit_exists()"
     },
     {
@@ -9450,7 +9520,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_test_sample_repo_test_build_sample_repo",
-      "community": 32,
+      "community": 46,
       "norm_label": "test_build_sample_repo()"
     },
     {
@@ -9460,7 +9530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sandbox",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_sandbox.py"
     },
     {
@@ -9470,7 +9540,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_sandbox_test_prepare_workspaces",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_prepare_workspaces()"
     },
     {
@@ -9480,7 +9550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_simulated",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_simulated.py"
     },
     {
@@ -9490,7 +9560,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_test_simulated_test_sim_simulator_answers",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_sim_simulator_answers()"
     },
     {
@@ -9500,7 +9570,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_simulated_test_sim_taker_asks_and_returns",
-      "community": 32,
+      "community": 84,
       "norm_label": "test_sim_taker_asks_and_returns()"
     },
     {
@@ -9510,7 +9580,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_simulated_test_sim_judge_scores_in_range",
-      "community": 32,
+      "community": 44,
       "norm_label": "test_sim_judge_scores_in_range()"
     },
     {
@@ -9600,7 +9670,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_taker_fakeresult_init",
-      "community": 31,
+      "community": 93,
       "norm_label": ".__init__()"
     },
     {
@@ -9610,7 +9680,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_taker_py_any",
-      "community": 32,
+      "community": 93,
       "norm_label": "any"
     },
     {
@@ -9750,7 +9820,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "tests_test_taker_init_git_repo",
-      "community": 31,
+      "community": 86,
       "norm_label": "_init_git_repo()"
     },
     {
@@ -9760,7 +9830,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_new_file",
-      "community": 31,
+      "community": 86,
       "norm_label": "test_compute_diff_captures_new_file()"
     },
     {
@@ -9770,7 +9840,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_modification",
-      "community": 31,
+      "community": 86,
       "norm_label": "test_compute_diff_captures_modification()"
     },
     {
@@ -9780,7 +9850,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_empty_for_no_changes",
-      "community": 31,
+      "community": 86,
       "norm_label": "test_compute_diff_empty_for_no_changes()"
     },
     {
@@ -9790,7 +9860,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_non_git_dir",
-      "community": 31,
+      "community": 86,
       "norm_label": "test_compute_diff_non_git_dir()"
     },
     {
@@ -9800,7 +9870,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "tests_test_taker_test_compute_diff_captures_committed_changes",
-      "community": 31,
+      "community": 86,
       "norm_label": "test_compute_diff_captures_committed_changes()"
     },
     {
@@ -9810,7 +9880,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_test_taker_make_workspace",
-      "community": 31,
+      "community": 53,
       "norm_label": "_make_workspace()"
     },
     {
@@ -9820,7 +9890,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_test_taker_py_workspace",
-      "community": 32,
+      "community": 44,
       "norm_label": "workspace"
     },
     {
@@ -9830,7 +9900,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "tests_test_taker_make_cfg",
-      "community": 31,
+      "community": 53,
       "norm_label": "_make_cfg()"
     },
     {
@@ -9840,7 +9910,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "tests_test_taker_py_runconfig",
-      "community": 32,
+      "community": 53,
       "norm_label": "runconfig"
     },
     {
@@ -9850,7 +9920,7 @@
       "source_location": "L246",
       "_origin": "ast",
       "id": "tests_test_taker_make_thinking_block",
-      "community": 31,
+      "community": 93,
       "norm_label": "_make_thinking_block()"
     },
     {
@@ -9860,7 +9930,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "tests_test_taker_fake_query_gen",
-      "community": 31,
+      "community": 93,
       "norm_label": "_fake_query_gen()"
     },
     {
@@ -9870,7 +9940,7 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_mocked",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_mocked()"
     },
     {
@@ -9880,7 +9950,7 @@
       "source_location": "L319",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_streams_thinking_events",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_streams_thinking_events()"
     },
     {
@@ -9890,7 +9960,7 @@
       "source_location": "L340",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_with_skill_md",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_with_skill_md()"
     },
     {
@@ -9900,7 +9970,7 @@
       "source_location": "L376",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_missing_skill_md",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_missing_skill_md()"
     },
     {
@@ -9910,7 +9980,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_thinking_budget_sets_option",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_thinking_budget_sets_option()"
     },
     {
@@ -9920,7 +9990,7 @@
       "source_location": "L444",
       "_origin": "ast",
       "id": "tests_test_taker_test_run_taker_no_thinking_without_budget",
-      "community": 31,
+      "community": 53,
       "norm_label": "test_run_taker_no_thinking_without_budget()"
     },
     {
@@ -10020,7 +10090,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_149",
-      "community": 31,
+      "community": 86,
       "norm_label": "create a minimal git repo with an initial commit."
     },
     {
@@ -10030,7 +10100,7 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_187",
-      "community": 31,
+      "community": 86,
       "norm_label": "non-git directory should return empty string without raising."
     },
     {
@@ -10040,7 +10110,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_193",
-      "community": 31,
+      "community": 86,
       "norm_label": "a skill that runs `git commit` must still have its work captured.      diffing v"
     },
     {
@@ -10050,7 +10120,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_220",
-      "community": 31,
+      "community": 53,
       "norm_label": "create a temp git repo and return a workspace pointing at it."
     },
     {
@@ -10060,7 +10130,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_247",
-      "community": 31,
+      "community": 93,
       "norm_label": "return a magicmock that looks like a thinkingblock to type(block).__name__."
     },
     {
@@ -10070,7 +10140,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_255",
-      "community": 31,
+      "community": 93,
       "norm_label": "async generator that yields a fake assistantmessage with a thinkingblock,     th"
     },
     {
@@ -10080,7 +10150,7 @@
       "source_location": "L279",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_279",
-      "community": 31,
+      "community": 53,
       "norm_label": "run_taker returns a populated takerresult with patched query."
     },
     {
@@ -10090,7 +10160,7 @@
       "source_location": "L320",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_320",
-      "community": 31,
+      "community": 53,
       "norm_label": "thinkingblocks from the sdk stream must be forwarded to on_event live \u2014     the"
     },
     {
@@ -10100,7 +10170,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_341",
-      "community": 31,
+      "community": 53,
       "norm_label": "skill.md is injected into the system_prompt (approach b)."
     },
     {
@@ -10110,7 +10180,7 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_377",
-      "community": 31,
+      "community": 53,
       "norm_label": "missing skill.md should not raise \u2014 system_prompt uses empty skill."
     },
     {
@@ -10120,7 +10190,7 @@
       "source_location": "L404",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_404",
-      "community": 31,
+      "community": 53,
       "norm_label": "when thinking_budget is set in cfg, the options include a thinking dict."
     },
     {
@@ -10130,7 +10200,7 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "tests_test_taker_rationale_445",
-      "community": 31,
+      "community": 53,
       "norm_label": "when thinking_budget is none, options should not include thinking."
     },
     {
@@ -12534,6 +12604,26 @@
       "target": "src_app_app"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_app_skillpruneanimation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_app_team_members",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -12728,17 +12818,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "api_client"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/charts.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -12750,23 +12829,12 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "components_nodepanel",
-      "target": "api_client",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "api_client",
-      "confidence_score": 1.0
+      "target": "api_client"
     },
     {
       "relation": "imports_from",
@@ -12778,6 +12846,17 @@
       "confidence_score": 1.0,
       "source": "components_resultsfunnel",
       "target": "api_client"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "api_client",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -12827,12 +12906,23 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "api_client_fixtureinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "api_client_fixtureinfo",
-      "confidence_score": 1.0
+      "target": "api_client_fixtureinfo"
     },
     {
       "relation": "imports",
@@ -12893,10 +12983,10 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_file": "frontend/src/components/RunForm.tsx",
       "source_location": "L7",
       "weight": 1.0,
-      "source": "pages_runpage",
+      "source": "components_runform",
       "target": "api_client_retrievedcase",
       "confidence_score": 1.0
     },
@@ -12904,11 +12994,44 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L5",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L7",
       "weight": 1.0,
-      "source": "components_nodepanel",
-      "target": "api_client_batchcasestate",
+      "confidence_score": 1.0,
+      "source": "pages_runpage",
+      "target": "api_client_retrievedcase"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "api_client_createbatchrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "api_client_createbatchrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "api_client_batchdetail",
       "confidence_score": 1.0
     },
     {
@@ -12918,9 +13041,20 @@
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "api_client_batchcasestate",
-      "confidence_score": 1.0
+      "target": "api_client_batchcasestate"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_runpage",
+      "target": "api_client_batchcasestate"
     },
     {
       "relation": "imports",
@@ -12930,19 +13064,8 @@
       "source_location": "L7",
       "weight": 1.0,
       "source": "pages_runpage",
-      "target": "api_client_batchcasestate",
+      "target": "api_client_batchstats",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "api_client_batchstats"
     },
     {
       "relation": "imports",
@@ -12965,6 +13088,17 @@
       "confidence_score": 1.0,
       "source": "state_eventstore_test",
       "target": "api_client_runevent"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "api_client_api",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -13052,256 +13186,12 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_batchstats_barpair"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L56",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_batchstats_batchstats"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L45",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_batchstats_wincard"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_charts"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_charts_arm_colors"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_ui"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/BatchStats.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_batchstats",
-      "target": "components_ui_card"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "pages_runpage",
-      "target": "components_batchstats",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "pages_runpage",
-      "target": "components_batchstats_batchstats",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_case_tone",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_caseinfopanel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_describe"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_kind_tone"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_node_description"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_nodepanel_nodepanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_ui"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_ui_badge"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "components_ui_card"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "state_eventstore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel",
-      "target": "state_eventstore_runlivestate"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pages_runpage",
-      "target": "components_nodepanel"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/NodePanel.tsx",
-      "source_location": "L68",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_nodepanel_nodepanel",
-      "target": "components_nodepanel_describe"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pages_runpage",
-      "target": "components_nodepanel_nodepanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "components_pipelinegraph_batchgraphcontext",
-      "confidence_score": 1.0
+      "target": "components_pipelinegraph_batchgraphcontext"
     },
     {
       "relation": "contains",
@@ -13319,9 +13209,9 @@
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "components_pipelinegraph_case_status",
-      "confidence_score": 1.0
+      "target": "components_pipelinegraph_case_status"
     },
     {
       "relation": "contains",
@@ -13329,9 +13219,9 @@
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L242",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "components_pipelinegraph_caseidof",
-      "confidence_score": 1.0
+      "target": "components_pipelinegraph_caseidof"
     },
     {
       "relation": "contains",
@@ -13339,9 +13229,9 @@
       "source_file": "frontend/src/components/PipelineGraph.tsx",
       "source_location": "L81",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_pipelinegraph",
-      "target": "components_pipelinegraph_coarsenode",
-      "confidence_score": 1.0
+      "target": "components_pipelinegraph_coarsenode"
     },
     {
       "relation": "contains",
@@ -13571,11 +13461,41 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_behaviorinsight",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L37",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "components_resultsfunnel",
       "target": "components_resultsfunnel_byarm"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_decisionaction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_inferdecision",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -13591,11 +13511,71 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_mockedassumptionsandmisses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_mockedbehaviorinsights",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_mockedrequirementunlocks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_mocktaskkind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_requirementunlock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
       "source_location": "L41",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "components_resultsfunnel",
       "target": "components_resultsfunnel_resultsfunnel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "components_resultsfunnel",
+      "target": "components_resultsfunnel_scorefor",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -13662,6 +13642,94 @@
       "confidence_score": 1.0,
       "source": "pages_runpage",
       "target": "components_resultsfunnel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_mockedbehaviorinsights",
+      "target": "components_resultsfunnel_scorefor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_mockedrequirementunlocks",
+      "target": "components_resultsfunnel_scorefor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_resultsfunnel",
+      "target": "components_resultsfunnel_inferdecision",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L199",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_mockedassumptionsandmisses",
+      "target": "components_resultsfunnel_mocktaskkind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_mockedrequirementunlocks",
+      "target": "components_resultsfunnel_mocktaskkind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_resultsfunnel",
+      "target": "components_resultsfunnel_mockedrequirementunlocks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L286",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_resultsfunnel",
+      "target": "components_resultsfunnel_mockedbehaviorinsights",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ResultsFunnel.tsx",
+      "source_location": "L287",
+      "weight": 1.0,
+      "source": "components_resultsfunnel_resultsfunnel",
+      "target": "components_resultsfunnel_mockedassumptionsandmisses",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -13743,6 +13811,60 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "components_runform_runform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "components_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/RunForm.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_runform",
+      "target": "components_ui_field",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "components_runform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "components_runform_runform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/charts.ts",
       "source_location": "L6",
       "weight": 1.0,
@@ -13810,6 +13932,28 @@
       "confidence_score": 1.0,
       "source": "pages_historypage",
       "target": "components_charts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "components_charts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "components_charts_arm_colors",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -13901,9 +14045,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_ui",
-      "confidence_score": 1.0
+      "target": "components_ui"
     },
     {
       "relation": "calls",
@@ -13967,19 +14111,8 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
-      "source": "pages_runpage",
-      "target": "components_ui_cn",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L109",
-      "weight": 1.0,
-      "source": "pages_runpage_caserow",
+      "source": "pages_runpage",
       "target": "components_ui_cn"
     },
     {
@@ -13989,9 +14122,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_ui_button",
-      "confidence_score": 1.0
+      "target": "components_ui_button"
     },
     {
       "relation": "imports",
@@ -14011,9 +14144,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_ui_card",
-      "confidence_score": 1.0
+      "target": "components_ui_card"
     },
     {
       "relation": "imports",
@@ -14033,9 +14166,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_ui_badge",
-      "confidence_score": 1.0
+      "target": "components_ui_badge"
     },
     {
       "relation": "imports",
@@ -14055,9 +14188,9 @@
       "source_file": "frontend/src/pages/RunPage.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_runpage",
-      "target": "components_ui_field",
-      "confidence_score": 1.0
+      "target": "components_ui_field"
     },
     {
       "relation": "contains",
@@ -14093,20 +14226,80 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L31",
+      "source_location": "L201",
       "weight": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_caseliveview",
+      "target": "pages_runpage_barpair",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L95",
+      "source_location": "L29",
       "weight": 1.0,
       "source": "pages_runpage",
-      "target": "pages_runpage_caserow",
+      "target": "pages_runpage_batchmilestones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L234",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_batchstatsboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L429",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_futureroadmapscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_milestonecard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_milestonecards",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_nodethinkingcodeblock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L412",
+      "weight": 1.0,
+      "source": "pages_runpage",
+      "target": "pages_runpage_onboardingroadmap",
       "confidence_score": 1.0
     },
     {
@@ -14118,16 +14311,6 @@
       "confidence_score": 1.0,
       "source": "pages_runpage",
       "target": "pages_runpage_runpage"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/pages/RunPage.tsx",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "pages_runpage",
-      "target": "pages_runpage_status_tone",
-      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -14172,6 +14355,17 @@
       "confidence_score": 1.0,
       "source": "pages_runpage",
       "target": "state_eventstore_runlivestate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/RunPage.tsx",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "pages_runpage_milestonecards",
+      "target": "pages_runpage_batchmilestones",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -19609,9 +19803,9 @@
       "source_file": "skill_eval/api/run_manager.py",
       "source_location": "L289",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_run_manager_rationale_289",
-      "target": "api_run_manager_runmanager_events",
-      "confidence_score": 1.0
+      "target": "api_run_manager_runmanager_events"
     },
     {
       "relation": "calls",
@@ -20794,9 +20988,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_47",
-      "target": "api_schemas_runsummary",
-      "confidence_score": 1.0
+      "target": "api_schemas_runsummary"
     },
     {
       "relation": "uses",
@@ -20825,9 +21019,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_57",
-      "target": "api_schemas_rundetail",
-      "confidence_score": 1.0
+      "target": "api_schemas_rundetail"
     },
     {
       "relation": "uses",
@@ -20855,9 +21049,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_64",
-      "target": "api_schemas_fixtureinfo",
-      "confidence_score": 1.0
+      "target": "api_schemas_fixtureinfo"
     },
     {
       "relation": "uses",
@@ -20875,9 +21069,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_85",
-      "target": "api_schemas_retrievedcase",
-      "confidence_score": 1.0
+      "target": "api_schemas_retrievedcase"
     },
     {
       "relation": "uses",
@@ -20915,9 +21109,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_94",
-      "target": "api_schemas_createbatchrequest",
-      "confidence_score": 1.0
+      "target": "api_schemas_createbatchrequest"
     },
     {
       "relation": "imports",
@@ -20946,9 +21140,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L120",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_120",
-      "target": "api_schemas_batchcasestate",
-      "confidence_score": 1.0
+      "target": "api_schemas_batchcasestate"
     },
     {
       "relation": "uses",
@@ -20966,9 +21160,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L136",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_136",
-      "target": "api_schemas_batchsummary",
-      "confidence_score": 1.0
+      "target": "api_schemas_batchsummary"
     },
     {
       "relation": "uses",
@@ -20986,9 +21180,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_149",
-      "target": "api_schemas_batchstats",
-      "confidence_score": 1.0
+      "target": "api_schemas_batchstats"
     },
     {
       "relation": "uses",
@@ -21016,9 +21210,9 @@
       "source_file": "skill_eval/api/schemas.py",
       "source_location": "L164",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_schemas_rationale_164",
-      "target": "api_schemas_batchdetail",
-      "confidence_score": 1.0
+      "target": "api_schemas_batchdetail"
     },
     {
       "relation": "contains",
@@ -35142,9 +35336,9 @@
       "source_file": "tests/test_batch_api.py",
       "source_location": "L190",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_batch_api_rationale_190",
-      "target": "tests_test_batch_api_test_batch_archive_survives_restart",
-      "confidence_score": 1.0
+      "target": "tests_test_batch_api_test_batch_archive_survives_restart"
     },
     {
       "relation": "rationale_for",
@@ -35152,9 +35346,9 @@
       "source_file": "tests/test_batch_api.py",
       "source_location": "L220",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_batch_api_rationale_220",
-      "target": "tests_test_batch_api_test_batch_child_failure_propagates",
-      "confidence_score": 1.0
+      "target": "tests_test_batch_api_test_batch_child_failure_propagates"
     },
     {
       "relation": "rationale_for",
@@ -35162,9 +35356,9 @@
       "source_file": "tests/test_batch_api.py",
       "source_location": "L257",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_batch_api_rationale_257",
-      "target": "tests_test_batch_api_test_batch_respects_max_concurrent",
-      "confidence_score": 1.0
+      "target": "tests_test_batch_api_test_batch_respects_max_concurrent"
     },
     {
       "relation": "contains",
@@ -35292,9 +35486,9 @@
       "source_file": "tests/test_e2e_playwright.py",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_e2e_playwright",
-      "target": "tests_test_e2e_playwright_test_app_loads_with_batch_form",
-      "confidence_score": 1.0
+      "target": "tests_test_e2e_playwright_test_app_loads_with_batch_form"
     },
     {
       "relation": "contains",
@@ -35364,9 +35558,9 @@
       "source_file": "tests/test_e2e_playwright.py",
       "source_location": "L89",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_e2e_playwright_test_app_loads_with_batch_form",
-      "target": "tests_test_e2e_playwright_open",
-      "confidence_score": 1.0
+      "target": "tests_test_e2e_playwright_open"
     },
     {
       "relation": "calls",
@@ -35396,9 +35590,9 @@
       "source_file": "tests/test_e2e_playwright.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_e2e_playwright_rationale_77",
-      "target": "tests_test_e2e_playwright_hover_node",
-      "confidence_score": 1.0
+      "target": "tests_test_e2e_playwright_hover_node"
     },
     {
       "relation": "calls",
@@ -39533,5 +39727,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2fdcef9c402d5ad1a847bb94ff1611cd538c8a93"
+  "built_at_commit": "63c61cf20fbf2dd97b35ea12e2eccb79503fec4b"
 }
