@@ -24,8 +24,10 @@ const NODE_DESCRIPTION: Record<string, string> = {
   sandbox: "Creates one isolated git worktree per arm @before plus a shared read-only gold tree @after; computes the gold diff.",
   simulator:
     "The stakeholder. Knows the gold solution; answers only what is asked, at requirement level, temperature=0 — identical answers for both arms.",
-  assemble: "Aggregates replicate judges per criterion (median), sums totals, derives the verdict.",
-  report: "The comparison report — rendered in the results funnel below and archived to runs/.",
+  assemble:
+    "Batch aggregation — every case's judge scores funnel in here: win summary, per-criterion averages, per-case totals, token costs. Fills the stats dashboard as cases land.",
+  report:
+    "The one result: the aggregate stats dashboard below. Each case's full comparison report is archived to runs/ and browsable in History.",
 };
 
 function describe(nodeId: string): string {
@@ -126,7 +128,15 @@ export function NodePanel({
     if (c) return <CaseInfoPanel c={c} />;
   }
 
-  const status = state.nodeStatus[innerId] ?? "pending";
+  // The merged assemble/report nodes are batch-level: derive their status
+  // from the cases, not from the selected run's stream.
+  let status = state.nodeStatus[innerId] ?? "pending";
+  if ((innerId === "assemble" || innerId === "report") && cases && cases.length > 0) {
+    const terminal = cases.filter((c) => c.status === "completed" || c.status === "failed").length;
+    const allDone = terminal === cases.length;
+    const active = terminal > 0 || cases.some((c) => c.status === "running");
+    status = allDone ? "done" : innerId === "assemble" && active ? "running" : "pending";
+  }
   return (
     <Card className="flex h-[560px] flex-col p-4" data-testid="node-panel">
       <div className="mb-2 flex items-center gap-2">

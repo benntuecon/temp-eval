@@ -125,6 +125,38 @@ export function buildGraph(
     { id: "e-sc", source: "skill:challenger", target: "retriever" },
   ];
 
+  // ONE assemble + ONE report for the whole batch: every band's judges
+  // funnel into a single aggregation point — the result is one thing.
+  const terminal = batch.cases.filter(
+    (c) => c.status === "completed" || c.status === "failed",
+  ).length;
+  const allDone = terminal === n;
+  const anyActivity = terminal > 0 || batch.cases.some((c) => c.status === "running");
+  nodes.push(
+    {
+      id: "assemble",
+      type: "pipeline",
+      position: { x: X.assemble, y: midY },
+      data: {
+        label: "assemble",
+        sub: `${terminal}/${n} cases`,
+        status: allDone ? "done" : anyActivity ? "running" : "pending",
+        hint: "Aggregates every case's judge scores — win summary, per-criterion averages, token costs",
+      },
+    },
+    {
+      id: "report",
+      type: "pipeline",
+      position: { x: X.report, y: midY },
+      data: {
+        label: "report",
+        status: allDone ? "done" : "pending",
+        hint: "The one result: the batch stats dashboard below (per-case reports archived to runs/)",
+      },
+    },
+  );
+  edges.push({ id: "e-ar", source: "assemble", target: "report" });
+
   batch.cases.forEach((c, i) => {
     const off = i * BAND_H;
     const p = (inner: string) => `${c.case_id}/${inner}`;
@@ -173,20 +205,7 @@ export function buildGraph(
         position: { x: X.sandbox + 60, y: 320 + off },
         data: { label: "HITL simulator", status: st("simulator"), hint: "Answers clarifying questions from the gold tree (temperature=0)" },
       },
-      {
-        id: p("assemble"),
-        type: "pipeline",
-        position: { x: X.assemble, y: 150 + off },
-        data: { label: "assemble", status: st("assemble"), hint: "Median of replicate judges, totals, verdict" },
-      },
-      {
-        id: p("report"),
-        type: "pipeline",
-        position: { x: X.report, y: 150 + off },
-        data: { label: "report", status: st("report"), hint: "The comparison report — archived to runs/" },
-      },
     );
-    edges.push({ id: `e-ar-${c.case_id}`, source: p("assemble"), target: p("report") });
 
     ARMS.forEach((arm, ai) => {
       const takerId = p(`taker:${arm}`);
@@ -228,8 +247,8 @@ export function buildGraph(
         edges.push({
           id: `e-j-${arm}-${cr}-${c.case_id}`,
           source: judgeId,
-          target: p("assemble"),
-          style: { opacity: 0.35 },
+          target: "assemble",
+          style: { opacity: 0.2 },
         });
       });
     });
