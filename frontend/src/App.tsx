@@ -3,26 +3,37 @@ import { cn } from "./components/ui";
 import { HistoryPage } from "./pages/HistoryPage";
 import { RunPage } from "./pages/RunPage";
 
-const TEAM_MEMBERS = [
+// photo: /team/N.jpg where N matches the card's position in this list
+// (drop frontend/public/team/4.jpg in place to give the 4th card a photo).
+const TEAM_MEMBERS: Array<{
+  name: string;
+  role: string;
+  contribution: string;
+  photo: string | null;
+}> = [
   {
     name: "Kuanpin Chen",
     role: "IP Software Engineer",
     contribution: "Built the AI backend prototype and database foundation for SkillForge.",
+    photo: "/team/1.jpg",
   },
   {
     name: "Chin-Lun Fu",
     role: "CDAO ML Scientist",
     contribution: "Built the evaluation framework, especially the Agentic AI methodology behind the system.",
+    photo: "/team/2.jpg",
   },
   {
     name: "Prajwal Manjunath",
     role: "IP Software Engineer",
     contribution: "Provided key technical support and system integration across the prototype.",
+    photo: "/team/3.jpg",
   },
   {
     name: "Luciana Ma",
     role: "CIB Product Manager",
     contribution: "Built the frontend, refined the problem framing, and created the demo material.",
+    photo: null,
   },
 ];
 
@@ -680,7 +691,11 @@ export default function App() {
                 {TEAM_MEMBERS.map((member) => (
                   <div key={member.name} className="team-member-card sticky-note bg-sketch-paper p-5">
                     <div className="flex items-start gap-4">
-                      <div className="team-avatar font-hand">{member.name.split(" ").map((part) => part[0]).join("")}</div>
+                      {member.photo ? (
+                        <img src={member.photo} alt={member.name} className="team-photo" />
+                      ) : (
+                        <div className="team-avatar font-hand">{member.name.split(" ").map((part) => part[0]).join("")}</div>
+                      )}
                       <div>
                         <h3 className="font-hand text-xl font-bold">{member.name}</h3>
                         <p className="mt-1 text-sm font-bold text-sketch-muted">{member.role}</p>

@@ -1173,3 +1173,15 @@ textarea {
   outline-offset: 3px;
   border-radius: 14px;
 }
+
+/* Team photo: same footprint as the initials avatar, hand-drawn frame */
+.team-photo {
+  width: clamp(72px, 8vw, 112px);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  border: 3px solid #302a25;
+  border-radius: 50%;
+  box-shadow: 5px 5px 0 rgb(48 42 37 / 0.18);
+  object-fit: cover;
+  background: #f2dfb2;
+}
