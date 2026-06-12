@@ -70,11 +70,7 @@ def app_server(tmp_path_factory):
 def _open(page, url: str) -> None:
     page.goto(url)
     page.get_by_test_id("tab-run").wait_for(timeout=20_000)
-    # form prefilled from /api/fixtures = backend reachable through the proxy
-    page.wait_for_function(
-        "() => document.querySelector('[data-testid=fixture-select]')?.options.length >= 2",
-        timeout=20_000,
-    )
+    page.get_by_test_id("batch-query").wait_for(timeout=20_000)
 
 
 def _hover_node(page, text: str) -> None:
@@ -89,17 +85,22 @@ def _hover_node(page, text: str) -> None:
     page.mouse.move(cx, cy, steps=4)
 
 
-def test_app_loads_with_pipeline_graph(app_server, page):
+def test_app_loads_with_batch_form(app_server, page):
     _open(page, app_server)
     assert page.get_by_test_id("tab-history").is_visible()
-    # The whole architecture is on screen before any run.
-    for label in ("test generator", "sandbox", "HITL simulator", "baseline taker", "report"):
-        assert page.locator(".react-flow__node", has_text=label).count() >= 1, label
+    assert page.get_by_test_id("batch-query").is_visible()
+    assert page.get_by_test_id("run-button").is_visible()
+    # run is gated on a retrieval query
+    assert page.get_by_test_id("run-button").is_disabled()
 
 
 def test_simulated_run_lights_graph_and_streams_thinking(app_server, page):
     _open(page, app_server)
+    # One retrieved case keeps the run fast; the board auto-opens its pipeline.
+    page.get_by_test_id("batch-query").fill("payment api logging banking")
+    page.get_by_test_id("batch-topk").fill("1")
     page.get_by_test_id("run-button").click()
+    page.get_by_test_id("batch-board").wait_for(timeout=30_000)
 
     # The graph lights up live (amber pulse) and finishes with results.
     saw_running = False
