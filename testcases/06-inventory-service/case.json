@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python warehouse inventory service owned by the logistics team. The stock sync module (inventory_sync.py) logs every message at ERROR level regardless of severity, builds messages with string concatenation, hides unknown-SKU failures behind bare except clauses, and drops the order_id that reserve_stock receives so reservations cannot be traced. Refactor its logging to production standard: correct level per event (routine sync is INFO, per-SKU corrections DEBUG, unknown SKUs and rejected reservations WARNING), lazy %-style formatting, explicit narrow exception handling instead of bare except, sync summaries with updated/unknown counts, and warehouse_id/sku/order_id context on every message. Do not change stock arithmetic.",
+  "description": "Logging improvement for the Python warehouse inventory service owned by the logistics team. The stock sync module (inventory_sync.py) reports every routine event as an error, hides unknown-SKU failures behind bare except clauses, and drops the order id from reservation messages, so reservations cannot be reconciled. Bring its logging up to production standard. Do not change stock arithmetic.",
   "before": "testcases/06-inventory-service/repo/before",
   "after": "testcases/06-inventory-service/repo/after",
   "repo": "testcases/06-inventory-service/repo"

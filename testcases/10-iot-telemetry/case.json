@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python IoT telemetry ingestion service owned by the IoT platform team. The device batch ingestor (telemetry_ingest.py) prints every raw packet and parsed reading from every device (a log flood at fleet scale), logs device API keys in plaintext on both successful and failed authentication, and silently drops malformed packets and out-of-range readings with no count or trace. Refactor its logging to production standard: module-level logger, no credentials in any message, per-packet detail at DEBUG only, dropped readings counted and reported as a single rate-limit-friendly WARNING per batch, and one INFO summary per batch with device_id and received/accepted counts. Do not change validation rules.",
+  "description": "Logging improvement for the Python IoT telemetry ingestion service owned by the IoT platform team. The device batch ingestor (telemetry_ingest.py) prints every raw packet from every device, writes device API keys to the log in plaintext, and malformed packets are dropped silently with no count or trace. Bring its logging up to production standard. Do not change validation rules.",
   "before": "testcases/10-iot-telemetry/repo/before",
   "after": "testcases/10-iot-telemetry/repo/after",
   "repo": "testcases/10-iot-telemetry/repo"

@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python ML inference service owned by the ML platform team. The fraud-score server (inference_server.py) logs entire feature vectors at INFO on the hot path using eager f-strings, emits four log lines per single prediction, reports high-risk detections and outright failures both at INFO, and has no usable latency telemetry. Refactor its logging to production standard for a latency-sensitive service: lazy %-style formatting, large payloads only at DEBUG behind logger.isEnabledFor, one INFO line per prediction with request_id, model version, score and latency in milliseconds, WARNING for high-risk scores, logger.exception for scoring failures, and a per-batch summary with total and failed counts. Do not change the model or scoring logic.",
+  "description": "Logging improvement for the Python ML inference service owned by the ML platform team. The fraud-score server (inference_server.py) logs entire feature vectors on the hot path, emits several lines per prediction, and gives on-call no usable latency or risk signal when scoring fails. Bring its logging up to production standard for a latency-sensitive service. Do not change the model or scoring logic.",
   "before": "testcases/04-ml-inference/repo/before",
   "after": "testcases/04-ml-inference/repo/after",
   "repo": "testcases/04-ml-inference/repo"

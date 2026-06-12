@@ -1,5 +1,5 @@
 {
-  "description": "Logging improvement for the Python payment API owned by the global banking team. The payment capture service (payment_service.py) handles card charges and refunds but uses bare print() statements for diagnostics, logs full card numbers and CVVs in plaintext, and silently swallows gateway exceptions with except/pass. Refactor its logging to production standard: module-level logger via logging.getLogger(__name__), appropriate log levels, lazy %-style formatting, logger.exception with tracebacks on failure paths, masked card data (last 4 digits only, never the CVV), and order/receipt IDs on every message. Do not change business behavior.",
+  "description": "Logging improvement for the Python payment API owned by the global banking team. The payment capture service (payment_service.py) handles card charges and refunds, but its diagnostics are ad-hoc print() statements that expose full card numbers and CVVs, and gateway failures disappear silently — the module was flagged in a PCI review. Bring its logging up to production standard. Do not change business behavior.",
   "before": "testcases/01-payment-api/repo/before",
   "after": "testcases/01-payment-api/repo/after",
   "repo": "testcases/01-payment-api/repo"
